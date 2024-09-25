@@ -5,6 +5,17 @@ struct StationDetailsSheet: View {
     @EnvironmentObject private var mapViewModel: MapViewModel
     @EnvironmentObject private var locationManager: LocationManager
     
+    func formatDate(_ value: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        if let date = formatter.date(from: value) {
+            return date
+        }
+        else {
+            return nil
+        }
+    }
+    
     var body: some View {
         if let station = mapViewModel.selectedStation {
             ScrollView {
@@ -96,6 +107,22 @@ struct StationDetailsSheet: View {
                             }
                         }
                         PricesItem()
+                        if let update = mapViewModel.data?.lastUpdated {
+                            if let date = formatDate(update) {
+                                ListItem(
+                                    icon: "arrow.down.circle.fill",
+                                    iconColor: .brown,
+                                    title: String(localized: "Latest information")
+                                ) {
+                                    AnyView(
+                                        Text(date, format: .dateTime.weekday().day().hour().minute())
+                                            .font(.system(size: 14))
+                                            .foregroundStyle(Color.gray)
+                                            .fontWeight(.medium)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
                 .padding()

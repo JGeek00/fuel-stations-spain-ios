@@ -214,6 +214,16 @@
         }
       }
     },
+    "Latest information" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última información"
+          }
+        }
+      }
+    },
     "Liquefied Natural Gas" : {
       "localizations" : {
         "es" : {
