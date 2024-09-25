@@ -7,6 +7,7 @@ struct FuelStationsSpainApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environmentObject(LocationManager())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
