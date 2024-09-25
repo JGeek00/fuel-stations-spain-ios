@@ -52,7 +52,50 @@ struct StationDetailsSheet: View {
                                 subtitle: distanceText
                             )
                         }
+                        if let locality = station.locality {
+                            ListItem(
+                                icon: "building.2.fill",
+                                iconColor: .green,
+                                title: String(localized: "Locality"),
+                                subtitle: String(locality.capitalized)
+                            )
+                        }
                         ScheduleItem()
+                        if let saleType = station.saleType {
+                            ListItem(
+                                icon: "person.fill",
+                                iconColor: .purple,
+                                title: String(localized: "Sales to the general public")
+                            ) {
+                                switch saleType {
+                                case .p:
+                                    AnyView(
+                                        HStack {
+                                            Image(systemName: "checkmark.circle.fill")
+                                            Spacer()
+                                                .frame(width: 4)
+                                            Text("Yes")
+                                        }
+                                        .foregroundStyle(Color.green)
+                                        .font(.system(size: 14))
+                                        .fontWeight(.medium)
+                                    )
+                                case .r:
+                                    AnyView(
+                                        HStack {
+                                            Image(systemName: "xmark.circle.fill")
+                                            Spacer()
+                                                .frame(width: 4)
+                                            Text("No")
+                                        }
+                                        .foregroundStyle(Color.red)
+                                        .font(.system(size: 14))
+                                        .fontWeight(.medium)
+                                    )
+                                }
+                            }
+                        }
+                        PricesItem()
                     }
                 }
                 .padding()
@@ -143,7 +186,7 @@ fileprivate struct ScheduleItem: View {
                                 .font(.system(size: 16))
                                 .fontWeight(.semibold)
                             Spacer()
-                                .frame(height: 4)
+                                .frame(height: 8)
                             HStack {
                                 todayValue
                                     .font(.system(size: 14))
@@ -203,6 +246,67 @@ fileprivate struct ScheduleItem: View {
     }
 }
 
+struct PricesItem: View {
+    
+    @EnvironmentObject private var mapViewModel: MapViewModel
+    
+    var body: some View {
+        if let station = mapViewModel.selectedStation {
+            HStack(alignment: .top) {
+                Image(systemName: "eurosign.circle.fill")
+                    .foregroundStyle(Color.white)
+                    .frame(width: 28, height: 28)
+                    .background(.orange)
+                    .cornerRadius(6)
+                Spacer()
+                    .frame(width: 12)
+                VStack(alignment: .leading) {
+                    Text("Prices")
+                        .font(.system(size: 16))
+                        .fontWeight(.semibold)
+                    Spacer()
+                        .frame(height: 8)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Product(name: String(localized: "A Gasoil"), value: station.gasoilAPrice)
+                        Product(name: String(localized: "B Gasoil"), value: station.gasoilBPrice)
+                        Product(name: String(localized: "Premium Gasoil"), value: station.premiumGasoilPrice)
+                        Product(name: String(localized: "Biodiesel"), value: station.biodieselPrice)
+                        Product(name: String(localized: "Gasoline 95 E10"), value: station.gasoline95E10Price)
+                        Product(name: String(localized: "Gasoline 95 E5"), value: station.gasoline95E5Price)
+                        Product(name: String(localized: "Gasoline 95 E5 Premium"), value: station.gasoline95E5PremiumPrice)
+                        Product(name: String(localized: "Gasoline 98 E10"), value: station.gasoline98E10Price)
+                        Product(name: String(localized: "Gasoline 98 E5"), value: station.gasoline98E5Price)
+                        Product(name: String(localized: "Bioethanol"), value: station.bioethanolPrice)
+                        Product(name: String(localized: "Compressed Natural Gas"), value: station.cngPrice)
+                        Product(name: String(localized: "Liquefied Natural Gas"), value: station.lngPrice)
+                        Product(name: String(localized: "Liquefied petroleum gases"), value: station.lpgPrice)
+                        Product(name: String(localized: "Hydrogen"), value: station.hydrogenPrice)
+                    }
+                }
+                Spacer()
+            }
+            .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
+            .padding()
+            .background(Color.background)
+            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+        }
+    }
+    
+    @ViewBuilder
+    func Product(name: String, value: Double?) -> some View {
+        if let value {
+            HStack {
+                Text(name)
+                Spacer()
+                Text("\(formattedNumber(value: value, digits: 3)) €")
+            }
+            .font(.system(size: 14))
+        }
+        else {
+            EmptyView()
+        }
+    }
+}
 
 fileprivate struct ListItem: View {
     var icon: String
@@ -242,14 +346,15 @@ fileprivate struct ListItem: View {
                     .fontWeight(.semibold)
                 if let subtitle = subtitle {
                     Spacer()
-                        .frame(height: 4)
+                        .frame(height: 8)
                     Text(subtitle)
                         .font(.system(size: 14))
                         .foregroundStyle(Color.gray)
+                        .fontWeight(.medium)
                 }
                 if let viewSubtitle = viewSubtitle {
                     Spacer()
-                        .frame(height: 4)
+                        .frame(height: 8)
                     viewSubtitle()
                 }
                 else {

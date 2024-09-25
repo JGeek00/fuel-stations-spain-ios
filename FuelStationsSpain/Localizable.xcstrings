@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ €" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ €"
+          }
+        }
+      }
+    },
     "%@ Km from your current location" : {
       "localizations" : {
         "es" : {
@@ -17,6 +27,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld m de tu localización actual"
+          }
+        }
+      }
+    },
+    "A Gasoil" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasóleo A"
+          }
+        }
+      }
+    },
+    "B Gasoil" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasóleo B"
+          }
+        }
+      }
+    },
+    "Biodiesel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biodiésel"
+          }
+        }
+      }
+    },
+    "Bioethanol" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bioetanol"
           }
         }
       }
@@ -47,6 +97,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cerrado"
+          }
+        }
+      }
+    },
+    "Compressed Natural Gas" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gas Natural Comprimido"
           }
         }
       }
@@ -91,8 +151,98 @@
         }
       }
     },
+    "Gasoline 95 E5" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina 95 E5"
+          }
+        }
+      }
+    },
+    "Gasoline 95 E5 Premium" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina 95 E5 Premium"
+          }
+        }
+      }
+    },
+    "Gasoline 95 E10" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina 95 E10"
+          }
+        }
+      }
+    },
+    "Gasoline 98 E5" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina 98 E5"
+          }
+        }
+      }
+    },
+    "Gasoline 98 E10" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina 98 E10"
+          }
+        }
+      }
+    },
     "Hello, World!" : {
 
+    },
+    "Hydrogen" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hidrógeno"
+          }
+        }
+      }
+    },
+    "Liquefied Natural Gas" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gas Natural Licuado"
+          }
+        }
+      }
+    },
+    "Liquefied petroleum gases" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gases licuados del petróleo"
+          }
+        }
+      }
+    },
+    "Locality" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Localidad"
+          }
+        }
+      }
     },
     "Location access required" : {
       "localizations" : {
@@ -144,6 +294,16 @@
         }
       }
     },
+    "No" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        }
+      }
+    },
     "No station selected" : {
       "localizations" : {
         "es" : {
@@ -184,12 +344,42 @@
         }
       }
     },
+    "Premium Gasoil" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasóleo Premium"
+          }
+        }
+      }
+    },
+    "Prices" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precios"
+          }
+        }
+      }
+    },
     "Retry" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reintentar"
+          }
+        }
+      }
+    },
+    "Sales to the general public" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vende al público general"
           }
         }
       }
@@ -250,6 +440,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cuota de uso excedida. Prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
+    "Yes" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí"
           }
         }
       }

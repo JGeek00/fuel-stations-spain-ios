@@ -1,10 +1,10 @@
 import Foundation
 
-func formattedNumber(value: Double) -> String {
+func formattedNumber(value: Double, digits: Int = 2) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
-    numberFormatter.minimumFractionDigits = 2
-    numberFormatter.maximumFractionDigits = 2
+    numberFormatter.minimumFractionDigits = digits
+    numberFormatter.maximumFractionDigits = digits
     numberFormatter.locale = Locale.current
     
     return numberFormatter.string(from: NSNumber(value: value)) ?? "\(value)"
