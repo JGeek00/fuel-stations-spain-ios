@@ -1,10 +1,3 @@
-//
-//  FuelStationsSpainApp.swift
-//  FuelStationsSpain
-//
-//  Created by Juan Gilsanz Polo on 25/9/24.
-//
-
 import SwiftUI
 
 @main
@@ -13,7 +6,7 @@ struct FuelStationsSpainApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
