@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0D5F58D92CA4C6C400342D3F /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 0D5F58D82CA4C6BD00342D3F /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0D5F58712CA42B8300342D3F /* FuelStationsSpain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuelStationsSpain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D5F58D82CA4C6BD00342D3F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -34,6 +39,7 @@
 			children = (
 				0D5F58732CA42B8300342D3F /* FuelStationsSpain */,
 				0D5F58722CA42B8300342D3F /* Products */,
+				0D5F58D82CA4C6BD00342D3F /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,6 +128,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D5F58D92CA4C6C400342D3F /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,7 +268,8 @@
 				DEVELOPMENT_TEAM = 38Z3B9TJTR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Gasolineras España";
+				INFOPLIST_KEY_CFBundleDisplayName = HispaFuel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "The application needs access to your location to show you the nearby service stations.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The application needs access to your location to show you the nearby service stations.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -295,7 +303,8 @@
 				DEVELOPMENT_TEAM = 38Z3B9TJTR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Gasolineras España";
+				INFOPLIST_KEY_CFBundleDisplayName = HispaFuel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "The application needs access to your location to show you the nearby service stations.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The application needs access to your location to show you the nearby service stations.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
