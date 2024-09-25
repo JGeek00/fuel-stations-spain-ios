@@ -12,6 +12,7 @@ struct RootView: View {
                     Label("Settings", systemImage: "gear")
                 }
         }
+        .fontDesign(.rounded)
     }
 }
 

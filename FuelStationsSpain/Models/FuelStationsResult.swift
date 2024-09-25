@@ -1,13 +1,13 @@
 import Foundation
 
 // MARK: - FuelStationsResult
-struct FuelStationsResult: Codable {
+struct FuelStationsResult: Codable, Hashable {
     let lastUpdated: String?
     let results: [FuelStation]?
 }
 
 // MARK: - FuelStation
-struct FuelStation: Codable {
+struct FuelStation: Codable, Hashable {
     let id, postalCode, address, openingHours: String?
     let latitude, longitude: Double?
     let locality: String?
@@ -42,18 +42,18 @@ struct FuelStation: Codable {
     }
 }
 
-enum Margin: String, Codable {
+enum Margin: String, Codable, Hashable {
     case d = "D"
     case i = "I"
     case n = "N"
 }
 
-enum Referral: String, Codable {
+enum Referral: String, Codable, Hashable {
     case dm = "dm"
     case om = "OM"
 }
 
-enum SaleType: String, Codable {
+enum SaleType: String, Codable, Hashable {
     case p = "P"
     case r = "R"
 }
