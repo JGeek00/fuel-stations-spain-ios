@@ -138,7 +138,7 @@ fileprivate struct ScheduleItem: View {
     
     @EnvironmentObject private var mapViewModel: MapViewModel
     @EnvironmentObject private var locationManager: LocationManager
-    
+        
     @State private var showFullSchedule = false
     @State private var chevronAngle: Double = 0
     
@@ -264,7 +264,7 @@ fileprivate struct ScheduleItem: View {
             .buttonStyle(.plain)
             .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
             .padding()
-            .background(Color.background)
+            .customBackgroundWithMaterial()
             .clipShape(RoundedRectangle(cornerRadius: 8.0))
         }
         else {
@@ -276,7 +276,7 @@ fileprivate struct ScheduleItem: View {
 struct PricesItem: View {
     
     @EnvironmentObject private var mapViewModel: MapViewModel
-    
+        
     var body: some View {
         if let station = mapViewModel.selectedStation {
             HStack(alignment: .top) {
@@ -314,7 +314,7 @@ struct PricesItem: View {
             }
             .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
             .padding()
-            .background(Color.background)
+            .customBackgroundWithMaterial()
             .clipShape(RoundedRectangle(cornerRadius: 8.0))
         }
     }
@@ -392,7 +392,7 @@ fileprivate struct ListItem: View {
         }
         .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
         .padding()
-        .background(Color.background)
+        .customBackgroundWithMaterial()
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
     }
     

@@ -1,6 +1,20 @@
 import SwiftUI
 
 struct RootView: View {
+    
+    @AppStorage(StorageKeys.theme, store: UserDefaults.shared) private var theme: Enums.Theme = .system
+
+    func getColorScheme(theme: Enums.Theme) -> ColorScheme? {
+        switch theme {
+            case .system:
+                return nil
+            case .light:
+                return ColorScheme.light
+            case .dark:
+                return ColorScheme.dark
+        }
+    }
+    
     var body: some View {
         TabView {
             MapView()
@@ -13,9 +27,6 @@ struct RootView: View {
                 }
         }
         .fontDesign(.rounded)
+        .preferredColorScheme(getColorScheme(theme: theme))
     }
-}
-
-#Preview {
-    RootView()
 }

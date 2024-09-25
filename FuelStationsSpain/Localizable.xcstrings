@@ -41,6 +41,36 @@
         }
       }
     },
+    "About the app" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre la app"
+          }
+        }
+      }
+    },
+    "App repository" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repositorio de la app"
+          }
+        }
+      }
+    },
+    "App version" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión de la app"
+          }
+        }
+      }
+    },
     "B Gasoil" : {
       "localizations" : {
         "es" : {
@@ -111,6 +141,26 @@
         }
       }
     },
+    "Contact the developer" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contactar con el desarrollador"
+          }
+        }
+      }
+    },
+    "Created on 🇪🇸 by JGeek00" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creado en 🇪🇸 por JGeek00"
+          }
+        }
+      }
+    },
     "Currently closed" : {
       "localizations" : {
         "es" : {
@@ -121,12 +171,42 @@
         }
       }
     },
+    "Dark" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oscuro"
+          }
+        }
+      }
+    },
+    "Data" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos"
+          }
+        }
+      }
+    },
     "Data loaded successfully." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Datos cargados correctamente."
+          }
+        }
+      }
+    },
+    "Data source" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fuente de datos"
           }
         }
       }
@@ -201,9 +281,6 @@
         }
       }
     },
-    "Hello, World!" : {
-
-    },
     "Hydrogen" : {
       "localizations" : {
         "es" : {
@@ -220,6 +297,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Última información"
+          }
+        }
+      }
+    },
+    "Light" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claro"
           }
         }
       }
@@ -420,6 +507,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Satisfactorio"
+          }
+        }
+      }
+    },
+    "System defined" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Definido por el sistema"
+          }
+        }
+      }
+    },
+    "Theme" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tema"
+          }
+        }
+      }
+    },
+    "This application receives the data from a public API of the Spanish government." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta aplicación recibe los datos de una API pública del gobierno de España."
           }
         }
       }
