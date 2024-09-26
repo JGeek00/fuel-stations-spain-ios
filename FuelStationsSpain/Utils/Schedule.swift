@@ -195,6 +195,6 @@ func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
         }
     }
     else {
-        return nil
+        return OpeningSchedule(schedule: [], isCurrentlyOpen: false)
     }
 }

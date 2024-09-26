@@ -49,7 +49,7 @@ class StationDetailsComponents {
                                     .frame(height: 8)
                                 Group {
                                     if let formattedSchedule = formattedSchedule {
-                                        if formattedSchedule.schedule.isEmpty {
+                                        if formattedSchedule.schedule.isEmpty && formattedSchedule.isCurrentlyOpen == true {
                                             Text("Open 24 hours")
                                                 .foregroundStyle(Color.green)
                                         }

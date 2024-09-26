@@ -33,7 +33,7 @@ struct StationListEntry: View {
                     let formattedSchedule = getStationSchedule(schedule)
                     if let formattedSchedule = formattedSchedule {
                         Group {
-                            if formattedSchedule.schedule.isEmpty {
+                            if formattedSchedule.schedule.isEmpty && formattedSchedule.isCurrentlyOpen == true {
                                 Text("Open 24 hours")
                                     .foregroundStyle(Color.green)
                             }
