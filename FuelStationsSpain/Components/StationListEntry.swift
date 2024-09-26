@@ -33,13 +33,26 @@ struct StationListEntry: View {
                     let formattedSchedule = getStationSchedule(schedule)
                     if let formattedSchedule = formattedSchedule {
                         Group {
-                            if formattedSchedule.closing == nil && formattedSchedule.opening == nil {
+                            if formattedSchedule.schedule.isEmpty {
                                 Text("Open 24 hours")
                                     .foregroundStyle(Color.green)
                             }
                             else if formattedSchedule.isCurrentlyOpen == true {
-                                Text("Open until \(dateFormatter.string(from: formattedSchedule.closing!))")
-                                    .foregroundStyle(Color.green)
+                                if formattedSchedule.schedule.count == 2 {
+                                    Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[1]))")
+                                        .foregroundStyle(Color.green)
+                                }
+                                else if formattedSchedule.schedule.count == 4 {
+                                    let now = Date()
+                                    if now < formattedSchedule.schedule[1] {
+                                        Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[1]))")
+                                            .foregroundStyle(Color.green)
+                                    }
+                                    else {
+                                        Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[3]))")
+                                            .foregroundStyle(Color.green)
+                                    }
+                                }
                             }
                             else if formattedSchedule.isCurrentlyOpen == false {
                                 Text("Currently closed")
