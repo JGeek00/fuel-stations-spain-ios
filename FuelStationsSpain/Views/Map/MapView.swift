@@ -34,7 +34,7 @@ fileprivate struct MapComponent: View {
                                     // await to prevent opening a sheet with another one already open
                                     if mapViewModel.showStationSheet == true {
                                         mapViewModel.showStationSheet = false
-                                        try await Task.sleep(for: .seconds(0.6))
+                                        try await Task.sleep(for: .seconds(0.7))
                                     }
                                     mapViewModel.selectStation(station: value)
                                 }
@@ -152,11 +152,10 @@ fileprivate struct MapComponent: View {
         .sheet(isPresented: $mapViewModel.showStationSheet) {
             StationDetailsSheet()
                 .presentationBackground(Material.regular)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.fraction(0.5), .fraction(0.99)])
                 .presentationBackgroundInteraction(
-                    .enabled(upThrough: .large)
+                    .enabled(upThrough: .fraction(0.99))
                 )
-                .presentationDragIndicator(.hidden)
         }
     }
 }
