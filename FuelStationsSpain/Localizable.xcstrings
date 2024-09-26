@@ -167,6 +167,16 @@
         }
       }
     },
+    "Change the inputted search term." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia el término de búsqueda introducido."
+          }
+        }
+      }
+    },
     "Close" : {
       "localizations" : {
         "es" : {
@@ -477,6 +487,16 @@
         }
       }
     },
+    "No results" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay resultados"
+          }
+        }
+      }
+    },
     "No station selected" : {
       "localizations" : {
         "es" : {
@@ -553,6 +573,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vende al público general"
+          }
+        }
+      }
+    },
+    "Search service station by name" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar estación de servicio por nombre"
           }
         }
       }

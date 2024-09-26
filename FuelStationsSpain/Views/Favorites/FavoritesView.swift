@@ -8,6 +8,8 @@ struct FavoritesView: View {
     @EnvironmentObject private var locationManager: LocationManager
     
     @State private var selectedStation: FuelStation? = nil
+    @State private var searchText = ""
+    @State private var listHasContent = true    // To make transition
     
     var body: some View {
         NavigationSplitView {
@@ -26,10 +28,30 @@ struct FavoritesView: View {
                         else {
                             let data = addDistancesToStations(stations: favoritesListViewModel.data!.results!, lastLocation: locationManager.lastLocation)
                             let sortedDistance = sortStationsByDistance(data)
-                            List(sortedDistance, id: \.self, selection: $selectedStation) { item in
-                                StationListEntry(station: item)
+                            let filtered = searchText != "" ? sortedDistance.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sortedDistance
+                            Group {
+                                if listHasContent == false {
+                                    ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
+                                        .transition(.opacity)
+                                }
+                                else {
+                                    List(filtered, id: \.self, selection: $selectedStation) { item in
+                                        StationListEntry(station: item)
+                                    }
+                                    .animation(.default, value: filtered)
+                                    .transition(.opacity)
+                                }
                             }
-                            .transition(.opacity)
+                            .onChange(of: filtered) {
+                                withAnimation(.default) {
+                                    if filtered.isEmpty {
+                                        listHasContent = false
+                                    }
+                                    else {
+                                        listHasContent = true
+                                    }
+                                }
+                            }
                         }
                     }
                     else {
@@ -39,6 +61,7 @@ struct FavoritesView: View {
                 }
             }
             .navigationTitle("Favorites")
+            .searchable(text: $searchText, prompt: "Search service station by name")
         } detail: {
             if let selectedStation = selectedStation {
                 FavoriteDetailsView(station: selectedStation)
