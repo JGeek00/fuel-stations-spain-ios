@@ -11,4 +11,14 @@ class ApiClient {
         )
         return result
     }
+    
+    static func fetchServiceStationsById(stationIds: [String]) async -> StatusResponse<FuelStationsResult> {
+        let result: StatusResponse<FuelStationsResult> = await httpRequest(
+            url: "https://fuelapi.jgeek00.com/service-stations",
+            queryParameters: stationIds.map({ item in
+                URLQueryItem(name: "id", value: item)
+            })
+        )
+        return result
+    }
 }

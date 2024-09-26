@@ -4,7 +4,8 @@ struct StationDetailsSheet: View {
     
     @EnvironmentObject private var mapViewModel: MapViewModel
     @EnvironmentObject private var locationManager: LocationManager
-    
+    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+        
     func formatDate(_ value: String) -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
@@ -29,6 +30,23 @@ struct StationDetailsSheet: View {
                                 .lineLimit(1)
                         }
                         Spacer()
+                        if let stationId = station.id {
+                            let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
+                            Button {
+                                if isFavorite == true {
+                                    favoritesProvider.removeFavorite(stationId: stationId)
+                                }
+                                else {
+                                    favoritesProvider.addFavorite(stationId: stationId)
+                                }
+                            } label: {
+                                Image(systemName: isFavorite == true ? "star.fill" : "star")
+                                    .fontWeight(.semibold)
+                                    .animation(.default, value: isFavorite)
+                            }
+                            .buttonStyle(BorderedButtonStyle())
+                            .clipShape(Circle())
+                        }
                         Button {
                             mapViewModel.showStationSheet = false
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {

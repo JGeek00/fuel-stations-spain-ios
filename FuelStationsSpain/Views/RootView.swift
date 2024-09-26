@@ -24,6 +24,11 @@ struct RootView: View {
                 .tabItem {
                     Label("Map", systemImage: "map")
                 }
+            FavoritesView()
+                .tabItem {
+                    Label("Favorites", systemImage: "star")
+                }
+                .environmentObject(FavoritesListViewModel())
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")

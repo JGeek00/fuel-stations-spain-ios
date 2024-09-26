@@ -51,6 +51,16 @@
         }
       }
     },
+    "An error occured when loading the favorites information. Try again later." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error al cargar la información de las estaciones favoritas. Prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
     "App repository" : {
       "localizations" : {
         "es" : {
@@ -107,6 +117,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se puede establecer una conexión con el servidor. Comprueba tu conexión a internet."
+          }
+        }
+      }
+    },
+    "Cannot load favorites" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han podido cargar los favoritos"
           }
         }
       }
@@ -231,6 +251,16 @@
         }
       }
     },
+    "Favorites" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favoritos"
+          }
+        }
+      }
+    },
     "Gasoline 95 E5" : {
       "localizations" : {
         "es" : {
@@ -351,23 +381,22 @@
         }
       }
     },
-    "Location unavailable" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Localización no disponible"
-          }
-        }
-      }
-    },
     "Map" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mapa"
+          }
+        }
+      }
+    },
+    "Mark some service stations as favorites to see them here." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca algunas estaciones de servicio como favoritas para verlas aquí."
           }
         }
       }
@@ -398,6 +427,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
+          }
+        }
+      }
+    },
+    "No favorite stations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay estaciones favoritas"
           }
         }
       }

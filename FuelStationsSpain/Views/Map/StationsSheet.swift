@@ -1,14 +1,6 @@
 import SwiftUI
 
-fileprivate struct StationWithDistance: Hashable {
-    let station: FuelStation
-    let distance: Double?
-    
-    init(station: FuelStation, distance: Double?) {
-        self.station = station
-        self.distance = distance
-    }
-}
+
 
 struct StationsSheet: View {
     
@@ -23,28 +15,7 @@ struct StationsSheet: View {
                 }
                 else {
                     if let data = mapViewModel.data?.results {
-                        let dataWithDistances: [StationWithDistance] = data.map() { item in
-                            if item.latitude != nil && item.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                                let distance = distanceBetweenCoordinates(Coordinate(latitude: item.latitude!, longitude: item.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
-                                return StationWithDistance(station: item, distance: distance)
-                            }
-                            else {
-                                return StationWithDistance(station: item, distance: nil)
-                            }
-                        }.sorted { a, b in
-                            if a.distance != nil && b.distance != nil {
-                                return a.distance! < b.distance!
-                            }
-                            else if a.distance == nil && b.distance != nil {
-                                return true
-                            }
-                            else if a.distance != nil && b.distance == nil {
-                                return false
-                            }
-                            else {
-                                return false
-                            }
-                        }
+                        let dataWithDistances = sortStationsByDistance(data: data, lastLocation: locationManager.lastLocation)
                         List(dataWithDistances, id: \.self) { item in
                             Button {
                                 mapViewModel.showStationsSheet.toggle()

@@ -57,3 +57,13 @@ enum SaleType: String, Codable, Hashable {
     case p = "P"
     case r = "R"
 }
+
+struct StationWithDistance: Hashable {
+    let station: FuelStation
+    let distance: Double?
+    
+    init(station: FuelStation, distance: Double?) {
+        self.station = station
+        self.distance = distance
+    }
+}

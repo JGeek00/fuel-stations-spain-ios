@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 
 struct Coordinate {
     let latitude: Double
@@ -24,4 +25,30 @@ func distanceBetweenCoordinates(_ coordinate1: Coordinate, _ coordinate2: Coordi
     let distance = earthRadius * c
     
     return distance
+}
+
+func sortStationsByDistance(data: [FuelStation], lastLocation: CLLocation?) -> [StationWithDistance] {
+    let dataWithDistances: [StationWithDistance] = data.map() { item in
+        if item.latitude != nil && item.longitude != nil && lastLocation?.coordinate.latitude != nil && lastLocation?.coordinate.longitude != nil {
+            let distance = distanceBetweenCoordinates(Coordinate(latitude: item.latitude!, longitude: item.longitude!), Coordinate(latitude: lastLocation!.coordinate.latitude, longitude: lastLocation!.coordinate.longitude))
+            return StationWithDistance(station: item, distance: distance)
+        }
+        else {
+            return StationWithDistance(station: item, distance: nil)
+        }
+    }.sorted { a, b in
+        if a.distance != nil && b.distance != nil {
+            return a.distance! < b.distance!
+        }
+        else if a.distance == nil && b.distance != nil {
+            return true
+        }
+        else if a.distance != nil && b.distance == nil {
+            return false
+        }
+        else {
+            return false
+        }
+    }
+    return dataWithDistances
 }
