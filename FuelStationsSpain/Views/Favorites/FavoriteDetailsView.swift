@@ -56,6 +56,7 @@ struct FavoriteDetailsView: View {
                             subtitle: String(locality.capitalized)
                         )
                         .background(Color.listItemBackground)
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     }
                     StationDetailsComponents.ScheduleItem(station: station)
                         .background(Color.listItemBackground)
