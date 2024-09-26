@@ -1,11 +1,16 @@
 import SwiftUI
 
-struct StationDetailsSheet: View {
+struct FavoriteDetailsView: View {
+    var station: FuelStation
     
-    @EnvironmentObject private var mapViewModel: MapViewModel
+    init(station: FuelStation) {
+        self.station = station
+    }
+    
     @EnvironmentObject private var locationManager: LocationManager
+    @EnvironmentObject private var mapViewModel: MapViewModel
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
-        
+    
     private func formatDate(_ value: String) -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
@@ -18,143 +23,125 @@ struct StationDetailsSheet: View {
     }
     
     var body: some View {
-        if let station = mapViewModel.selectedStation {
+        NavigationStack {
             ScrollView {
-                LazyVStack(alignment: .leading) {
-                    HStack {
-                        if let name = station.signage {
-                            Text(verbatim: name.capitalized)
-                                .font(.system(size: 30))
-                                .fontWeight(.bold)
-                                .truncationMode(.tail)
-                                .lineLimit(1)
-                        }
-                        Spacer()
-                        if let stationId = station.id {
-                            let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
-                            Button {
-                                if isFavorite == true {
-                                    favoritesProvider.removeFavorite(stationId: stationId)
+                LazyVStack(alignment: .leading, spacing: 12) {
+                    if let address = station.address {
+                        let distanceText: String? = {
+                            if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
+                                let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                                if distance < 1 {
+                                    return String(localized: "\(Int(distance*1000)) m from your current location")
+                                } else {
+                                    return String(localized: "\(formattedNumber(value: distance)) Km from your current location")
                                 }
-                                else {
-                                    favoritesProvider.addFavorite(stationId: stationId)
-                                }
-                            } label: {
-                                Image(systemName: isFavorite == true ? "star.fill" : "star")
-                                    .fontWeight(.semibold)
-                                    .animation(.default, value: isFavorite)
                             }
-                            .buttonStyle(BorderedButtonStyle())
-                            .clipShape(Circle())
-                        }
-                        Button {
-                            mapViewModel.showStationSheet = false
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                mapViewModel.selectedStation = nil
-                            }
-                        } label: {
-                            Image(systemName: "xmark")
-                                .fontWeight(.semibold)
-                                .foregroundColor(.foreground.opacity(0.5))
-                        }
-                        .buttonStyle(BorderedButtonStyle())
-                        .clipShape(Circle())
+                            return nil
+                        }()
+                        
+                        ListItem(
+                            icon: "mappin",
+                            iconColor: .red,
+                            title: address.capitalized,
+                            subtitle: distanceText
+                        )
                     }
-                    VStack(alignment: .leading, spacing: 12) {
-                        if let address = station.address {
-                            let distanceText: String? = {
-                                if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
-                                    if distance < 1 {
-                                        return String(localized: "\(Int(distance*1000)) m from your current location")
-                                    } else {
-                                        return String(localized: "\(formattedNumber(value: distance)) Km from your current location")
+                    if let locality = station.locality {
+                        ListItem(
+                            icon: "building.2.fill",
+                            iconColor: .green,
+                            title: String(localized: "Locality"),
+                            subtitle: String(locality.capitalized)
+                        )
+                    }
+                    ScheduleItem(station: station)
+                    if let saleType = station.saleType {
+                        ListItem(
+                            icon: "person.fill",
+                            iconColor: .purple,
+                            title: String(localized: "Sales to the general public")
+                        ) {
+                            switch saleType {
+                            case .p:
+                                AnyView(
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill")
+                                        Spacer()
+                                            .frame(width: 4)
+                                        Text("Yes")
                                     }
-                                }
-                                return nil
-                            }()
-                            
-                            ListItem(
-                                icon: "mappin",
-                                iconColor: .red,
-                                title: address.capitalized,
-                                subtitle: distanceText
-                            )
-                        }
-                        if let locality = station.locality {
-                            ListItem(
-                                icon: "building.2.fill",
-                                iconColor: .green,
-                                title: String(localized: "Locality"),
-                                subtitle: String(locality.capitalized)
-                            )
-                        }
-                        ScheduleItem()
-                        if let saleType = station.saleType {
-                            ListItem(
-                                icon: "person.fill",
-                                iconColor: .purple,
-                                title: String(localized: "Sales to the general public")
-                            ) {
-                                switch saleType {
-                                case .p:
-                                    AnyView(
-                                        HStack {
-                                            Image(systemName: "checkmark.circle.fill")
-                                            Spacer()
-                                                .frame(width: 4)
-                                            Text("Yes")
-                                        }
-                                        .foregroundStyle(Color.green)
-                                        .font(.system(size: 14))
-                                        .fontWeight(.medium)
-                                    )
-                                case .r:
-                                    AnyView(
-                                        HStack {
-                                            Image(systemName: "xmark.circle.fill")
-                                            Spacer()
-                                                .frame(width: 4)
-                                            Text("No")
-                                        }
-                                        .foregroundStyle(Color.red)
-                                        .font(.system(size: 14))
-                                        .fontWeight(.medium)
-                                    )
-                                }
+                                    .foregroundStyle(Color.green)
+                                    .font(.system(size: 14))
+                                    .fontWeight(.medium)
+                                )
+                            case .r:
+                                AnyView(
+                                    HStack {
+                                        Image(systemName: "xmark.circle.fill")
+                                        Spacer()
+                                            .frame(width: 4)
+                                        Text("No")
+                                    }
+                                    .foregroundStyle(Color.red)
+                                    .font(.system(size: 14))
+                                    .fontWeight(.medium)
+                                )
                             }
                         }
-                        PricesItem()
-                        if let update = mapViewModel.data?.lastUpdated {
-                            if let date = formatDate(update) {
-                                ListItem(
-                                    icon: "arrow.down.circle.fill",
-                                    iconColor: .brown,
-                                    title: String(localized: "Latest information")
-                                ) {
-                                    AnyView(
-                                        Text(date, format: .dateTime.weekday().day().hour().minute())
-                                            .font(.system(size: 14))
-                                            .foregroundStyle(Color.gray)
-                                            .fontWeight(.medium)
-                                    )
-                                }
+                    }
+                    PricesItem(station: station)
+                    if let update = mapViewModel.data?.lastUpdated {
+                        if let date = formatDate(update) {
+                            ListItem(
+                                icon: "arrow.down.circle.fill",
+                                iconColor: .brown,
+                                title: String(localized: "Latest information")
+                            ) {
+                                AnyView(
+                                    Text(date, format: .dateTime.weekday().day().hour().minute())
+                                        .font(.system(size: 14))
+                                        .foregroundStyle(Color.gray)
+                                        .fontWeight(.medium)
+                                )
                             }
                         }
                     }
                 }
                 .padding()
             }
-        }
-        else {
-            ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
+            .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.listBackground)
+            .toolbar {
+                if let stationId = station.id {
+                    let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
+                    Button {
+                        if isFavorite == true {
+                            favoritesProvider.removeFavorite(stationId: stationId)
+                        }
+                        else {
+                            favoritesProvider.addFavorite(stationId: stationId)
+                        }
+                    } label: {
+                        Image(systemName: isFavorite == true ? "star.fill" : "star")
+                            .fontWeight(.semibold)
+                            .animation(.default, value: isFavorite)
+                    }
+                    .buttonStyle(BorderedButtonStyle())
+                    .clipShape(Circle())
+                }
+            }
         }
     }
 }
 
 fileprivate struct ScheduleItem: View {
+    var station: FuelStation
     
-    @EnvironmentObject private var mapViewModel: MapViewModel
+    init(station: FuelStation) {
+        self.station = station
+    }
+    
     @EnvironmentObject private var locationManager: LocationManager
         
     @State private var showFullSchedule = false
@@ -163,7 +150,7 @@ fileprivate struct ScheduleItem: View {
     private let daysOfWeek = ["L", "M", "X", "J", "V", "S", "D"]
     
     var body: some View {
-        if let openingHours = mapViewModel.selectedStation?.openingHours {
+        if let openingHours = station.openingHours {
             let schedule = parseSchedule(schedule: openingHours)
             let formattedSchedule = getStationSchedule(openingHours)
             
@@ -266,7 +253,7 @@ fileprivate struct ScheduleItem: View {
             .buttonStyle(.plain)
             .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
             .padding()
-            .customBackgroundWithMaterial()
+            .background(Color.listItemBackground)
             .clipShape(RoundedRectangle(cornerRadius: 8.0))
         }
         else {
@@ -276,49 +263,52 @@ fileprivate struct ScheduleItem: View {
 }
 
 fileprivate struct PricesItem: View {
+    var station: FuelStation
+    
+    init(station: FuelStation) {
+        self.station = station
+    }
     
     @EnvironmentObject private var mapViewModel: MapViewModel
         
     var body: some View {
-        if let station = mapViewModel.selectedStation {
-            HStack(alignment: .top) {
-                Image(systemName: "eurosign.circle.fill")
-                    .foregroundStyle(Color.white)
-                    .frame(width: 28, height: 28)
-                    .background(.orange)
-                    .cornerRadius(6)
+        HStack(alignment: .top) {
+            Image(systemName: "eurosign.circle.fill")
+                .foregroundStyle(Color.white)
+                .frame(width: 28, height: 28)
+                .background(.orange)
+                .cornerRadius(6)
+            Spacer()
+                .frame(width: 12)
+            VStack(alignment: .leading) {
+                Text("Prices")
+                    .font(.system(size: 16))
+                    .fontWeight(.semibold)
                 Spacer()
-                    .frame(width: 12)
-                VStack(alignment: .leading) {
-                    Text("Prices")
-                        .font(.system(size: 16))
-                        .fontWeight(.semibold)
-                    Spacer()
-                        .frame(height: 8)
-                    VStack(alignment: .leading, spacing: 6) {
-                        Product(name: String(localized: "A Gasoil"), value: station.gasoilAPrice)
-                        Product(name: String(localized: "B Gasoil"), value: station.gasoilBPrice)
-                        Product(name: String(localized: "Premium Gasoil"), value: station.premiumGasoilPrice)
-                        Product(name: String(localized: "Biodiesel"), value: station.biodieselPrice)
-                        Product(name: String(localized: "Gasoline 95 E10"), value: station.gasoline95E10Price)
-                        Product(name: String(localized: "Gasoline 95 E5"), value: station.gasoline95E5Price)
-                        Product(name: String(localized: "Gasoline 95 E5 Premium"), value: station.gasoline95E5PremiumPrice)
-                        Product(name: String(localized: "Gasoline 98 E10"), value: station.gasoline98E10Price)
-                        Product(name: String(localized: "Gasoline 98 E5"), value: station.gasoline98E5Price)
-                        Product(name: String(localized: "Bioethanol"), value: station.bioethanolPrice)
-                        Product(name: String(localized: "Compressed Natural Gas"), value: station.cngPrice)
-                        Product(name: String(localized: "Liquefied Natural Gas"), value: station.lngPrice)
-                        Product(name: String(localized: "Liquefied petroleum gases"), value: station.lpgPrice)
-                        Product(name: String(localized: "Hydrogen"), value: station.hydrogenPrice)
-                    }
+                    .frame(height: 8)
+                VStack(alignment: .leading, spacing: 6) {
+                    Product(name: String(localized: "A Gasoil"), value: station.gasoilAPrice)
+                    Product(name: String(localized: "B Gasoil"), value: station.gasoilBPrice)
+                    Product(name: String(localized: "Premium Gasoil"), value: station.premiumGasoilPrice)
+                    Product(name: String(localized: "Biodiesel"), value: station.biodieselPrice)
+                    Product(name: String(localized: "Gasoline 95 E10"), value: station.gasoline95E10Price)
+                    Product(name: String(localized: "Gasoline 95 E5"), value: station.gasoline95E5Price)
+                    Product(name: String(localized: "Gasoline 95 E5 Premium"), value: station.gasoline95E5PremiumPrice)
+                    Product(name: String(localized: "Gasoline 98 E10"), value: station.gasoline98E10Price)
+                    Product(name: String(localized: "Gasoline 98 E5"), value: station.gasoline98E5Price)
+                    Product(name: String(localized: "Bioethanol"), value: station.bioethanolPrice)
+                    Product(name: String(localized: "Compressed Natural Gas"), value: station.cngPrice)
+                    Product(name: String(localized: "Liquefied Natural Gas"), value: station.lngPrice)
+                    Product(name: String(localized: "Liquefied petroleum gases"), value: station.lpgPrice)
+                    Product(name: String(localized: "Hydrogen"), value: station.hydrogenPrice)
                 }
-                Spacer()
             }
-            .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
-            .padding()
-            .customBackgroundWithMaterial()
-            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+            Spacer()
         }
+        .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
+        .padding()
+        .background(Color.listItemBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 8.0))
     }
     
     @ViewBuilder
@@ -394,7 +384,7 @@ fileprivate struct ListItem: View {
         }
         .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
         .padding()
-        .customBackgroundWithMaterial()
+        .background(Color.listItemBackground)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
     }
 }

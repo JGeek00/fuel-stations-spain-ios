@@ -15,10 +15,10 @@ struct StationsSheet: View {
                 }
                 else {
                     if let data = mapViewModel.data?.results {
-                        let data = addDistancesToStations(stations: mapViewModel.data!.results!, lastLocation: locationManager.lastLocation)
+                        let data = addDistancesToStations(stations: data, lastLocation: locationManager.lastLocation)
                         let sortedDistance = sortStationsByDistance(data)
                         List(sortedDistance, id: \.self) { item in
-                            StationListEntry(station: item) {
+                            Button {
                                 mapViewModel.showStationsSheet.toggle()
                                 // await to prevent opening a sheet with another one already open
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
@@ -27,6 +27,8 @@ struct StationsSheet: View {
                                         await mapViewModel.fetchData(latitude: item.latitude!, longitude: item.longitude!)
                                     }
                                 })
+                            } label: {
+                                StationListEntry(station: item)
                             }
                         }
                     }

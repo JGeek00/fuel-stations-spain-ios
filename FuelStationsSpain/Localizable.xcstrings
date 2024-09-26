@@ -551,6 +551,16 @@
         }
       }
     },
+    "Service station" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estación de servicio"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "es" : {

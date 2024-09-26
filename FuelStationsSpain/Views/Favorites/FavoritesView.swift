@@ -7,6 +7,8 @@ struct FavoritesView: View {
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     @EnvironmentObject private var locationManager: LocationManager
     
+    @State private var selectedStation: FuelStation? = nil
+    
     var body: some View {
         NavigationSplitView {
             Group {
@@ -24,10 +26,8 @@ struct FavoritesView: View {
                         else {
                             let data = addDistancesToStations(stations: favoritesListViewModel.data!.results!, lastLocation: locationManager.lastLocation)
                             let sortedDistance = sortStationsByDistance(data)
-                            List(sortedDistance, id: \.self) { item in
-                                StationListEntry(station: item) {
-                                    
-                                }
+                            List(sortedDistance, id: \.self, selection: $selectedStation) { item in
+                                StationListEntry(station: item)
                             }
                             .transition(.opacity)
                         }
@@ -40,11 +40,16 @@ struct FavoritesView: View {
             }
             .navigationTitle("Favorites")
         } detail: {
-            VStack {
-                
+            if let selectedStation = selectedStation {
+                FavoriteDetailsView(station: selectedStation)
             }
         }
         .onAppear {
+            Task {
+                await favoritesListViewModel.fetchData()
+            }
+        }
+        .onChange(of: favoritesProvider.favorites, initial: false) {
             Task {
                 await favoritesListViewModel.fetchData()
             }
