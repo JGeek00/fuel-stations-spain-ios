@@ -52,3 +52,39 @@ func sortStationsByDistance(data: [FuelStation], lastLocation: CLLocation?) -> [
     }
     return dataWithDistances
 }
+
+func addDistancesToStations(stations: [FuelStation], lastLocation: CLLocation?) -> [FuelStation] {
+    if let latitude = lastLocation?.coordinate.latitude, let longitude = lastLocation?.coordinate.longitude {
+        return stations.map { item in
+            if let stationLatitude = item.latitude, let stationLongitude = item.longitude {
+                var itemCloned = item
+                itemCloned.distanceToUserLocation = distanceBetweenCoordinates(Coordinate(latitude: stationLatitude, longitude: stationLongitude), Coordinate(latitude: latitude, longitude: longitude))
+                return itemCloned
+            }
+            else {
+                return item
+            }
+        }
+    }
+    else {
+        return stations
+    }
+}
+
+func sortStationsByDistance(_ stations: [FuelStation]) -> [FuelStation] {
+    let sorted = stations.sorted { a, b in
+        if a.distanceToUserLocation != nil && b.distanceToUserLocation != nil {
+            return a.distanceToUserLocation! < b.distanceToUserLocation!
+        }
+        else if a.distanceToUserLocation == nil && b.distanceToUserLocation != nil {
+            return true
+        }
+        else if a.distanceToUserLocation != nil && b.distanceToUserLocation == nil {
+            return false
+        }
+        else {
+            return false
+        }
+    }
+    return sorted
+}

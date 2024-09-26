@@ -1,5 +1,17 @@
 import Foundation
 
+class OpeningSchedule {
+    let opening: Date?
+    let closing: Date?
+    let isCurrentlyOpen: Bool
+    
+    init(opening: Date?, closing: Date?, isCurrentlyOpen: Bool) {
+        self.opening = opening
+        self.closing = closing
+        self.isCurrentlyOpen = isCurrentlyOpen
+    }
+}
+
 func parseSchedule(schedule: String) -> [[Date?]?] {
     // Define a calendar to work with DateComponents
     _ = Calendar.current
@@ -66,4 +78,57 @@ func parseSchedule(schedule: String) -> [[Date?]?] {
     }
 
     return result
+}
+
+func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
+    let schedule = parseSchedule(schedule: openingHours)
+    
+    let currentDate = Date()
+    let calendar = Calendar.current
+    let dayOfWeek = calendar.component(.weekday, from: currentDate)
+    
+    let todaySchedule = schedule[dayOfWeek-1]
+    if let todaySchedule = todaySchedule {
+        // todaySchedule[0] = opening time, todaySchedule[1] = closing time
+        if let openingTime = todaySchedule[0], let closingTime = todaySchedule[1] {
+            let opening = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: openingTime)
+            let closing = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: closingTime)
+            
+            // If opening is 00:00 and closing is 23:59 that's converted to open 24h
+            if opening.hour == 00 && opening.minute == 00 && closing.hour == 23 && closing.minute == 59 {
+                return OpeningSchedule(opening: nil, closing: nil, isCurrentlyOpen: true)
+            }
+            
+            // Take the current date and apply the opening hour and minute
+            var openingCalendar = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentDate)
+            openingCalendar.hour = opening.hour
+            openingCalendar.minute = opening.minute
+            
+            // Take the current date and apply the closing hour and minute
+            var closingCalendar = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentDate)
+            closingCalendar.hour = closing.hour
+            closingCalendar.minute = closing.minute
+            
+            // If current date is between opening date and closing date it's currently open
+            if let openingDate = calendar.date(from: openingCalendar), let closingDate = calendar.date(from: closingCalendar) {
+                if openingDate <= currentDate && currentDate <= closingDate {
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "HH:mm"
+                    return OpeningSchedule(opening: openingDate, closing: closingDate, isCurrentlyOpen: true)
+                }
+                else {
+                    return OpeningSchedule(opening: openingDate, closing: closingDate, isCurrentlyOpen: false)
+                }
+            }
+            else {
+                return nil
+            }
+        }
+        else {
+            return nil
+        }
+    }
+    else {
+        return nil
+    }
 }

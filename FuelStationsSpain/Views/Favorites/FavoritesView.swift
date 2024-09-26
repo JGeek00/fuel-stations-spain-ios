@@ -22,30 +22,11 @@ struct FavoritesView: View {
                             ContentUnavailableView("No favorite stations", systemImage: "list.bullet", description: Text("Mark some service stations as favorites to see them here."))
                         }
                         else {
-                            let dataWithDistances = sortStationsByDistance(data: favoritesListViewModel.data!.results!, lastLocation: locationManager.lastLocation)
-                            List(dataWithDistances, id: \.self) { item in
-                                Button {
+                            let data = addDistancesToStations(stations: favoritesListViewModel.data!.results!, lastLocation: locationManager.lastLocation)
+                            let sortedDistance = sortStationsByDistance(data)
+                            List(sortedDistance, id: \.self) { item in
+                                StationListEntry(station: item) {
                                     
-                                } label: {
-                                    VStack(alignment: .leading) {
-                                        if let signage = item.station.signage {
-                                            Text(signage.capitalized)
-                                                .font(.system(size: 18))
-                                                .fontWeight(.semibold)
-                                        }
-                                        Spacer()
-                                            .frame(height: 4)
-                                        if let distance = item.distance {
-                                            if distance < 1 {
-                                                Text("\(Int(distance*1000)) m from your current location")
-                                                    .font(.system(size: 14))
-                                            } else {
-                                                Text("\(formattedNumber(value: distance)) Km from your current location")
-                                                    .font(.system(size: 14))
-                                            }
-                                        }
-                                    }
-                                    .foregroundStyle(Color.foreground)
                                 }
                             }
                             .transition(.opacity)

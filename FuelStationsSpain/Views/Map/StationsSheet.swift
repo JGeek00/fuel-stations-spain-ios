@@ -15,37 +15,18 @@ struct StationsSheet: View {
                 }
                 else {
                     if let data = mapViewModel.data?.results {
-                        let dataWithDistances = sortStationsByDistance(data: data, lastLocation: locationManager.lastLocation)
-                        List(dataWithDistances, id: \.self) { item in
-                            Button {
+                        let data = addDistancesToStations(stations: mapViewModel.data!.results!, lastLocation: locationManager.lastLocation)
+                        let sortedDistance = sortStationsByDistance(data)
+                        List(sortedDistance, id: \.self) { item in
+                            StationListEntry(station: item) {
                                 mapViewModel.showStationsSheet.toggle()
                                 // await to prevent opening a sheet with another one already open
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                                    mapViewModel.selectStation(station: item.station, centerLocation: true)
+                                    mapViewModel.selectStation(station: item, centerLocation: true)
                                     Task {
-                                        await mapViewModel.fetchData(latitude: item.station.latitude!, longitude: item.station.longitude!)
+                                        await mapViewModel.fetchData(latitude: item.latitude!, longitude: item.longitude!)
                                     }
                                 })
-                            } label: {
-                                VStack(alignment: .leading) {
-                                    if let signage = item.station.signage {
-                                        Text(signage.capitalized)
-                                            .font(.system(size: 18))
-                                            .fontWeight(.semibold)
-                                    }
-                                    Spacer()
-                                        .frame(height: 4)
-                                    if let distance = item.distance {
-                                        if distance < 1 {
-                                            Text("\(Int(distance*1000)) m from your current location")
-                                                .font(.system(size: 14))
-                                        } else {
-                                            Text("\(formattedNumber(value: distance)) Km from your current location")
-                                                .font(.system(size: 14))
-                                        }
-                                    }
-                                }
-                                .foregroundStyle(Color.foreground)
                             }
                         }
                     }

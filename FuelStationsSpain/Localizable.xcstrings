@@ -11,12 +11,32 @@
         }
       }
     },
+    "%@ Km" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Km"
+          }
+        }
+      }
+    },
     "%@ Km from your current location" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ Km de tu localización actual"
+          }
+        }
+      }
+    },
+    "%lld m" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld m"
           }
         }
       }
@@ -587,6 +607,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esta aplicación necesita acceso a la localización para mostrar las estaciones de servicio cercanas."
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconocido"
           }
         }
       }

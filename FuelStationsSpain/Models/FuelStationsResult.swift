@@ -28,6 +28,7 @@ struct FuelStation: Codable, Hashable {
     let gasoline98E10Price: Double?
     let gasoline98E5Price: Double?
     let hydrogenPrice: Double?
+    var distanceToUserLocation: Double?  // This parameter is filled when it's rendered
 
     enum CodingKeys: String, CodingKey {
         case id, postalCode, address, openingHours, latitude, longitude, locality, margin, municipality, province, referral, signage, saleType, percBioEthanol, percMethylEster
