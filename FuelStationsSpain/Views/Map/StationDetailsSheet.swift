@@ -155,18 +155,30 @@ fileprivate struct ScheduleItem: View {
             let todaySchedule = schedule[dayOfWeek-1]
             let todayValue: Text = {
                 if let todaySchedule = todaySchedule {
-                    if let closingTime = todaySchedule[1], let openingTime = todaySchedule[0] {
+                    // todaySchedule[0] = opening time, todaySchedule[1] = closing time
+                    if let openingTime = todaySchedule[0], let closingTime = todaySchedule[1] {
                         let opening = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: openingTime)
                         let closing = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: closingTime)
+                        
+                        // If opening is 00:00 and closing is 23:59 that's converted to open 24h
                         if opening.hour == 00 && opening.minute == 00 && closing.hour == 23 && closing.minute == 59 {
                             return Text("Open 24 hours")
                                 .foregroundStyle(Color.green)
                         }
-                        var now = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentDate)
-                        now.hour = closing.hour
-                        now.minute = closing.minute
-                        if let closingDate = calendar.date(from: now) {
-                            if currentDate < closingDate {
+                        
+                        // Take the current date and apply the opening hour and minute
+                        var openingCalendar = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentDate)
+                        openingCalendar.hour = opening.hour
+                        openingCalendar.minute = opening.minute
+                        
+                        // Take the current date and apply the closing hour and minute
+                        var closingCalendar = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentDate)
+                        closingCalendar.hour = closing.hour
+                        closingCalendar.minute = closing.minute
+                        
+                        // If current date is between opening date and closing date it's currently open
+                        if let openingDate = calendar.date(from: openingCalendar), let closingDate = calendar.date(from: closingCalendar) {
+                            if openingDate <= currentDate && currentDate <= closingDate {
                                 let dateFormatter = DateFormatter()
                                 dateFormatter.dateFormat = "HH:mm"
                                 return Text("Open until \(dateFormatter.string(from: closingTime))")
