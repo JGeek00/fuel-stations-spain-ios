@@ -8,7 +8,7 @@ let defaultZoom = 0.03
 @MainActor
 class MapViewModel: ObservableObject {
     @Published var data: FuelStationsResult? = nil
-    @Published var loading = true
+    @Published var loading = false
     @Published var error: Enums.ApiErrorReason? = nil
     
     @Published var position: MapCameraPosition = MapCameraPosition.region(
@@ -17,7 +17,6 @@ class MapViewModel: ObservableObject {
             span: MKCoordinateSpan(latitudeDelta: defaultZoom, longitudeDelta: defaultZoom)
         )
     )
-    @Published var usedMoved = false
     
     @Published var showSuccessAlert = false
     @Published var showErrorAlert = false
@@ -28,11 +27,14 @@ class MapViewModel: ObservableObject {
     @Published var showStationSheet = false
         
     private var previousLoadCoordinates: Coordinate? = nil
+    private var firstLoadCompleted = false
     
     var latitude = 0.0
     var longitude = 0.0
     
-    init(latitude: Double?, longitude: Double?) {
+    init() {}
+    
+    func setInitialLocation(latitude: Double?, longitude: Double?) async {
         if latitude != nil && longitude != nil {
             self.latitude = latitude!
             self.longitude = longitude!
@@ -42,68 +44,55 @@ class MapViewModel: ObservableObject {
                     span: MKCoordinateSpan(latitudeDelta: defaultZoom, longitudeDelta: defaultZoom)
                 )
             )
-            fetchData(latitude: latitude!, longitude: longitude!, force: true)
+            await fetchData(latitude: latitude!, longitude: longitude!)
+            self.firstLoadCompleted = true
         }
         else {
             self.latitude = Config.defaultCoordinates.latitude
             self.longitude = Config.defaultCoordinates.longitude
-            fetchData(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude, force: true)
+            await fetchData(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude)
+            self.firstLoadCompleted = true
         }
     }
     
-    func updatePositionAndFetch(latitude: Double, longitude: Double) {
-        guard let previousLoadCoordinates = previousLoadCoordinates else { return }
-        if distanceBetweenCoordinates(Coordinate(latitude: latitude, longitude: longitude), previousLoadCoordinates) <= Config.minimumRefetchDistance {
+    func onMapCameraChange(_ value: MapCameraUpdateContext) {
+        self.latitude = value.camera.centerCoordinate.latitude
+        self.longitude = value.camera.centerCoordinate.longitude
+
+        if !(self.firstLoadCompleted == true && (previousLoadCoordinates == nil || (previousLoadCoordinates != nil && distanceBetweenCoordinates(Coordinate(latitude: latitude, longitude: longitude), previousLoadCoordinates!) > Config.minimumRefetchDistance))) {
             return
         }
         
-        self.latitude = latitude
-        self.longitude = longitude
-        self.position = MapCameraPosition.region(
-            MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                span: MKCoordinateSpan(latitudeDelta: defaultZoom, longitudeDelta: defaultZoom)
-            )
-        )
-        fetchData(latitude: latitude, longitude: longitude, force: true)
-    }
-    
-    func setPosition(latitude: Double, longitude: Double) {
-        self.latitude = latitude
-        self.longitude = longitude
-    }
-    
-    func fetchData(latitude: Double, longitude: Double, force: Bool = false) {
-        // To prevent triggering a lot of queries
-        if !(force == true || (previousLoadCoordinates == nil || (previousLoadCoordinates != nil && distanceBetweenCoordinates(Coordinate(latitude: latitude, longitude: longitude), previousLoadCoordinates!) > Config.minimumRefetchDistance))) {
-            return
-        }
-
         Task {
-            DispatchQueue.main.async {
-                self.loading = true
-            }
-            let result = await ApiClient.fetchServiceStationsByLocation(lat: latitude, long: longitude, distance: 30)
-            if result.successful == true {
-                DispatchQueue.main.async {
-                    self.data = result.data!
-                    self.loading = false
-                    self.error = nil
-                }
-            }
-            else {
-                DispatchQueue.main.async {
-                    if result.statusCode == 429 {
-                        self.error = .usage
-                    }
-                    else {
-                        self.error = .connection
-                    }
-                    self.loading = false
-                }
-            }
-            self.previousLoadCoordinates = Coordinate(latitude: latitude, longitude: longitude)
+            await self.fetchData(latitude: value.camera.centerCoordinate.latitude, longitude: value.camera.centerCoordinate.longitude)
         }
+    }
+    
+    func fetchData(latitude: Double, longitude: Double) async {
+        self.loading = true
+        
+        let result = await ApiClient.fetchServiceStationsByLocation(lat: latitude, long: longitude, distance: 30)
+        
+        if result.successful == true {
+            DispatchQueue.main.async {
+                self.data = result.data!
+                self.loading = false
+                self.error = nil
+            }
+        }
+        else {
+            DispatchQueue.main.async {
+                if result.statusCode == 429 {
+                    self.error = .usage
+                }
+                else {
+                    self.error = .connection
+                }
+                self.loading = false
+            }
+        }
+        
+        self.previousLoadCoordinates = Coordinate(latitude: latitude, longitude: longitude)
     }
     
     func centerToLocation(latitude: Double, longitude: Double) {

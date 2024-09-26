@@ -352,6 +352,7 @@
       }
     },
     "Location unavailable" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

@@ -51,7 +51,9 @@ struct StationsSheet: View {
                                 // await to prevent opening a sheet with another one already open
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                                     mapViewModel.selectStation(station: item.station, centerLocation: true)
-                                    mapViewModel.fetchData(latitude: item.station.latitude!, longitude: item.station.longitude!)
+                                    Task {
+                                        await mapViewModel.fetchData(latitude: item.station.latitude!, longitude: item.station.longitude!)
+                                    }
                                 })
                             } label: {
                                 VStack(alignment: .leading) {

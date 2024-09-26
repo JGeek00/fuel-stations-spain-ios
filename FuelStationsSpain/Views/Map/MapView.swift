@@ -11,7 +11,6 @@ struct MapView: View {
         }
         else {
             MapComponent()
-                .environmentObject(MapViewModel(latitude: locationManager.lastLocation?.coordinate.latitude, longitude: locationManager.lastLocation?.coordinate.longitude))
         }
     }
 }
@@ -35,7 +34,7 @@ fileprivate struct MapComponent: View {
                                     // await to prevent opening a sheet with another one already open
                                     if mapViewModel.showStationSheet == true {
                                         mapViewModel.showStationSheet = false
-                                        try await Task.sleep(for: .seconds(0.1))
+                                        try await Task.sleep(for: .seconds(0.6))
                                     }
                                     mapViewModel.selectStation(station: value)
                                 }
@@ -44,47 +43,11 @@ fileprivate struct MapComponent: View {
                 }
             }
         }
-        .onChange(of: mapViewModel.position, { oldValue, newValue in
-            // Only executed first time map is moved
-            mapViewModel.usedMoved = true
-        })
         .onMapCameraChange(frequency: .onEnd, { value in
-            // Prevents multiple executions when map is loaded
-            guard mapViewModel.usedMoved == true else {
-                return
-            }
-            mapViewModel.setPosition(latitude: value.camera.centerCoordinate.latitude, longitude: value.camera.centerCoordinate.longitude)
-            mapViewModel.fetchData(latitude: value.camera.centerCoordinate.latitude, longitude: value.camera.centerCoordinate.longitude)
+            mapViewModel.onMapCameraChange(value)
         })
         .overlay(alignment: .topLeading) {
             GeometryReader(content: { geometry in
-                Group {
-                    HStack {
-                        Spacer()
-                            .frame(width: 58)
-                        Spacer()
-                        HStack {
-                            Image(systemName: "location.slash.fill")
-                            Spacer()
-                                .frame(width: 6)
-                            Text("Location unavailable")
-                                .fontWeight(.medium)
-                                .multilineTextAlignment(.center)
-                                .font(.system(size: 14))
-                        }
-                        .foregroundStyle(Color.black)
-                        .padding(12)
-                        .background(Color.yellow.opacity(0.8))
-                        .cornerRadius(50)
-                        .shadow(color: .black.opacity(0.3), radius: 5)
-                        Spacer()
-                        Spacer()
-                            .frame(width: 58)
-                    }
-                }
-                .offset(x: 0, y: 12)
-                .opacity(locationManager.lastLocation != nil ? 0 : 1)
-                .animation(.easeInOut(duration: 0.25), value: locationManager.lastLocation)
                 Group {
                     Button {
                         mapViewModel.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
@@ -92,6 +55,7 @@ fileprivate struct MapComponent: View {
                         Image(systemName: "location.fill.viewfinder")
                             .font(.system(size: 22))
                             .foregroundStyle(locationManager.lastLocation != nil ? Color.foreground : Color.gray)
+                            .contentShape(Rectangle())
                     }
                     .disabled(locationManager.lastLocation == nil)
                     .frame(width: 40, height: 40)
@@ -102,18 +66,15 @@ fileprivate struct MapComponent: View {
                 .offset(x: geometry.size.width - 52, y: 12)
                 Group {
                     Button {
-                        Task {
-                            // await to prevent opening a sheet with another one already open
-                            if mapViewModel.showStationSheet == true {
-                                mapViewModel.showStationSheet = false
-                                try await Task.sleep(for: .seconds(0.1))
-                            }
-                            mapViewModel.showStationsSheet.toggle()
+                        if mapViewModel.showStationSheet == true {
+                            mapViewModel.showStationSheet = false
                         }
+                        mapViewModel.showStationsSheet.toggle()
                     } label: {
                         Image(systemName: "list.bullet")
                             .font(.system(size: 22))
                             .foregroundStyle(Color.foreground)
+                            .contentShape(Rectangle())
                     }
                     .frame(width: 40, height: 40)
                     .background(.regularMaterial)
@@ -130,22 +91,25 @@ fileprivate struct MapComponent: View {
                             mapViewModel.showSuccessAlert.toggle()
                         }
                     } label: {
-                        if mapViewModel.loading == true {
-                            ProgressView()
-                                .font(.system(size: 24))
-                        }
-                        else {
-                            if mapViewModel.error != nil {
-                                Image(systemName: "exclamationmark.circle.fill")
-                                    .font(.system(size: 22))
-                                    .foregroundStyle(Color.red)
+                        Group {
+                            if mapViewModel.loading == true {
+                                ProgressView()
+                                    .font(.system(size: 24))
                             }
                             else {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .font(.system(size: 22))
-                                    .foregroundStyle(Color.green)
+                                if mapViewModel.error != nil {
+                                    Image(systemName: "exclamationmark.circle.fill")
+                                        .font(.system(size: 22))
+                                        .foregroundStyle(Color.red)
+                                }
+                                else {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.system(size: 22))
+                                        .foregroundStyle(Color.green)
+                                }
                             }
                         }
+                        .contentShape(Rectangle())
                     }
                     .frame(width: 40, height: 40)
                     .background(.regularMaterial)
@@ -168,7 +132,9 @@ fileprivate struct MapComponent: View {
                 mapViewModel.showErrorAlert.toggle()
             }
             Button("Retry") {
-                mapViewModel.fetchData(latitude: mapViewModel.latitude, longitude: mapViewModel.longitude, force: true)
+                Task {
+                    await mapViewModel.fetchData(latitude: mapViewModel.latitude, longitude: mapViewModel.longitude)
+                }
             }
         }, message: {
             switch mapViewModel.error {
@@ -191,10 +157,6 @@ fileprivate struct MapComponent: View {
                     .enabled(upThrough: .large)
                 )
                 .presentationDragIndicator(.hidden)
-        }
-        .onChange(of: locationManager.firstLocation) {
-            guard let loc = locationManager.firstLocation else { return }
-            mapViewModel.updatePositionAndFetch(latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude)
         }
     }
 }

@@ -24,7 +24,7 @@ struct StationDetailsSheet: View {
                         if let name = station.signage {
                             Text(verbatim: name.capitalized)
                                 .font(.system(size: 30))
-                                .fontWeight(.semibold)
+                                .fontWeight(.bold)
                                 .truncationMode(.tail)
                                 .lineLimit(1)
                         }
