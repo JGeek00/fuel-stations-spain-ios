@@ -8,7 +8,7 @@ let defaultZoom = 0.03
 @MainActor
 class MapViewModel: ObservableObject {
     @Published var data: FuelStationsResult? = nil
-    @Published var loading = false
+    @Published var loading = true
     @Published var error: Enums.ApiErrorReason? = nil
     
     @Published var position: MapCameraPosition = MapCameraPosition.region(
