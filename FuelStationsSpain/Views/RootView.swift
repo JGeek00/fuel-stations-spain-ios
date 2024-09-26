@@ -6,6 +6,8 @@ struct RootView: View {
     
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var mapViewModel: MapViewModel
+    
+    @Environment(\.horizontalSizeClass) private var defaultHorizontalSizeClass
 
     func getColorScheme(theme: Enums.Theme) -> ColorScheme? {
         switch theme {
@@ -24,16 +26,20 @@ struct RootView: View {
                 .tabItem {
                     Label("Map", systemImage: "map")
                 }
+                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "star")
                 }
                 .environmentObject(FavoritesListViewModel())
+                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
+                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
         }
+        .environment(\.horizontalSizeClass, .compact)
         .fontDesign(.rounded)
         .preferredColorScheme(getColorScheme(theme: theme))
         .onChange(of: locationManager.firstLocation, initial: true) {

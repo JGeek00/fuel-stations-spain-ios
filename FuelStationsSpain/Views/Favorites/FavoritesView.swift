@@ -44,6 +44,7 @@ struct FavoritesView: View {
                 FavoriteDetailsView(station: selectedStation)
             }
         }
+        .navigationSplitViewStyle(.balanced)
         .onAppear {
             Task {
                 await favoritesListViewModel.fetchData()

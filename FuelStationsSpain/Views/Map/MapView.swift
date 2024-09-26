@@ -20,6 +20,8 @@ fileprivate struct MapComponent: View {
     @EnvironmentObject private var mapViewModel: MapViewModel
     @EnvironmentObject private var locationManager: LocationManager
     
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
     var body: some View {
         Map(position: $mapViewModel.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
             if let stations = mapViewModel.data?.results {
@@ -150,12 +152,18 @@ fileprivate struct MapComponent: View {
             StationsSheet()
         })
         .sheet(isPresented: $mapViewModel.showStationSheet) {
-            StationDetailsSheet()
-                .presentationBackground(Material.regular)
-                .presentationDetents([.fraction(0.5), .fraction(0.99)])
-                .presentationBackgroundInteraction(
-                    .enabled(upThrough: .fraction(0.99))
-                )
+            if horizontalSizeClass == .compact {
+                StationDetailsSheet()
+                    .presentationBackground(Material.regular)
+                    .presentationDetents([.fraction(0.5), .fraction(0.99)])
+                    .presentationBackgroundInteraction(
+                        .enabled(upThrough: .fraction(0.99))
+                    )
+            }
+            else {
+                StationDetailsSheet()
+                    .presentationBackground(Material.regular)
+            }
         }
     }
 }
