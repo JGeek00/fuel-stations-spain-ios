@@ -9,8 +9,8 @@ struct FavoriteDetailsView: View {
     }
     
     @EnvironmentObject private var locationManager: LocationManager
-    @EnvironmentObject private var mapViewModel: MapViewModel
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
+    @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     
     private func formatDate(_ value: String) -> Date? {
         let formatter = DateFormatter()
@@ -104,7 +104,7 @@ struct FavoriteDetailsView: View {
                     StationDetailsComponents.PricesItem(station: station)
                         .background(Color.listItemBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    if let update = mapViewModel.data?.lastUpdated {
+                    if let update = favoritesListViewModel.data?.lastUpdated {
                         if let date = formatDate(update) {
                             StationDetailsComponents.ListItem(
                                 icon: "arrow.down.circle.fill",

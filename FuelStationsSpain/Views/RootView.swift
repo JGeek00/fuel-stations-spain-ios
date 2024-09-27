@@ -3,10 +3,7 @@ import SwiftUI
 struct RootView: View {
     
     @AppStorage(StorageKeys.theme, store: UserDefaults.shared) private var theme: Enums.Theme = .system
-    
-    @EnvironmentObject private var locationManager: LocationManager
-    @EnvironmentObject private var mapViewModel: MapViewModel
-    
+        
     @Environment(\.horizontalSizeClass) private var defaultHorizontalSizeClass
 
     func getColorScheme(theme: Enums.Theme) -> ColorScheme? {
@@ -27,6 +24,7 @@ struct RootView: View {
                     Label("Map", systemImage: "map")
                 }
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
+                .environmentObject(MapViewModel())
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "star")
@@ -42,11 +40,5 @@ struct RootView: View {
         .environment(\.horizontalSizeClass, .compact)
         .fontDesign(.rounded)
         .preferredColorScheme(getColorScheme(theme: theme))
-        .onChange(of: locationManager.firstLocation, initial: true) {
-            guard let latitude = locationManager.firstLocation?.coordinate.latitude, let longitude = locationManager.firstLocation?.coordinate.longitude else { return }
-            Task {
-                await mapViewModel.setInitialLocation(latitude: latitude, longitude: longitude)
-            }
-        }
     }
 }

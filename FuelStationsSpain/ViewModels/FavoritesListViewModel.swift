@@ -16,7 +16,6 @@ class FavoritesListViewModel: ObservableObject {
         self.loading = true
     
         let result = await ApiClient.fetchServiceStationsById(stationIds: favorites)
-        
         if result.successful == true {
             DispatchQueue.main.async {
                 withAnimation(.default) {

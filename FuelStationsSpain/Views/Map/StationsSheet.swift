@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 
 struct StationsSheet: View {
     
@@ -8,6 +9,9 @@ struct StationsSheet: View {
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     
+    // Last location changes constantly, having a fixed location prevents unwanted reorders on the list
+    @State private var location: CLLocation? = nil
+    
     var body: some View {
         NavigationStack {
             Group {
@@ -16,7 +20,7 @@ struct StationsSheet: View {
                 }
                 else {
                     if let data = mapViewModel.data?.results {
-                        let data = addDistancesToStations(stations: data, lastLocation: locationManager.lastLocation)
+                        let data = addDistancesToStations(stations: data, lastLocation: location)
                         let sortedDistance = sortStationsByDistance(data)
                         let filtered = searchText != "" ? sortedDistance.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sortedDistance
                         Group {
@@ -74,6 +78,9 @@ struct StationsSheet: View {
                 }
             }
             .searchable(text: $searchText, prompt: "Search service station by name")
+        }
+        .onAppear {
+            location = locationManager.lastLocation
         }
     }
 }

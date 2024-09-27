@@ -165,5 +165,11 @@ fileprivate struct MapComponent: View {
                     .presentationBackground(Material.regular)
             }
         }
+        .onChange(of: locationManager.firstLocation, initial: true) {
+            guard let latitude = locationManager.firstLocation?.coordinate.latitude, let longitude = locationManager.firstLocation?.coordinate.longitude else { return }
+            Task {
+                await mapViewModel.setInitialLocation(latitude: latitude, longitude: longitude)
+            }
+        }
     }
 }

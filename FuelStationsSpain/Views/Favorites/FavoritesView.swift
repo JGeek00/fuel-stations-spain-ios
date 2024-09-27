@@ -2,7 +2,7 @@ import SwiftUI
 import CoreLocation
 
 struct FavoritesView: View {
-    
+
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     @EnvironmentObject private var locationManager: LocationManager
@@ -11,13 +11,16 @@ struct FavoritesView: View {
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     
+    // Last location changes constantly, having a fixed location prevents unwanted reorders on the list
+    @State private var location: CLLocation? = nil
+    
     var body: some View {
         NavigationSplitView {
             Group {
                 if favoritesProvider.favorites.isEmpty {
                     ContentUnavailableView("No favorite stations", systemImage: "list.bullet", description: Text("Mark some service stations as favorites to see them here."))                }
                 else {
-                    if favoritesListViewModel.loading {
+                    if favoritesListViewModel.loading == true {
                         ProgressView()
                             .transition(.opacity)
                     }
@@ -26,7 +29,7 @@ struct FavoritesView: View {
                             ContentUnavailableView("No favorite stations", systemImage: "list.bullet", description: Text("Mark some service stations as favorites to see them here."))
                         }
                         else {
-                            let data = addDistancesToStations(stations: favoritesListViewModel.data!.results!, lastLocation: locationManager.lastLocation)
+                            let data = addDistancesToStations(stations: favoritesListViewModel.data!.results!, lastLocation: location)
                             let sortedDistance = sortStationsByDistance(data)
                             let filtered = searchText != "" ? sortedDistance.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sortedDistance
                             Group {
@@ -72,6 +75,9 @@ struct FavoritesView: View {
             Task {
                 await favoritesListViewModel.fetchData()
             }
+        }
+        .onAppear {
+            location = locationManager.lastLocation
         }
     }
 }
