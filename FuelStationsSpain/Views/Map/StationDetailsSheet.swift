@@ -1,4 +1,5 @@
 import SwiftUI
+import AlertToast
 
 struct StationDetailsSheet: View {
     
@@ -17,6 +18,9 @@ struct StationDetailsSheet: View {
         }
     }
     
+    @State private var showAddedFavoritesToast = false
+    @State private var showRemovedFavoritesToast = false
+    
     var body: some View {
         if let station = mapViewModel.selectedStation {
             ScrollView {
@@ -34,10 +38,16 @@ struct StationDetailsSheet: View {
                             let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
                             Button {
                                 if isFavorite == true {
-                                    favoritesProvider.removeFavorite(stationId: stationId)
+                                    if favoritesProvider.removeFavorite(stationId: stationId) == true {
+                                        showAddedFavoritesToast = false
+                                        showRemovedFavoritesToast = true
+                                    }
                                 }
                                 else {
-                                    favoritesProvider.addFavorite(stationId: stationId)
+                                    if favoritesProvider.addFavorite(stationId: stationId) == true {
+                                        showRemovedFavoritesToast = false
+                                        showAddedFavoritesToast = true
+                                    }
                                 }
                             } label: {
                                 Image(systemName: isFavorite == true ? "star.fill" : "star")
@@ -155,6 +165,12 @@ struct StationDetailsSheet: View {
                     }
                 }
                 .padding()
+            }
+            .toast(isPresenting: $showAddedFavoritesToast, duration: 3, tapToDismiss: true) {
+                AlertToast(displayMode: .alert, type: .systemImage("star.fill", .foreground), title: String(localized: "Added to favorites"))
+            }
+            .toast(isPresenting: $showRemovedFavoritesToast, duration: 3, tapToDismiss: true) {
+                AlertToast(displayMode: .alert, type: .systemImage("star.slash.fill", .foreground), title: String(localized: "Removed from favorites"))
             }
         }
         else {

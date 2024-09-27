@@ -10,16 +10,18 @@ class FavoritesProvider: ObservableObject {
     private let coredataContext = PersistenceController.shared.container.viewContext
     
     init() {
-        fetchFavorites()
+        _ = fetchFavorites()
     }
     
-    func fetchFavorites() {
+    func fetchFavorites() -> Bool {
         let fetchRequest: NSFetchRequest = FavoriteStation.fetchRequest()
         do {
             let items = try coredataContext.fetch(fetchRequest)
             self.favorites = items
+            return true
         } catch {
             print("Failed to fetch items: \(error)")
+            return false
         }
     }
     
@@ -27,7 +29,7 @@ class FavoritesProvider: ObservableObject {
         return favorites.contains() { $0.id == stationId }
     }
     
-    func addFavorite(stationId: String) {
+    func addFavorite(stationId: String) -> Bool {
         let fetchRequest: NSFetchRequest = FavoriteStation.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", stationId as CVarArg)
         do {
@@ -37,27 +39,31 @@ class FavoritesProvider: ObservableObject {
                 newFavorite.id = stationId
                 newFavorite.date = Date()
                 try coredataContext.save()
-                self.fetchFavorites()
+                _ = self.fetchFavorites()
+                return true
             }
+            return false
         } catch {
             print("Failed to fetch items: \(error)")
+            return false
         }
     }
     
-    func removeFavorite(stationId: String) {
+    func removeFavorite(stationId: String) -> Bool {
         let fetchRequest: NSFetchRequest<FavoriteStation> = FavoriteStation.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", stationId as CVarArg)
         do {
             let result = try coredataContext.fetch(fetchRequest)
-            if let personToDelete = result.first {
-                coredataContext.delete(personToDelete)
+            if let favoriteToDelete = result.first {
+                coredataContext.delete(favoriteToDelete)
                 try coredataContext.save()
-                self.fetchFavorites()
-            } else {
-                print("No person found with this ID")
+                _ = self.fetchFavorites()
+                return true
             }
+            return false
         } catch {
-            print("Failed to fetch or delete person: \(error)")
+            print("Failed to fetch or delete: \(error)")
+            return false
         }
     }
 }

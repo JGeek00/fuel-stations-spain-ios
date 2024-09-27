@@ -87,6 +87,16 @@
         }
       }
     },
+    "Added to favorites" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadido a favoritos"
+          }
+        }
+      }
+    },
     "An error occured when loading the favorites information. Try again later." : {
       "localizations" : {
         "es" : {
@@ -553,6 +563,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Precios"
+          }
+        }
+      }
+    },
+    "Removed from favorites" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminado de favoritos"
           }
         }
       }
