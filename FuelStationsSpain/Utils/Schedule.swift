@@ -99,10 +99,9 @@ func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
     
     let currentDate = Date()
     let calendar = Calendar.current
-    let dayOfWeek = calendar.component(.weekday, from: currentDate)
-    
-    let todaySchedule = schedule[dayOfWeek-1]
-    if let todaySchedule = todaySchedule {
+    let dayOfWeek = calendar.component(.weekdayOrdinal, from: currentDate)
+
+    if let todaySchedule = schedule[dayOfWeek] {
         if todaySchedule.count == 2 {
             // todaySchedule[0] = opening time, todaySchedule[1] = closing time
             if let openingTime = todaySchedule[0], let closingTime = todaySchedule[1] {
@@ -163,8 +162,8 @@ func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
                 
                 // Take the current date and apply the opening hour and minute
                 var openingCalendar2 = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentDate)
-                openingCalendar2.hour = opening1.hour
-                openingCalendar2.minute = opening1.minute
+                openingCalendar2.hour = opening2.hour
+                openingCalendar2.minute = opening2.minute
                 
                 // Take the current date and apply the closing hour and minute
                 var closingCalendar2 = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: currentDate)
