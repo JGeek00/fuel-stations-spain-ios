@@ -9,7 +9,7 @@ struct StationsSheet: View {
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     
-    // Last location changes constantly, having a fixed location prevents unwanted reorders on the list
+    // Keep the same location while the view is being presented
     @State private var location: CLLocation? = nil
     
     @State private var selectedSorting: Enums.SortingOptions = .proximity
@@ -91,9 +91,7 @@ struct StationsSheet: View {
                     .clipShape(Circle())
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    SortingPicker(selectedSorting: selectedSorting) { value in
-                        selectedSorting = value
-                    }
+                    SortingPicker(selectedSorting: $selectedSorting)
                 }
             }
             .searchable(text: $searchText, prompt: "Search service station by name")

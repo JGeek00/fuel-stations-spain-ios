@@ -6,8 +6,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     private let locationManager = CLLocationManager()
     @Published var authorizationStatus: CLAuthorizationStatus?
-    @Published var lastLocation: CLLocation?
     @Published var firstLocation: CLLocation?
+    
+    // Last location is not published because it causes unwanted rerenders
+    var lastLocation: CLLocation?
 
     override init() {
         super.init()

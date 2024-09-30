@@ -327,6 +327,36 @@
         }
       }
     },
+    "Gas" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gas"
+          }
+        }
+      }
+    },
+    "Gasoil" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasóleo"
+          }
+        }
+      }
+    },
+    "Gasoline" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina"
+          }
+        }
+      }
+    },
     "Gasoline 95 E5" : {
       "localizations" : {
         "es" : {
@@ -553,6 +583,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Horario de apertura"
+          }
+        }
+      }
+    },
+    "Others" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otros"
           }
         }
       }

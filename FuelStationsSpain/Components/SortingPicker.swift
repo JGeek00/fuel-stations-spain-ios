@@ -1,79 +1,43 @@
 import SwiftUI
 
 struct SortingPicker: View {
-    var selectedSorting: Enums.SortingOptions
-    var onSelect: (_ selected: Enums.SortingOptions) -> Void
-    
-    init(selectedSorting: Enums.SortingOptions, onSelect: @escaping (_: Enums.SortingOptions) -> Void) {
-        self.selectedSorting = selectedSorting
-        self.onSelect = onSelect
-    }
+    @Binding var selectedSorting: Enums.SortingOptions
     
     var body: some View {
         Menu {
             Section {
-                MenuItem(label: String(localized: "Proximity"), selectedOption: selectedSorting, value: .proximity) { value in
-                    onSelect(value)
-                }
+                MenuItem(label: String(localized: "Proximity"), selectedOption: $selectedSorting, value: .proximity)
             }
             Section {
                 Menu {
-                    Section {
-                        MenuItem(label: String(localized: "A Gasoil"), selectedOption: selectedSorting, value: .aGasoil) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "B Gasoil"), selectedOption: selectedSorting, value: .bGasoil) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Premium Gasoil"), selectedOption: selectedSorting, value: .premiumGasoil) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Biodiesel"), selectedOption: selectedSorting, value: .biodiesel) { value in
-                            onSelect(value)
-                        }
+                    Section("Gasoil") {
+                        MenuItem(label: String(localized: "A Gasoil"), selectedOption: $selectedSorting, value: .aGasoil)
+                        MenuItem(label: String(localized: "B Gasoil"), selectedOption: $selectedSorting, value: .bGasoil)
+                        MenuItem(label: String(localized: "Premium Gasoil"), selectedOption: $selectedSorting, value: .premiumGasoil)
+                        MenuItem(label: String(localized: "Biodiesel"), selectedOption: $selectedSorting, value: .biodiesel)
                     }
-                    Section {
-                        MenuItem(label: String(localized: "Gasoline 95 E10"), selectedOption: selectedSorting, value: .gasoline95E10) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Gasoline 95 E5"), selectedOption: selectedSorting, value: .gasoline95E5) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Gasoline 95 E5 Premium"), selectedOption: selectedSorting, value: .gasoline95E5Premium) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Gasoline 98 E10"), selectedOption: selectedSorting, value: .gasoline98E10) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Gasoline 98 E5"), selectedOption: selectedSorting, value: .gasoline98E5) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Bioethanol"), selectedOption: selectedSorting, value: .bioethanol) { value in
-                            onSelect(value)
-                        }
+                    Section("Gasoline") {
+                        MenuItem(label: String("Gasoline 95 E10"), selectedOption: $selectedSorting, value: .gasoline95E10)
+                        MenuItem(label: String(localized: "Gasoline 95 E5"), selectedOption: $selectedSorting, value: .gasoline95E5)
+                        MenuItem(label: String(localized: "Gasoline 95 E5 Premium"), selectedOption: $selectedSorting, value: .gasoline95E5Premium)
+                        MenuItem(label: String(localized: "Gasoline 98 E10"), selectedOption: $selectedSorting, value: .gasoline98E10)
+                        MenuItem(label: String(localized: "Gasoline 98 E5"), selectedOption: $selectedSorting, value: .gasoline98E5)
+                        MenuItem(label: String(localized: "Bioethanol"), selectedOption: $selectedSorting, value: .bioethanol)
                     }
-                    Section {
-                        MenuItem(label: String(localized: "Compressed Natural Gas"), selectedOption: selectedSorting, value: .cng) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Liquefied Natural Gas"), selectedOption: selectedSorting, value: .lng) { value in
-                            onSelect(value)
-                        }
-                        MenuItem(label: String(localized: "Liquefied petroleum gases"), selectedOption: selectedSorting, value: .lpg) { value in
-                            onSelect(value)
-                        }
+                    Section("Gas") {
+                        MenuItem(label: String(localized: "Compressed Natural Gas"), selectedOption: $selectedSorting, value: .cng)
+                        MenuItem(label: String(localized: "Liquefied Natural Gas"), selectedOption: $selectedSorting, value: .lng)
+                        MenuItem(label: String(localized: "Liquefied petroleum gases"), selectedOption: $selectedSorting, value: .lpg)
                     }
-                    Section {
-                        MenuItem(label: String(localized: "Hydrogen"), selectedOption: selectedSorting, value: .hydrogen) { value in
-                            onSelect(value)
-                        }
+                    Section("Others") {
+                        MenuItem(label: String(localized: "Hydrogen"), selectedOption: $selectedSorting, value: .hydrogen)
                     }
                 } label: {
-                    HStack {
+                    if selectedSorting != .proximity {
+                        Label("Fuel price", systemImage: "checkmark")
+                    }
+                    else {
                         Text("Fuel price")
-                        if selectedSorting != .proximity {
-                            Image(systemName: "checkmark")
-                        }
                     }
                 }
             }
@@ -81,15 +45,22 @@ struct SortingPicker: View {
             Image(systemName: "arrow.up.arrow.down")
         }
     }
+}
+
+fileprivate struct MenuItem: View {
+    var label: String
+    @Binding var selectedOption: Enums.SortingOptions
+    var value: Enums.SortingOptions
     
-    @ViewBuilder
-    func MenuItem(label: String, selectedOption: Enums.SortingOptions, value: Enums.SortingOptions, onSelect: @escaping (_ value: Enums.SortingOptions) -> Void) -> some View {
+    var body: some View {
         Button {
-            onSelect(value)
+            selectedOption = value
         } label: {
-            Text(label)
             if selectedOption == value {
-                Image(systemName: "checkmark")
+                Label(label, systemImage: "checkmark")
+            }
+            else {
+                Text(label)
             }
         }
     }
