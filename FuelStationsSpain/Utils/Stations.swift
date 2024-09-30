@@ -97,3 +97,46 @@ func sortStations(stations: [FuelStation], sortingMethod: Enums.SortingOptions) 
     }
     return sorted
 }
+
+func sortingText(sortingMethod: Enums.SortingOptions) -> String {
+    func fuelName() -> String {
+        switch sortingMethod {
+        case .proximity:
+            return String("")
+        case .aGasoil:
+            return String(localized: "A Gasoil")
+        case .bGasoil:
+            return String(localized: "B Gasoil")
+        case .premiumGasoil:
+            return String(localized: "Premium Gasoil")
+        case .biodiesel:
+            return String(localized: "Biodiesel")
+        case .gasoline95E10:
+            return String(localized: "Gasoline 95 E10")
+        case .gasoline95E5:
+            return String(localized: "Gasoline 95 E5")
+        case .gasoline95E5Premium:
+            return String(localized: "Gasoline 95 E5 Premium")
+        case .gasoline98E10:
+            return String(localized: "Gasoline 98 E10")
+        case .gasoline98E5:
+            return String(localized: "Gasoline 98 E5")
+        case .bioethanol:
+            return String(localized: "Bioethanol")
+        case .cng:
+            return String(localized: "Compressed Natural Gas")
+        case .lng:
+            return String(localized: "Liquefied Natural Gas")
+        case .lpg:
+            return String(localized: "Liquefied petroleum gases")
+        case .hydrogen:
+            return String(localized: "Hydrogen")
+        }
+    }
+    if sortingMethod == .proximity {
+        return String(localized: "Sorted by proximity")
+    }
+    else {
+        return String(localized: "Sorted by \(fuelName()) price")
+    }
+}

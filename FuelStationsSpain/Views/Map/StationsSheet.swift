@@ -23,7 +23,7 @@ struct StationsSheet: View {
                 else {
                     if let data = mapViewModel.data?.results {
                         let data = addDistancesToStations(stations: data, lastLocation: location)
-                        let sorted = sortStations(stations: data, sortingMethod: .proximity)
+                        let sorted = sortStations(stations: data, sortingMethod: selectedSorting)
                         let filtered = searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sorted
                         Group {
                             if listHasContent == false {
@@ -31,18 +31,30 @@ struct StationsSheet: View {
                                     .transition(.opacity)
                             }
                             else {
-                                List(filtered, id: \.self) { item in
-                                    Button {
-                                        mapViewModel.showStationsSheet.toggle()
-                                        // await to prevent opening a sheet with another one already open
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                                            mapViewModel.selectStation(station: item, centerLocation: true)
-                                            Task {
-                                                await mapViewModel.fetchData(latitude: item.latitude!, longitude: item.longitude!)
+                                List {
+                                    Section {
+                                        ForEach(filtered, id: \.self) { item in
+                                            Button {
+                                                mapViewModel.showStationsSheet.toggle()
+                                                // await to prevent opening a sheet with another one already open
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                                                    mapViewModel.selectStation(station: item, centerLocation: true)
+                                                    Task {
+                                                        await mapViewModel.fetchData(latitude: item.latitude!, longitude: item.longitude!)
+                                                    }
+                                                })
+                                            } label: {
+                                                StationListEntry(station: item, sortingMethod: selectedSorting)
                                             }
-                                        })
-                                    } label: {
-                                        StationListEntry(station: item, sortingMethod: selectedSorting)
+                                        }
+                                    } header: {
+                                        Text(sortingText(sortingMethod: selectedSorting))
+                                            .fontWeight(.semibold)
+                                            .padding(.bottom, 12)
+                                            .padding(.leading, -12)
+                                            .padding(.top, -12)
+                                            .textCase(nil)
+                                            .font(.system(size: 14))
                                     }
                                 }
                                 .animation(.default, value: filtered)

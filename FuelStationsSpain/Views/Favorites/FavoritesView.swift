@@ -40,8 +40,20 @@ struct FavoritesView: View {
                                         .transition(.opacity)
                                 }
                                 else {
-                                    List(filtered, id: \.self, selection: $selectedStation) { item in
-                                        StationListEntry(station: item, sortingMethod: selectedSorting)
+                                    List(selection: $selectedStation) {
+                                        Section {
+                                            ForEach(filtered, id: \.self) { item in
+                                                StationListEntry(station: item, sortingMethod: selectedSorting)
+                                            }
+                                        } header: {
+                                            Text(sortingText(sortingMethod: selectedSorting))
+                                                .fontWeight(.semibold)
+                                                .padding(.bottom, 12)
+                                                .padding(.leading, -12)
+                                                .padding(.top, -12)
+                                                .textCase(nil)
+                                                .font(.system(size: 14))
+                                        }
                                     }
                                     .animation(.default, value: filtered)
                                     .transition(.opacity)

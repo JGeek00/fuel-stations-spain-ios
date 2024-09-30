@@ -637,6 +637,26 @@
         }
       }
     },
+    "Sorted by %@ price" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenado por precio de %@"
+          }
+        }
+      }
+    },
+    "Sorted by proximity" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenado por proximidad"
+          }
+        }
+      }
+    },
     "Success" : {
       "localizations" : {
         "es" : {
