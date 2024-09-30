@@ -25,4 +25,22 @@ class Enums {
         case usage
         case notFound
     }
+    
+    public enum SortingOptions: String {
+        case proximity
+        case aGasoil
+        case bGasoil
+        case premiumGasoil
+        case biodiesel
+        case gasoline95E10
+        case gasoline95E5
+        case gasoline95E5Premium
+        case gasoline98E10
+        case gasoline98E5
+        case bioethanol
+        case cng
+        case lng
+        case lpg
+        case hydrogen
+    }
 }

@@ -11,16 +11,6 @@
         }
       }
     },
-    "%@ Km" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ Km"
-          }
-        }
-      }
-    },
     "%@ Km from your current location" : {
       "localizations" : {
         "es" : {
@@ -43,16 +33,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@:%2$@ - %3$@:%4$@ y %5$@:%6$@ - %7$@:%8$@"
-          }
-        }
-      }
-    },
-    "%lld m" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld m"
           }
         }
       }
@@ -317,6 +297,16 @@
         }
       }
     },
+    "Fuel price" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precio de combustible"
+          }
+        }
+      }
+    },
     "Gasoline 95 E5" : {
       "localizations" : {
         "es" : {
@@ -563,6 +553,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Precios"
+          }
+        }
+      }
+    },
+    "Proximity" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proximidad"
           }
         }
       }

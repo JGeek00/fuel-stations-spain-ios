@@ -2,9 +2,62 @@ import SwiftUI
 
 struct StationListEntry: View {
     var station: FuelStation
+    var sortingMethod: Enums.SortingOptions
     
-    init(station: FuelStation) {
+    init(station: FuelStation, sortingMethod: Enums.SortingOptions) {
         self.station = station
+        self.sortingMethod = sortingMethod
+    }
+    
+    private func getValue() -> String? {
+        func format(_ value: Double?) -> String? {
+            if let value = value {
+                return String("\(formattedNumber(value: value, digits: 3)) €")
+            }
+            else {
+                return nil
+            }
+        }
+        
+        switch sortingMethod {
+        case .proximity:
+            if let distance = station.distanceToUserLocation {
+                if distance < 1 {
+                    return String("\(Int(distance*1000)) m")
+                } else {
+                    return String("\(formattedNumber(value: distance)) Km")
+                }
+            }
+        case .aGasoil:
+            return format(station.gasoilAPrice)
+        case .bGasoil:
+            return format(station.gasoilBPrice)
+        case .premiumGasoil:
+            return format(station.premiumGasoilPrice)
+        case .biodiesel:
+            return format(station.biodieselPrice)
+        case .gasoline95E10:
+            return format(station.gasoline95E10Price)
+        case .gasoline95E5:
+            return format(station.gasoline95E5Price)
+        case .gasoline95E5Premium:
+            return format(station.gasoline95E5PremiumPrice)
+        case .gasoline98E10:
+            return format(station.gasoline98E10Price)
+        case .gasoline98E5:
+            return format(station.gasoline98E5Price)
+        case .bioethanol:
+            return format(station.bioethanolPrice)
+        case .cng:
+            return format(station.cngPrice)
+        case .lng:
+            return format(station.lngPrice)
+        case .lpg:
+            return format(station.lpgPrice)
+        case .hydrogen:
+            return format(station.hydrogenPrice)
+        }
+        return nil
     }
     
     var body: some View {
@@ -70,17 +123,17 @@ struct StationListEntry: View {
                     }
                 }
             }
-            if let distance = station.distanceToUserLocation {
+            if let value = getValue() {
                 Spacer()
-                Group {
-                    if distance < 1 {
-                        Text("\(Int(distance*1000)) m")
-                    } else {
-                        Text("\(formattedNumber(value: distance)) Km")
-                    }
-                }
-                .font(.system(size: 16))
-                .fontWeight(.semibold)
+                Text(value)
+                    .font(.system(size: 16))
+                    .fontWeight(.semibold)
+            }
+            else {
+                Spacer()
+                Text(verbatim: "N/A")
+                    .font(.system(size: 16))
+                    .fontWeight(.semibold)
             }
         }
         .foregroundStyle(Color.foreground)

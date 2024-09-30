@@ -14,6 +14,8 @@ struct FavoritesView: View {
     // Last location changes constantly, having a fixed location prevents unwanted reorders on the list
     @State private var location: CLLocation? = nil
     
+    @State private var selectedSorting: Enums.SortingOptions = .proximity
+    
     var body: some View {
         NavigationSplitView {
             Group {
@@ -30,8 +32,8 @@ struct FavoritesView: View {
                         }
                         else {
                             let data = addDistancesToStations(stations: favoritesListViewModel.data!.results!, lastLocation: location)
-                            let sortedDistance = sortStationsByDistance(data)
-                            let filtered = searchText != "" ? sortedDistance.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sortedDistance
+                            let sorted = sortStations(stations: data, sortingMethod: selectedSorting)
+                            let filtered = searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sorted
                             Group {
                                 if listHasContent == false {
                                     ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
@@ -39,7 +41,7 @@ struct FavoritesView: View {
                                 }
                                 else {
                                     List(filtered, id: \.self, selection: $selectedStation) { item in
-                                        StationListEntry(station: item)
+                                        StationListEntry(station: item, sortingMethod: selectedSorting)
                                     }
                                     .animation(.default, value: filtered)
                                     .transition(.opacity)
@@ -65,6 +67,13 @@ struct FavoritesView: View {
             }
             .navigationTitle("Favorites")
             .searchable(text: $searchText, prompt: "Search service station by name")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    SortingPicker(selectedSorting: selectedSorting) { value in
+                        selectedSorting = value
+                    }
+                }
+            }
         } detail: {
             if let selectedStation = selectedStation {
                 FavoriteDetailsView(station: selectedStation)
