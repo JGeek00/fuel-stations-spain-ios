@@ -21,6 +21,16 @@
         }
       }
     },
+    "%@ Km from your location" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A %@ Km de tu posición"
+          }
+        }
+      }
+    },
     "%@:%@ - %@:%@ and %@:%@ - %@:%@" : {
       "localizations" : {
         "en" : {
@@ -43,6 +53,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld m de tu localización actual"
+          }
+        }
+      }
+    },
+    "%lld m from your location" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A %lld m de tu posición"
           }
         }
       }

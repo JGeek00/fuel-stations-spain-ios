@@ -80,6 +80,19 @@ struct StationListEntry: View {
                     Text(address.capitalized)
                         .font(.system(size: 14))
                 }
+                if sortingMethod != .proximity {
+                    if let distance = station.distanceToUserLocation {
+                        Spacer()
+                            .frame(height: 4)
+                        if distance < 1 {
+                            Text("\(Int(distance*1000)) m from your location")
+                                .font(.system(size: 14))
+                        } else {
+                            Text("\(formattedNumber(value: distance)) Km from your location")
+                                .font(.system(size: 14))
+                        }
+                    }
+                }
                 Spacer()
                     .frame(height: 4)
                 if let schedule = station.openingHours {
