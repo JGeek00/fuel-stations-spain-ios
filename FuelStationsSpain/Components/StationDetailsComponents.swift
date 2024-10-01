@@ -155,7 +155,7 @@ class StationDetailsComponents {
             self.station = station
         }
         
-        @EnvironmentObject private var mapViewModel: MapViewModel
+        @EnvironmentObject private var mapManager: MapManager
             
         var body: some View {
             HStack(alignment: .top) {

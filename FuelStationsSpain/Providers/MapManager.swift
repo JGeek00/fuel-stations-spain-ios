@@ -6,7 +6,7 @@ import SwiftUI
 let defaultZoom = 0.03
 
 @MainActor
-class MapViewModel: ObservableObject {
+class MapManager: ObservableObject {
     @Published var data: FuelStationsResult? = nil
     @Published var loading = true
     @Published var error: Enums.ApiErrorReason? = nil
@@ -35,6 +35,7 @@ class MapViewModel: ObservableObject {
     init() {}
     
     func setInitialLocation(latitude: Double?, longitude: Double?) async {
+        print("set initial")
         if latitude != nil && longitude != nil {
             self.latitude = latitude!
             self.longitude = longitude!

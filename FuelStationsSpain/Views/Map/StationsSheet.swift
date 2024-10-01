@@ -3,7 +3,7 @@ import CoreLocation
 
 struct StationsSheet: View {
     
-    @EnvironmentObject private var mapViewModel: MapViewModel
+    @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager
     
     @State private var searchText = ""
@@ -17,11 +17,11 @@ struct StationsSheet: View {
     var body: some View {
         NavigationStack {
             Group {
-                if mapViewModel.loading {
+                if mapManager.loading {
                     ProgressView()
                 }
                 else {
-                    if let data = mapViewModel.data?.results {
+                    if let data = mapManager.data?.results {
                         let data = addDistancesToStations(stations: data, lastLocation: location)
                         let sorted = sortStations(stations: data, sortingMethod: selectedSorting)
                         let filtered = searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sorted
@@ -35,12 +35,12 @@ struct StationsSheet: View {
                                     Section {
                                         ForEach(filtered, id: \.self) { item in
                                             Button {
-                                                mapViewModel.showStationsSheet.toggle()
+                                                mapManager.showStationsSheet.toggle()
                                                 // await to prevent opening a sheet with another one already open
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                                                    mapViewModel.selectStation(station: item, centerLocation: true)
+                                                    mapManager.selectStation(station: item, centerLocation: true)
                                                     Task {
-                                                        await mapViewModel.fetchData(latitude: item.latitude!, longitude: item.longitude!)
+                                                        await mapManager.fetchData(latitude: item.latitude!, longitude: item.longitude!)
                                                     }
                                                 })
                                             } label: {
@@ -81,7 +81,7 @@ struct StationsSheet: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        mapViewModel.showStationsSheet.toggle()
+                        mapManager.showStationsSheet.toggle()
                     } label: {
                         Image(systemName: "xmark")
                             .fontWeight(.semibold)

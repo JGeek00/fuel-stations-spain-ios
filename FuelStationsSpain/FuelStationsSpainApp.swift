@@ -19,6 +19,7 @@ struct FuelStationsSpainApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(LocationManager())
+                .environmentObject(MapManager())
                 .environmentObject(FavoritesProvider.shared)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }

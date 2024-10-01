@@ -5,6 +5,9 @@ struct RootView: View {
     @AppStorage(StorageKeys.theme, store: UserDefaults.shared) private var theme: Enums.Theme = .system
         
     @Environment(\.horizontalSizeClass) private var defaultHorizontalSizeClass
+    
+    @EnvironmentObject private var locationManager: LocationManager
+    @EnvironmentObject private var mapManager: MapManager
 
     func getColorScheme(theme: Enums.Theme) -> ColorScheme? {
         switch theme {
@@ -24,7 +27,6 @@ struct RootView: View {
                     Label("Map", systemImage: "map")
                 }
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
-                .environmentObject(MapViewModel())
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "star")
@@ -40,5 +42,11 @@ struct RootView: View {
         .environment(\.horizontalSizeClass, .compact)
         .fontDesign(.rounded)
         .preferredColorScheme(getColorScheme(theme: theme))
+        .onChange(of: locationManager.firstLocation, initial: true) {
+            guard let latitude = locationManager.firstLocation?.coordinate.latitude, let longitude = locationManager.firstLocation?.coordinate.longitude else { return }
+            Task {
+                await mapManager.setInitialLocation(latitude: latitude, longitude: longitude)
+            }
+        }
     }
 }

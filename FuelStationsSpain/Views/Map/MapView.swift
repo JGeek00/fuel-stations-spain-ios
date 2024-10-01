@@ -17,14 +17,14 @@ struct MapView: View {
 
 fileprivate struct MapComponent: View {
     
-    @EnvironmentObject private var mapViewModel: MapViewModel
+    @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
+
     var body: some View {
-        Map(position: $mapViewModel.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
-            if let stations = mapViewModel.data?.results {
+        Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
+            if let stations = mapManager.data?.results {
                 let markers = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
@@ -34,11 +34,11 @@ fileprivate struct MapComponent: View {
                             .onTapGesture {
                                 Task {
                                     // await to prevent opening a sheet with another one already open
-                                    if mapViewModel.showStationSheet == true {
-                                        mapViewModel.showStationSheet = false
+                                    if mapManager.showStationSheet == true {
+                                        mapManager.showStationSheet = false
                                         try await Task.sleep(for: .seconds(0.7))
                                     }
-                                    mapViewModel.selectStation(station: value)
+                                    mapManager.selectStation(station: value)
                                 }
                             }
                     }
@@ -46,13 +46,13 @@ fileprivate struct MapComponent: View {
             }
         }
         .onMapCameraChange(frequency: .onEnd, { value in
-            mapViewModel.onMapCameraChange(value)
+            mapManager.onMapCameraChange(value)
         })
         .overlay(alignment: .topLeading) {
             GeometryReader(content: { geometry in
                 Group {
                     Button {
-                        mapViewModel.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
+                        mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
                     } label: {
                         Image(systemName: "location.fill.viewfinder")
                             .font(.system(size: 22))
@@ -68,10 +68,10 @@ fileprivate struct MapComponent: View {
                 .offset(x: geometry.size.width - 52, y: 12)
                 Group {
                     Button {
-                        if mapViewModel.showStationSheet == true {
-                            mapViewModel.showStationSheet = false
+                        if mapManager.showStationSheet == true {
+                            mapManager.showStationSheet = false
                         }
-                        mapViewModel.showStationsSheet.toggle()
+                        mapManager.showStationsSheet.toggle()
                     } label: {
                         Image(systemName: "list.bullet")
                             .font(.system(size: 22))
@@ -86,20 +86,20 @@ fileprivate struct MapComponent: View {
                 .offset(x: geometry.size.width - 52, y: 70)
                 Group {
                     Button {
-                        if mapViewModel.error != nil {
-                            mapViewModel.showErrorAlert.toggle()
+                        if mapManager.error != nil {
+                            mapManager.showErrorAlert.toggle()
                         }
-                        else if mapViewModel.error == nil && mapViewModel.loading == false {
-                            mapViewModel.showSuccessAlert.toggle()
+                        else if mapManager.error == nil && mapManager.loading == false {
+                            mapManager.showSuccessAlert.toggle()
                         }
                     } label: {
                         Group {
-                            if mapViewModel.loading == true {
+                            if mapManager.loading == true {
                                 ProgressView()
                                     .font(.system(size: 24))
                             }
                             else {
-                                if mapViewModel.error != nil {
+                                if mapManager.error != nil {
                                     Image(systemName: "exclamationmark.circle.fill")
                                         .font(.system(size: 22))
                                         .foregroundStyle(Color.red)
@@ -117,29 +117,29 @@ fileprivate struct MapComponent: View {
                     .background(.regularMaterial)
                     .cornerRadius(10)
                     .shadow(color: .black.opacity(0.3), radius: 5)
-                    .disabled(mapViewModel.loading)
+                    .disabled(mapManager.loading)
                 }
                 .offset(x: 12, y: 12)
             })
         }
-        .alert("Success", isPresented: $mapViewModel.showSuccessAlert, actions: {
+        .alert("Success", isPresented: $mapManager.showSuccessAlert, actions: {
             Button("Close") {
-                mapViewModel.showSuccessAlert.toggle()
+                mapManager.showSuccessAlert.toggle()
             }
         }, message: {
             Text("Data loaded successfully.")
         })
-        .alert("Error", isPresented: $mapViewModel.showErrorAlert, actions: {
+        .alert("Error", isPresented: $mapManager.showErrorAlert, actions: {
             Button("Close") {
-                mapViewModel.showErrorAlert.toggle()
+                mapManager.showErrorAlert.toggle()
             }
             Button("Retry") {
                 Task {
-                    await mapViewModel.fetchData(latitude: mapViewModel.latitude, longitude: mapViewModel.longitude)
+                    await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
                 }
             }
         }, message: {
-            switch mapViewModel.error {
+            switch mapManager.error {
                 case .connection:
                     Text("Cannot establish a connection with the server. Check your Internet connection.")
                 case .usage:
@@ -148,10 +148,10 @@ fileprivate struct MapComponent: View {
                     Text("Unknown error.")
             }
         })
-        .sheet(isPresented: $mapViewModel.showStationsSheet, content: {
+        .sheet(isPresented: $mapManager.showStationsSheet, content: {
             StationsSheet()
         })
-        .sheet(isPresented: $mapViewModel.showStationSheet) {
+        .sheet(isPresented: $mapManager.showStationSheet) {
             if horizontalSizeClass == .compact {
                 StationDetailsSheet()
                     .presentationBackground(Material.regular)
@@ -163,12 +163,6 @@ fileprivate struct MapComponent: View {
             else {
                 StationDetailsSheet()
                     .presentationBackground(Material.regular)
-            }
-        }
-        .onChange(of: locationManager.firstLocation, initial: true) {
-            guard let latitude = locationManager.firstLocation?.coordinate.latitude, let longitude = locationManager.firstLocation?.coordinate.longitude else { return }
-            Task {
-                await mapViewModel.setInitialLocation(latitude: latitude, longitude: longitude)
             }
         }
     }

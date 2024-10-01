@@ -3,7 +3,7 @@ import AlertToast
 
 struct StationDetailsSheet: View {
     
-    @EnvironmentObject private var mapViewModel: MapViewModel
+    @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
         
@@ -22,7 +22,7 @@ struct StationDetailsSheet: View {
     @State private var showRemovedFavoritesToast = false
     
     var body: some View {
-        if let station = mapViewModel.selectedStation {
+        if let station = mapManager.selectedStation {
             ScrollView {
                 LazyVStack(alignment: .leading) {
                     HStack {
@@ -58,9 +58,9 @@ struct StationDetailsSheet: View {
                             .clipShape(Circle())
                         }
                         Button {
-                            mapViewModel.showStationSheet = false
+                            mapManager.showStationSheet = false
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                mapViewModel.selectedStation = nil
+                                mapManager.selectedStation = nil
                             }
                         } label: {
                             Image(systemName: "xmark")
@@ -144,7 +144,7 @@ struct StationDetailsSheet: View {
                         }
                         StationDetailsComponents.PricesItem(station: station)
                             .customBackgroundWithMaterial()
-                        if let update = mapViewModel.data?.lastUpdated {
+                        if let update = mapManager.data?.lastUpdated {
                             if let date = formatDate(update) {
                                 StationDetailsComponents.ListItem(
                                     icon: "arrow.down.circle.fill",
