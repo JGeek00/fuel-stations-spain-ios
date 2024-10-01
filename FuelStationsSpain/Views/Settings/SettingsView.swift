@@ -25,6 +25,14 @@ struct SettingsView: View {
                         .tag(Enums.Theme.dark)
                 }
                 .pickerStyle(.inline)
+                
+                Section("App settings") {
+                    NavigationLink {
+                        GeneralSettings()
+                    } label: {
+                        ListRowWithIconEntry(systemIcon: "gear", iconColor: .blue, label: "General settings")
+                    }
+                }
 
                 Section {
                     Button {

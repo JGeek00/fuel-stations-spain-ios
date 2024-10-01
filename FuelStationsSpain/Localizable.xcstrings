@@ -117,6 +117,16 @@
         }
       }
     },
+    "App settings" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de la app"
+          }
+        }
+      }
+    },
     "App version" : {
       "localizations" : {
         "es" : {
@@ -403,6 +413,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gasolina 98 E10"
+          }
+        }
+      }
+    },
+    "General settings" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes generales"
+          }
+        }
+      }
+    },
+    "Hide stations that aren't open to the general public" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar estaciones que no están abiertas al público general"
           }
         }
       }

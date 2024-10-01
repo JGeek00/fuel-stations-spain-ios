@@ -31,7 +31,6 @@ struct RootView: View {
                 .tabItem {
                     Label("Favorites", systemImage: "star")
                 }
-                .environmentObject(FavoritesListViewModel())
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SettingsView()
                 .tabItem {

@@ -3,10 +3,10 @@ import Combine
 import MapKit
 import SwiftUI
 
-let defaultZoom = 0.03
-
 @MainActor
 class MapManager: ObservableObject {
+    static let shared = MapManager()
+    
     @Published var data: FuelStationsResult? = nil
     @Published var loading = true
     @Published var error: Enums.ApiErrorReason? = nil
@@ -14,7 +14,7 @@ class MapManager: ObservableObject {
     @Published var position: MapCameraPosition = MapCameraPosition.region(
         MKCoordinateRegion(
             center: Config.defaultCoordinates,
-            span: MKCoordinateSpan(latitudeDelta: defaultZoom, longitudeDelta: defaultZoom)
+            span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
         )
     )
     
@@ -35,14 +35,13 @@ class MapManager: ObservableObject {
     init() {}
     
     func setInitialLocation(latitude: Double?, longitude: Double?) async {
-        print("set initial")
         if latitude != nil && longitude != nil {
             self.latitude = latitude!
             self.longitude = longitude!
             self.position = MapCameraPosition.region(
                 MKCoordinateRegion(
                     center: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!),
-                    span: MKCoordinateSpan(latitudeDelta: defaultZoom, longitudeDelta: defaultZoom)
+                    span: MKCoordinateSpan(latitudeDelta: Config.mapDefaultZoom, longitudeDelta: Config.mapDefaultZoom)
                 )
             )
             await fetchData(latitude: latitude!, longitude: longitude!)
@@ -100,7 +99,7 @@ class MapManager: ObservableObject {
         self.position = MapCameraPosition.region(
             MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                span: MKCoordinateSpan(latitudeDelta: defaultZoom, longitudeDelta: defaultZoom)
+                span: MKCoordinateSpan(latitudeDelta: Config.mapDefaultZoom, longitudeDelta: Config.mapDefaultZoom)
             )
         )
     }

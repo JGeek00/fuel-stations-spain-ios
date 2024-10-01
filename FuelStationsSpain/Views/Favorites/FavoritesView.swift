@@ -7,6 +7,8 @@ struct FavoritesView: View {
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     @EnvironmentObject private var locationManager: LocationManager
     
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
     @State private var selectedStation: FuelStation? = nil
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
@@ -46,13 +48,20 @@ struct FavoritesView: View {
                                                 StationListEntry(station: item, sortingMethod: selectedSorting)
                                             }
                                         } header: {
-                                            Text(sortingText(sortingMethod: selectedSorting))
-                                                .fontWeight(.semibold)
-                                                .padding(.bottom, 12)
-                                                .padding(.leading, -12)
-                                                .padding(.top, -12)
-                                                .textCase(nil)
-                                                .font(.system(size: 14))
+                                            HStack {
+                                                if horizontalSizeClass == .regular {
+                                                    Spacer()
+                                                }
+                                                Text(sortingText(sortingMethod: selectedSorting))
+                                                    .fontWeight(.semibold)
+                                                    .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
+                                                    .padding(.bottom, 12)
+                                                    .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
+                                                    .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
+                                                    .textCase(nil)
+                                                    .font(.system(size: 14))
+                                                Spacer()
+                                            }
                                         }
                                     }
                                     .animation(.default, value: filtered)

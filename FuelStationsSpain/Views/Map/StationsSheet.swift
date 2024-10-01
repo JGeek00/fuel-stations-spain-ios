@@ -6,6 +6,8 @@ struct StationsSheet: View {
     @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager
     
+    @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
+    
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     
@@ -22,9 +24,17 @@ struct StationsSheet: View {
                 }
                 else {
                     if let data = mapManager.data?.results {
-                        let data = addDistancesToStations(stations: data, lastLocation: location)
-                        let sorted = sortStations(stations: data, sortingMethod: selectedSorting)
-                        let filtered = searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sorted
+                        let processedData = {
+                            let d = addDistancesToStations(stations: data, lastLocation: location)
+                            let filtered = searchText != "" ? d.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : d
+                            let sorted = sortStations(stations: filtered, sortingMethod: selectedSorting)
+                            if hideStationsNotOpenPublic == true {
+                                return sorted.filter() { $0.saleType != .r }
+                            }
+                            else {
+                                return sorted
+                            }
+                        }()
                         Group {
                             if listHasContent == false {
                                 ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
@@ -33,7 +43,7 @@ struct StationsSheet: View {
                             else {
                                 List {
                                     Section {
-                                        ForEach(filtered, id: \.self) { item in
+                                        ForEach(processedData, id: \.self) { item in
                                             Button {
                                                 mapManager.showStationsSheet.toggle()
                                                 // await to prevent opening a sheet with another one already open
@@ -57,13 +67,13 @@ struct StationsSheet: View {
                                             .font(.system(size: 14))
                                     }
                                 }
-                                .animation(.default, value: filtered)
+                                .animation(.default, value: processedData)
                                 .transition(.opacity)
                             }
                         }
-                        .onChange(of: filtered) {
+                        .onChange(of: processedData) {
                             withAnimation(.default) {
-                                if filtered.isEmpty {
+                                if processedData.isEmpty {
                                     listHasContent = false
                                 }
                                 else {

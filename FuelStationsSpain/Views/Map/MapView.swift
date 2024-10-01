@@ -21,11 +21,21 @@ fileprivate struct MapComponent: View {
     @EnvironmentObject private var locationManager: LocationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
+    @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
 
     var body: some View {
         Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
             if let stations = mapManager.data?.results {
-                let markers = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
+                let markers = {
+                    let m = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
+                    if hideStationsNotOpenPublic == true {
+                        return m.filter() { $0.saleType != .r }
+                    }
+                    else {
+                        return m
+                    }
+                }()
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
                         MarkerIcon()
