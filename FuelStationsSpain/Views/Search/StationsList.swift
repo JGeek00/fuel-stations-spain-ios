@@ -2,9 +2,7 @@ import SwiftUI
 import CoreLocation
 
 struct SearchStationsList: View {
-    
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
+        
     @EnvironmentObject private var stationsViewModel: SearchStationsViewModel
     @EnvironmentObject private var searchViewModel: SearchViewModel
     @EnvironmentObject private var locationManager: LocationManager
@@ -41,20 +39,13 @@ struct SearchStationsList: View {
                                         StationListEntry(station: item, sortingMethod: selectedSorting)
                                     }
                                 } header: {
-                                    HStack {
-                                        if horizontalSizeClass == .regular {
-                                            Spacer()
-                                        }
-                                        Text(sortingText(sortingMethod: selectedSorting))
-                                            .fontWeight(.semibold)
-                                            .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
-                                            .padding(.bottom, 12)
-                                            .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
-                                            .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
-                                            .textCase(nil)
-                                            .font(.system(size: 14))
-                                        Spacer()
-                                    }
+                                    Text(sortingText(sortingMethod: selectedSorting))
+                                        .fontWeight(.semibold)
+                                        .padding(.bottom, 12)
+                                        .padding(.leading, -12)
+                                        .padding(.top, -12)
+                                        .textCase(nil)
+                                        .font(.system(size: 14))
                                 }
                             }
                             .animation(.default, value: filtered)
