@@ -1,65 +1,23 @@
 import SwiftUI
 import AlertToast
 
-struct StationDetailsSheet: View {
+struct SearchStationDetails: View {
     
-    @EnvironmentObject private var mapManager: MapManager
+    @EnvironmentObject private var searchViewModel: SearchViewModel
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
+    @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
+    
+
     
     @State private var showAddedFavoritesToast = false
     @State private var showRemovedFavoritesToast = false
     
     var body: some View {
-        if let station = mapManager.selectedStation {
-            ScrollView {
-                LazyVStack(alignment: .leading) {
-                    HStack {
-                        if let name = station.signage {
-                            Text(verbatim: name.capitalized)
-                                .font(.system(size: 30))
-                                .fontWeight(.bold)
-                                .truncationMode(.tail)
-                                .lineLimit(1)
-                        }
-                        Spacer()
-                        if let stationId = station.id {
-                            let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
-                            Button {
-                                if isFavorite == true {
-                                    if favoritesProvider.removeFavorite(stationId: stationId) == true {
-                                        showAddedFavoritesToast = false
-                                        showRemovedFavoritesToast = true
-                                    }
-                                }
-                                else {
-                                    if favoritesProvider.addFavorite(stationId: stationId) == true {
-                                        showRemovedFavoritesToast = false
-                                        showAddedFavoritesToast = true
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: isFavorite == true ? "star.fill" : "star")
-                                    .fontWeight(.semibold)
-                                    .animation(.default, value: isFavorite)
-                            }
-                            .buttonStyle(BorderedButtonStyle())
-                            .clipShape(Circle())
-                        }
-                        Button {
-                            mapManager.showStationSheet = false
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                mapManager.selectedStation = nil
-                            }
-                        } label: {
-                            Image(systemName: "xmark")
-                                .fontWeight(.semibold)
-                                .foregroundColor(.foreground.opacity(0.5))
-                        }
-                        .buttonStyle(BorderedButtonStyle())
-                        .clipShape(Circle())
-                    }
-                    VStack(alignment: .leading, spacing: 12) {
+        NavigationStack {
+            if let station = searchViewModel.selectedStation {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 12) {
                         if let address = station.address {
                             let distanceText: String? = {
                                 if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
@@ -79,7 +37,7 @@ struct StationDetailsSheet: View {
                                 title: address.capitalized,
                                 subtitle: distanceText
                             )
-                            .customBackgroundWithMaterial()
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         }
                         if let locality = station.locality {
@@ -89,11 +47,11 @@ struct StationDetailsSheet: View {
                                 title: String(localized: "Locality"),
                                 subtitle: String(locality.capitalized)
                             )
-                            .customBackgroundWithMaterial()
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         }
                         StationDetailsComponents.ScheduleItem(station: station)
-                            .customBackgroundWithMaterial()
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         if let saleType = station.saleType {
                             StationDetailsComponents.ListItem(
@@ -128,13 +86,13 @@ struct StationDetailsSheet: View {
                                     )
                                 }
                             }
-                            .customBackgroundWithMaterial()
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         }
                         StationDetailsComponents.PricesItem(station: station)
-                            .customBackgroundWithMaterial()
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                        if let update = mapManager.data?.lastUpdated {
+                        if let update = favoritesListViewModel.data?.lastUpdated {
                             if let date = formatDate(update) {
                                 StationDetailsComponents.ListItem(
                                     icon: "arrow.down.circle.fill",
@@ -148,23 +106,47 @@ struct StationDetailsSheet: View {
                                             .fontWeight(.medium)
                                     )
                                 }
-                                .customBackgroundWithMaterial()
+                                .background(Color.listItemBackground)
                                 .clipShape(RoundedRectangle(cornerRadius: 8.0))
                             }
                         }
                     }
+                    .padding()
                 }
-                .padding()
+                .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.listBackground)
+                .toolbar {
+                    if let stationId = station.id {
+                        let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
+                        Button {
+                            if isFavorite == true {
+                                if favoritesProvider.removeFavorite(stationId: stationId) == true {
+                                    showAddedFavoritesToast = false
+                                    showRemovedFavoritesToast = true
+                                }
+                            }
+                            else {
+                                if favoritesProvider.addFavorite(stationId: stationId) == true {
+                                    showRemovedFavoritesToast = false
+                                    showAddedFavoritesToast = true
+                                }
+                            }                    } label: {
+                            Image(systemName: isFavorite == true ? "star.fill" : "star")
+                                .fontWeight(.semibold)
+                                .animation(.default, value: isFavorite)
+                        }
+                        .buttonStyle(BorderedButtonStyle())
+                        .clipShape(Circle())
+                    }
+                }
+                .toast(isPresenting: $showAddedFavoritesToast, duration: 3, tapToDismiss: true) {
+                    AlertToast(displayMode: .alert, type: .systemImage("star.fill", .foreground), title: String(localized: "Added to favorites"))
+                }
+                .toast(isPresenting: $showRemovedFavoritesToast, duration: 3, tapToDismiss: true) {
+                    AlertToast(displayMode: .alert, type: .systemImage("star.slash.fill", .foreground), title: String(localized: "Removed from favorites"))
+                }
             }
-            .toast(isPresenting: $showAddedFavoritesToast, duration: 3, tapToDismiss: true) {
-                AlertToast(displayMode: .alert, type: .systemImage("star.fill", .foreground), title: String(localized: "Added to favorites"))
-            }
-            .toast(isPresenting: $showRemovedFavoritesToast, duration: 3, tapToDismiss: true) {
-                AlertToast(displayMode: .alert, type: .systemImage("star.slash.fill", .foreground), title: String(localized: "Removed from favorites"))
-            }
-        }
-        else {
-            ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
         }
     }
 }

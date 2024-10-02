@@ -6,7 +6,7 @@ fileprivate struct Province: Hashable {
     let municipalities: [Municipality]
 }
 
-struct MunicipalitiesList: View {
+struct SearchMunicipalitiesList: View {
     
     @EnvironmentObject private var searchViewModel: SearchViewModel
     

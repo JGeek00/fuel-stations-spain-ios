@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreLocation
 
-struct StationsList: View {
+struct SearchStationsList: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     

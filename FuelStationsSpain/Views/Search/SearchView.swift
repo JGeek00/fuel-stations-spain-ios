@@ -6,11 +6,11 @@ struct SearchView: View {
         
     var body: some View {
         NavigationSplitView {
-            MunicipalitiesList()
+            SearchMunicipalitiesList()
         } content: {
-            StationsList()
+            SearchStationsList()
         } detail: {
-            
+            SearchStationDetails()
         }
     }
 }

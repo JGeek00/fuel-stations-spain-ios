@@ -12,17 +12,6 @@ struct FavoriteDetailsView: View {
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     
-    private func formatDate(_ value: String) -> Date? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        if let date = formatter.date(from: value) {
-            return date
-        }
-        else {
-            return nil
-        }
-    }
-    
     @State private var showAddedFavoritesToast = false
     @State private var showRemovedFavoritesToast = false
     
