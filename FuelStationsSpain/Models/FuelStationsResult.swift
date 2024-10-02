@@ -3,6 +3,7 @@ import Foundation
 // MARK: - FuelStationsResult
 struct FuelStationsResult: Codable, Hashable {
     let lastUpdated: String?
+    let count: Int?
     let results: [FuelStation]?
 }
 
@@ -16,8 +17,9 @@ struct FuelStation: Codable, Hashable {
     let referral: Referral?
     let signage: String?
     let saleType: SaleType?
-    let percBioEthanol, percMethylEster, municipalityID, provinceID: String?
-    let regionID: String?
+    let percBioEthanol, percMethylEster: String?
+    let municipalityID, provinceID: Int?
+    let regionID: Int?
     let biodieselPrice, bioethanolPrice, cngPrice, lngPrice: Double?
     let lpgPrice: Double?
     let gasoilAPrice: Double?

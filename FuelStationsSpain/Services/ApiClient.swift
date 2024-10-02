@@ -21,4 +21,11 @@ class ApiClient {
         )
         return result
     }
+    
+    static func fetchMunicipalities() async -> StatusResponse<[Municipality]> {
+        let result: StatusResponse<[Municipality]> = await httpRequest(
+            url: "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/Municipios"
+        )
+        return result
+    }
 }

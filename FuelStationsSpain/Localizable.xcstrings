@@ -107,6 +107,16 @@
         }
       }
     },
+    "An error occured when loading the municipalities. Try again later." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error al cargar los municipios. Prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
     "App repository" : {
       "localizations" : {
         "es" : {
@@ -183,6 +193,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se han podido cargar los favoritos"
+          }
+        }
+      }
+    },
+    "Cannot load municipalities" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han podido cargar los municipios"
           }
         }
       }
@@ -683,6 +703,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vende al público general"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        }
+      }
+    },
+    "Search municipality" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar municipio"
           }
         }
       }

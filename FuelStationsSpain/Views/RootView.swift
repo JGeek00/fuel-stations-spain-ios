@@ -32,6 +32,11 @@ struct RootView: View {
                     Label("Favorites", systemImage: "star")
                 }
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
+            SearchView()
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
