@@ -147,6 +147,9 @@ struct SearchStationDetails: View {
                     AlertToast(displayMode: .alert, type: .systemImage("star.slash.fill", .foreground), title: String(localized: "Removed from favorites"))
                 }
             }
+            else {
+                ContentUnavailableView("Select a station", systemImage: "fuelpump.fill", description: Text("Select a service station to see it's details."))
+            }
         }
     }
 }

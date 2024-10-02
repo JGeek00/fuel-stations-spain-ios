@@ -88,6 +88,9 @@ struct SearchStationsList: View {
                     location = locationManager.lastLocation
                 }
             }
+            else {
+                ContentUnavailableView("Select a municipality", systemImage: "building.columns.fill", description: Text("Select a municipality to see it's service stations."))
+            }
         }
         .onChange(of: searchViewModel.selectedMunicipality) {
             if searchViewModel.selectedMunicipality != nil {

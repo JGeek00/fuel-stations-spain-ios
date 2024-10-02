@@ -12,5 +12,6 @@ struct SearchView: View {
         } detail: {
             SearchStationDetails()
         }
+        .navigationSplitViewStyle(.balanced)
     }
 }
