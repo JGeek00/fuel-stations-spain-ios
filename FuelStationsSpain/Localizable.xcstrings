@@ -567,6 +567,16 @@
         }
       }
     },
+    "Municipality" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Municipio"
+          }
+        }
+      }
+    },
     "Nearby service stations" : {
       "localizations" : {
         "es" : {

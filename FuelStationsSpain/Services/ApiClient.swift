@@ -28,4 +28,14 @@ class ApiClient {
         )
         return result
     }
+    
+    static func fetchServiceStationsByMunicipality(municipalityId: String) async -> StatusResponse<FuelStationsResult> {
+        let result: StatusResponse<FuelStationsResult> = await httpRequest(
+            url: "https://fuelapi.jgeek00.com/service-stations",
+            queryParameters: [
+                URLQueryItem(name: "municipalityId", value: municipalityId)
+            ]
+        )
+        return result
+    }
 }
