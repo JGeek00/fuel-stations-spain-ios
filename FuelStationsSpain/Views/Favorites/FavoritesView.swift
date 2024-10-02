@@ -48,7 +48,7 @@ struct FavoritesView: View {
                                         List(selection: $selectedStation) {
                                             Section {
                                                 ForEach(filtered, id: \.self) { item in
-                                                    StationListEntry(station: item, sortingMethod: selectedSorting)
+                                                    StationListEntry(station: item, sortingMethod: selectedSorting, hideFavoriteSymbol: true)
                                                 }
                                             } header: {
                                                 Text(sortingText(sortingMethod: selectedSorting))

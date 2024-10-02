@@ -3,11 +3,21 @@ import SwiftUI
 struct StationListEntry: View {
     var station: FuelStation
     var sortingMethod: Enums.StationsSortingOptions
+    var hideFavoriteSymbol: Bool
     
     init(station: FuelStation, sortingMethod: Enums.StationsSortingOptions) {
         self.station = station
         self.sortingMethod = sortingMethod
+        self.hideFavoriteSymbol = false
     }
+    
+    init(station: FuelStation, sortingMethod: Enums.StationsSortingOptions, hideFavoriteSymbol: Bool) {
+        self.station = station
+        self.sortingMethod = sortingMethod
+        self.hideFavoriteSymbol = hideFavoriteSymbol
+    }
+    
+    @EnvironmentObject private var favoritesProvider: FavoritesProvider
     
     private func getValue() -> String? {
         func format(_ value: Double?) -> String? {
@@ -69,10 +79,19 @@ struct StationListEntry: View {
         
         HStack {
             VStack(alignment: .leading) {
-                if let signage = station.signage {
-                    Text(signage.capitalized)
-                        .font(.system(size: 18))
-                        .fontWeight(.semibold)
+                HStack {
+                    if let stationId = station.id, favoritesProvider.isFavorite(stationId: stationId) && !hideFavoriteSymbol {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(Color.accentColor)
+                            .font(.system(size: 12))
+                        Spacer()
+                            .frame(width: 4)
+                    }
+                    if let signage = station.signage {
+                        Text(signage.capitalized)
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                    }
                 }
                 Spacer()
                     .frame(height: 4)
