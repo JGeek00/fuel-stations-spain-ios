@@ -16,7 +16,7 @@ struct FavoritesView: View {
     // Keep the same location when the view is being presented
     @State private var location: CLLocation? = nil
     
-    @State private var selectedSorting: Enums.SortingOptions = .proximity
+    @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
     
     var body: some View {
         NavigationSplitView {

@@ -26,7 +26,7 @@ class Enums {
         case notFound
     }
     
-    public enum SortingOptions: String {
+    public enum StationsSortingOptions: String {
         case proximity
         case aGasoil
         case bGasoil
@@ -42,5 +42,10 @@ class Enums {
         case lng
         case lpg
         case hydrogen
+    }
+    
+    public enum SearchSortingOptions: String {
+        case groupedProvince
+        case alphabetical
     }
 }

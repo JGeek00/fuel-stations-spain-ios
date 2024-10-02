@@ -97,6 +97,16 @@
         }
       }
     },
+    "Alphabetically by municipality" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alfabéticamente por municipio"
+          }
+        }
+      }
+    },
     "An error occured when loading the favorites information. Try again later." : {
       "localizations" : {
         "es" : {
@@ -443,6 +453,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajustes generales"
+          }
+        }
+      }
+    },
+    "Grouped by province" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrupado por provincia"
           }
         }
       }

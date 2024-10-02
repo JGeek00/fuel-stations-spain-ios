@@ -2,9 +2,9 @@ import SwiftUI
 
 struct StationListEntry: View {
     var station: FuelStation
-    var sortingMethod: Enums.SortingOptions
+    var sortingMethod: Enums.StationsSortingOptions
     
-    init(station: FuelStation, sortingMethod: Enums.SortingOptions) {
+    init(station: FuelStation, sortingMethod: Enums.StationsSortingOptions) {
         self.station = station
         self.sortingMethod = sortingMethod
     }

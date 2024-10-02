@@ -45,7 +45,7 @@ func addDistancesToStations(stations: [FuelStation], lastLocation: CLLocation?) 
     }
 }
 
-func sortStations(stations: [FuelStation], sortingMethod: Enums.SortingOptions) -> [FuelStation] {
+func sortStations(stations: [FuelStation], sortingMethod: Enums.StationsSortingOptions) -> [FuelStation] {
     func sort(_ a: Double?, _ b: Double?) -> Bool {
         if a != nil && b != nil {
             return a! < b!
@@ -98,7 +98,7 @@ func sortStations(stations: [FuelStation], sortingMethod: Enums.SortingOptions) 
     return sorted
 }
 
-func sortingText(sortingMethod: Enums.SortingOptions) -> String {
+func sortingText(sortingMethod: Enums.StationsSortingOptions) -> String {
     func fuelName() -> String {
         switch sortingMethod {
         case .proximity:

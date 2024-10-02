@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SortingPicker: View {
-    @Binding var selectedSorting: Enums.SortingOptions
+    @Binding var selectedSorting: Enums.StationsSortingOptions
     
     var body: some View {
         Menu {
@@ -49,8 +49,8 @@ struct SortingPicker: View {
 
 fileprivate struct MenuItem: View {
     var label: String
-    @Binding var selectedOption: Enums.SortingOptions
-    var value: Enums.SortingOptions
+    @Binding var selectedOption: Enums.StationsSortingOptions
+    var value: Enums.StationsSortingOptions
     
     var body: some View {
         Button {
