@@ -81,11 +81,14 @@ struct StationListEntry: View {
             VStack(alignment: .leading) {
                 HStack {
                     if let stationId = station.id, favoritesProvider.isFavorite(stationId: stationId) && !hideFavoriteSymbol {
-                        Image(systemName: "star.fill")
-                            .foregroundStyle(Color.accentColor)
-                            .font(.system(size: 12))
-                        Spacer()
-                            .frame(width: 4)
+                        Group {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(Color.accentColor)
+                                .font(.system(size: 12))
+                            Spacer()
+                                .frame(width: 4)
+                        }
+                        .transition(.opacity)
                     }
                     if let signage = station.signage {
                         Text(signage.capitalized)
@@ -172,11 +175,13 @@ struct StationListEntry: View {
         .contextMenu {
             if let stationId = station.id {
                 Button {
-                    if favoritesProvider.isFavorite(stationId: stationId) {
-                        _ = favoritesProvider.removeFavorite(stationId: stationId)
-                    }
-                    else {
-                        _ = favoritesProvider.addFavorite(stationId: stationId)
+                    withAnimation(.default) {
+                        if favoritesProvider.isFavorite(stationId: stationId) {
+                            _ = favoritesProvider.removeFavorite(stationId: stationId)
+                        }
+                        else {
+                            _ = favoritesProvider.addFavorite(stationId: stationId)
+                        }
                     }
                 } label: {
                     if favoritesProvider.isFavorite(stationId: stationId) {
