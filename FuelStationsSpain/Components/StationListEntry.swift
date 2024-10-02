@@ -169,5 +169,24 @@ struct StationListEntry: View {
             }
         }
         .foregroundStyle(Color.foreground)
+        .contextMenu {
+            if let stationId = station.id {
+                Button {
+                    if favoritesProvider.isFavorite(stationId: stationId) {
+                        _ = favoritesProvider.removeFavorite(stationId: stationId)
+                    }
+                    else {
+                        _ = favoritesProvider.addFavorite(stationId: stationId)
+                    }
+                } label: {
+                    if favoritesProvider.isFavorite(stationId: stationId) {
+                        Label("Remove from favorites", systemImage: "star.slash.fill")
+                    }
+                    else {
+                        Label("Add to favorites", systemImage: "star.fill")
+                    }
+                }
+            }
+        }
     }
 }

@@ -87,6 +87,16 @@
         }
       }
     },
+    "Add to favorites" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir a favoritos"
+          }
+        }
+      }
+    },
     "Added to favorites" : {
       "localizations" : {
         "es" : {
@@ -713,6 +723,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Proximidad"
+          }
+        }
+      }
+    },
+    "Remove from favorites" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar de favoritos"
           }
         }
       }

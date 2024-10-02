@@ -19,6 +19,7 @@ struct FavoritesView: View {
     @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
     
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var width = 0.0
     
     var body: some View {
         GeometryReader { proxy in
@@ -90,7 +91,7 @@ struct FavoritesView: View {
                         SortingPicker(selectedSorting: $selectedSorting)
                     }
                 }
-                .navigationSplitViewColumnWidth(min: proxy.size.width*0.3, ideal: proxy.size.width*0.4, max: proxy.size.width*0.5)
+                .navigationSplitViewColumnWidth(min: width*0.3, ideal: width*0.4, max: width*0.5)
             } detail: {
                 if let selectedStation = selectedStation {
                     FavoriteDetailsView(station: selectedStation)
@@ -107,6 +108,9 @@ struct FavoritesView: View {
             }
             .onAppear {
                 location = locationManager.lastLocation
+            }
+            .onChange(of: proxy.size.width) {
+                width = proxy.size.width
             }
         }
     }
