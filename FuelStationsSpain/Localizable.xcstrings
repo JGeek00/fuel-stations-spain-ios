@@ -637,6 +637,16 @@
         }
       }
     },
+    "No stations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay estaciones"
+          }
+        }
+      }
+    },
     "Open 24 hours" : {
       "localizations" : {
         "es" : {
@@ -863,6 +873,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esta aplicación necesita acceso a la localización para mostrar las estaciones de servicio cercanas."
+          }
+        }
+      }
+    },
+    "This municipality has no service stations." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este municipio no tiene estaciones de servicio."
           }
         }
       }
