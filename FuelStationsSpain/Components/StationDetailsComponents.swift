@@ -272,6 +272,7 @@ class StationDetailsComponents {
         }
     }
     
+    static fileprivate let delta = 0.003
     struct MapView: View {
         var station: FuelStation
         
@@ -282,28 +283,37 @@ class StationDetailsComponents {
         @EnvironmentObject private var mapManager: MapManager
         @EnvironmentObject private var tabViewManager: TabViewManager
         
+        @State private var camera = MapCameraPosition.region(.init(center: Config.defaultCoordinates, span: .init(latitudeDelta: delta, longitudeDelta: delta)))
+        
         var body: some View {
-            if let signage = station.signage, let latitude = station.latitude, let longitude = station.longitude {
-                Map(initialPosition: .item(MKMapItem(placemark: .init(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))), interactionModes: []) {
-                    Marker(signage.capitalized, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
-                }
-                .mapStyle(.standard(pointsOfInterest: .excludingAll))
-                .frame(height: 300)
-                .overlay(alignment: .topTrailing) {
-                    Button {
-                        mapManager.selectStation(station: station, centerLocation: true)
-                        tabViewManager.selectedTab = .map
-                    } label: {
-                        Image(systemName: "map.fill")
-                            .font(.system(size: 22))
-                            .foregroundStyle(Color.foreground)
-                            .contentShape(Rectangle())
+            Group {
+                if let signage = station.signage, let latitude = station.latitude, let longitude = station.longitude {
+                    Map(position: $camera, interactionModes: []) {
+                        Marker(signage.capitalized, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
                     }
-                    .frame(width: 40, height: 40)
-                    .background(.regularMaterial)
-                    .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.3), radius: 5)
-                    .offset(x: -12, y: 12)
+                    .mapStyle(.standard(pointsOfInterest: .excludingAll))
+                    .frame(height: 300)
+                    .overlay(alignment: .topTrailing) {
+                        Button {
+                            mapManager.selectStation(station: station, centerLocation: true)
+                            tabViewManager.selectedTab = .map
+                        } label: {
+                            Image(systemName: "map.fill")
+                                .font(.system(size: 22))
+                                .foregroundStyle(Color.foreground)
+                                .contentShape(Rectangle())
+                        }
+                        .frame(width: 40, height: 40)
+                        .background(.regularMaterial)
+                        .cornerRadius(10)
+                        .shadow(color: .black.opacity(0.3), radius: 5)
+                        .offset(x: -12, y: 12)
+                    }
+                }
+            }
+            .onChange(of: station, initial: true) {
+                if let latitude = station.latitude, let longitude = station.longitude {
+                    camera = MapCameraPosition.region(.init(center: .init(latitude: latitude, longitude: longitude), span: .init(latitudeDelta: delta, longitudeDelta: delta)))
                 }
             }
         }
