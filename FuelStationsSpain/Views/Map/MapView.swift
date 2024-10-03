@@ -96,42 +96,33 @@ fileprivate struct MapComponent: View {
                     .shadow(color: .black.opacity(0.3), radius: 5)
                 }
                 .offset(x: geometry.size.width - 52, y: 70)
-                Group {
-                    Button {
-                        if mapManager.error != nil {
+                if mapManager.loading == true || mapManager.error != nil {
+                    Group {
+                        Button {
                             mapManager.showErrorAlert.toggle()
-                        }
-                        else if mapManager.error == nil && mapManager.loading == false {
-                            mapManager.showSuccessAlert.toggle()
-                        }
-                    } label: {
-                        Group {
-                            if mapManager.loading == true {
-                                ProgressView()
-                                    .font(.system(size: 24))
-                            }
-                            else {
-                                if mapManager.error != nil {
+                        } label: {
+                            Group {
+                                if mapManager.loading == true {
+                                    ProgressView()
+                                        .font(.system(size: 24))
+                                }
+                                else {
                                     Image(systemName: "exclamationmark.circle.fill")
                                         .font(.system(size: 22))
                                         .foregroundStyle(Color.red)
                                 }
-                                else {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.system(size: 22))
-                                        .foregroundStyle(Color.green)
-                                }
                             }
+                            .contentShape(Rectangle())
                         }
-                        .contentShape(Rectangle())
+                        .frame(width: 40, height: 40)
+                        .background(.regularMaterial)
+                        .cornerRadius(10)
+                        .shadow(color: .black.opacity(0.3), radius: 5)
+                        .disabled(mapManager.loading)
                     }
-                    .frame(width: 40, height: 40)
-                    .background(.regularMaterial)
-                    .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.3), radius: 5)
-                    .disabled(mapManager.loading)
+                    .offset(x: 12, y: 50)
+                    .transition(.opacity)
                 }
-                .offset(x: 12, y: 12)
             })
         }
         .alert("Success", isPresented: $mapManager.showSuccessAlert, actions: {

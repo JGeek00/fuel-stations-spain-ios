@@ -69,26 +69,32 @@ class MapManager: ObservableObject {
     }
     
     func fetchData(latitude: Double, longitude: Double) async {
-        self.loading = true
+        withAnimation(.default) {
+            self.loading = true
+        }
         
         let result = await ApiClient.fetchServiceStationsByLocation(lat: latitude, long: longitude, distance: 30)
         
         if result.successful == true {
             DispatchQueue.main.async {
-                self.data = result.data!
-                self.loading = false
-                self.error = nil
+                withAnimation(.default) {
+                    self.data = result.data!
+                    self.loading = false
+                    self.error = nil
+                }
             }
         }
         else {
             DispatchQueue.main.async {
-                if result.statusCode == 429 {
-                    self.error = .usage
+                withAnimation(.default) {
+                    if result.statusCode == 429 {
+                        self.error = .usage
+                    }
+                    else {
+                        self.error = .connection
+                    }
+                    self.loading = false
                 }
-                else {
-                    self.error = .connection
-                }
-                self.loading = false
             }
         }
         
