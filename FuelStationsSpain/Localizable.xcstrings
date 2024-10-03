@@ -797,6 +797,26 @@
         }
       }
     },
+    "Select a municipality" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona un municipio"
+          }
+        }
+      }
+    },
+    "Select a municipality to see it's service stations." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona un municipio para ver sus estaciones de servicio."
+          }
+        }
+      }
+    },
     "Select a service station to see it's details." : {
       "localizations" : {
         "es" : {

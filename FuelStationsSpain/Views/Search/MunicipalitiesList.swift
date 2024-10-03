@@ -8,86 +8,80 @@ fileprivate struct Province: Hashable {
 
 struct SearchMunicipalitiesList: View {
     
-    @EnvironmentObject private var municipalitiesViewModel: SearchMunicipalitiesViewModel
+    @EnvironmentObject private var searchViewModel: SearchViewModel
     
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     @State private var sorting: Enums.SearchSortingOptions = .groupedProvince
-    @State private var navigationPath = NavigationPath()
     
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            Group {
-                if municipalitiesViewModel.loading == true {
-                    ProgressView()
-                        .transition(.opacity)
+        Group {
+            if searchViewModel.municipalitiesLoading == true {
+                ProgressView()
+                    .transition(.opacity)
+            }
+            else if searchViewModel.municipalitiesData != nil {
+                let filtered = searchText != "" ? searchViewModel.municipalitiesData!.filter() { $0.Municipio!.lowercased().contains(searchText.lowercased()) } : searchViewModel.municipalitiesData!
+                Group {
+                    if listHasContent == false {
+                        ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
+                            .transition(.opacity)
+                    }
+                    else {
+                        DataList(data: filtered)
+                    }
                 }
-                else if municipalitiesViewModel.data != nil {
-                    let filtered = searchText != "" ? municipalitiesViewModel.data!.filter() { $0.Municipio!.lowercased().contains(searchText.lowercased()) } : municipalitiesViewModel.data!
-                    Group {
-                        if listHasContent == false {
-                            ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
-                                .transition(.opacity)
+                .onChange(of: filtered) {
+                    withAnimation(.default) {
+                        if filtered.isEmpty {
+                            listHasContent = false
                         }
                         else {
-                            DataList(data: filtered)
-                        }
-                    }
-                    .onChange(of: filtered) {
-                        withAnimation(.default) {
-                            if filtered.isEmpty {
-                                listHasContent = false
-                            }
-                            else {
-                                listHasContent = true
-                            }
+                            listHasContent = true
                         }
                     }
                 }
-                else {
-                    ContentUnavailableView("Cannot load municipalities", systemImage: "exclamationmark.circle.fill", description: Text("An error occured when loading the municipalities. Try again later."))
-                        .transition(.opacity)
-                }
-            }
-            .navigationTitle("Search")
-            .searchable(text: $searchText, prompt: "Search municipality")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            withAnimation(.default) {
-                                sorting = .groupedProvince
+                .searchable(text: $searchText, prompt: "Search municipality")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Menu {
+                            Button {
+                                withAnimation(.default) {
+                                    sorting = .groupedProvince
+                                }
+                            } label: {
+                                if sorting == .groupedProvince {
+                                    Label("Grouped by province", systemImage: "checkmark")
+                                }
+                                else {
+                                    Text("Grouped by province")
+                                }
+                            }
+                            Button {
+                                withAnimation(.default) {
+                                    sorting = .alphabetical
+                                }
+                            } label: {
+                                if sorting == .alphabetical {
+                                    Label("Alphabetically by municipality", systemImage: "checkmark")
+                                }
+                                else {
+                                    Text("Alphabetically by municipality")
+                                }
                             }
                         } label: {
-                            if sorting == .groupedProvince {
-                                Label("Grouped by province", systemImage: "checkmark")
-                            }
-                            else {
-                                Text("Grouped by province")
-                            }
+                            Image(systemName: "arrow.up.arrow.down")
                         }
-                        Button {
-                            withAnimation(.default) {
-                                sorting = .alphabetical
-                            }
-                        } label: {
-                            if sorting == .alphabetical {
-                                Label("Alphabetically by municipality", systemImage: "checkmark")
-                            }
-                            else {
-                                Text("Alphabetically by municipality")
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "arrow.up.arrow.down")
                     }
                 }
+
             }
-            .navigationDestination(for: Municipality.self) { value in
-                SearchStationsList()
-                    .environmentObject(SearchStationsViewModel(selectedMunicipality: value))
+            else {
+                ContentUnavailableView("Cannot load municipalities", systemImage: "exclamationmark.circle.fill", description: Text("An error occured when loading the municipalities. Try again later."))
+                    .transition(.opacity)
             }
         }
+        .navigationTitle("Search")
     }
     
     @ViewBuilder
@@ -124,21 +118,15 @@ struct SearchMunicipalitiesList: View {
                 }
             }()
             
-            List(groupedByProvince, id: \.self) { item in
+            List(groupedByProvince, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
                 Section(item.provinceName) {
                     ForEach(item.municipalities, id: \.self) { item in
-                        Button {
-                            navigationPath.append(item)
-                        } label: {
-                            Text(item.Municipio!)
-                        }
-                        .foregroundStyle(Color.foreground)
+                        Text(item.Municipio!)
                     }
                 }
             }
             .animation(.default, value: data)
             .transition(.opacity)
-            .listStyle(.insetGrouped)
         case .alphabetical:
             let sorted = {
                 return data.sorted { a, b in
@@ -146,17 +134,11 @@ struct SearchMunicipalitiesList: View {
                 }
             }()
             
-            List(sorted, id: \.self) { item in
-                Button {
-                    navigationPath.append(item)
-                } label: {
-                    Text(item.Municipio!)
-                }
-                .foregroundStyle(Color.foreground)
+            List(sorted, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
+                Text(item.Municipio!)
             }
             .animation(.default, value: data)
             .transition(.opacity)
-            .listStyle(.insetGrouped)
         }
     }
 }

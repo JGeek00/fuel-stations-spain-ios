@@ -36,7 +36,6 @@ struct RootView: View {
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
-                .environmentObject(SearchViewModel())
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SettingsView()
                 .tabItem {
