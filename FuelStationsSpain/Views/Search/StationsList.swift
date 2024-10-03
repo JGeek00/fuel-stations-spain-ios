@@ -13,9 +13,11 @@ struct SearchStationsList: View {
     @State private var listHasContent = true    // To make transition
     @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
     
+    @State private var municipality: Municipality?
+    
     var body: some View {
         NavigationStack {
-            if let selectedMunicipality = searchViewModel.selectedMunicipality {
+            if let selectedMunicipality = municipality ?? searchViewModel.selectedMunicipality {
                 Group {
                     if searchViewModel.stationsLoading == true {
                         ProgressView()
@@ -100,11 +102,14 @@ struct SearchStationsList: View {
                 ContentUnavailableView("Select a municipality", systemImage: "building.columns.fill", description: Text("Select a municipality to see it's service stations."))
             }
         }
-        .onChange(of: searchViewModel.selectedMunicipality) {
+        .onChange(of: searchViewModel.selectedMunicipality, initial: true, {
             if searchViewModel.selectedMunicipality != nil {
-                Task {
-                    await searchViewModel.fetchStations()
-                }
+                municipality = searchViewModel.selectedMunicipality
+            }
+        })
+        .onDisappear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                municipality = nil
             }
         }
     }

@@ -87,6 +87,14 @@ struct SearchMunicipalitiesList: View {
             }
         }
         .navigationTitle("Search")
+        .onChange(of: searchViewModel.selectedMunicipality) {
+            if searchViewModel.selectedMunicipality != nil {
+                searchViewModel.stationsLoading = true
+                Task {
+                    await searchViewModel.fetchStations()
+                }
+            }
+        }
     }
     
     @ViewBuilder

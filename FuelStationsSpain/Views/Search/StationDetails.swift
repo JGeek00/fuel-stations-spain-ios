@@ -8,14 +8,14 @@ struct SearchStationDetails: View {
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     
-
-    
     @State private var showAddedFavoritesToast = false
     @State private var showRemovedFavoritesToast = false
     
+    @State private var station: FuelStation?
+    
     var body: some View {
         NavigationStack {
-            if let station = searchViewModel.selectedStation {
+            if let station = station ?? searchViewModel.selectedStation {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 12) {
                         if let address = station.address {
@@ -149,6 +149,16 @@ struct SearchStationDetails: View {
             }
             else {
                 ContentUnavailableView("Select a station", systemImage: "fuelpump.fill", description: Text("Select a service station to see it's details."))
+            }
+        }
+        .onChange(of: searchViewModel.selectedStation, initial: true, {
+            if searchViewModel.selectedStation != nil {
+                station = searchViewModel.selectedStation
+            }
+        })
+        .onDisappear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                station = nil
             }
         }
     }
