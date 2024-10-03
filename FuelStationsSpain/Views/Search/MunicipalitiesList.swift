@@ -20,65 +20,70 @@ struct SearchMunicipalitiesList: View {
                 ProgressView()
                     .transition(.opacity)
             }
-            else if searchViewModel.municipalitiesData != nil {
-                let filtered = searchText != "" ? searchViewModel.municipalitiesData!.filter() { $0.Municipio!.lowercased().contains(searchText.lowercased()) } : searchViewModel.municipalitiesData!
-                Group {
-                    if listHasContent == false {
-                        ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
-                            .transition(.opacity)
-                    }
-                    else {
-                        DataList(data: filtered)
-                    }
-                }
-                .onChange(of: filtered) {
-                    withAnimation(.default) {
-                        if filtered.isEmpty {
-                            listHasContent = false
-                        }
-                        else {
-                            listHasContent = true
-                        }
-                    }
-                }
-                .searchable(text: $searchText, prompt: "Search municipality")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Menu {
-                            Button {
-                                withAnimation(.default) {
-                                    sorting = .groupedProvince
-                                }
-                            } label: {
-                                if sorting == .groupedProvince {
-                                    Label("Grouped by province", systemImage: "checkmark")
-                                }
-                                else {
-                                    Text("Grouped by province")
-                                }
-                            }
-                            Button {
-                                withAnimation(.default) {
-                                    sorting = .alphabetical
-                                }
-                            } label: {
-                                if sorting == .alphabetical {
-                                    Label("Alphabetically by municipality", systemImage: "checkmark")
-                                }
-                                else {
-                                    Text("Alphabetically by municipality")
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "arrow.up.arrow.down")
-                        }
-                    }
-                }
-
-            }
-            else {
+            else if searchViewModel.municipalitiesError == true {
                 ContentUnavailableView("Cannot load municipalities", systemImage: "exclamationmark.circle.fill", description: Text("An error occured when loading the municipalities. Try again later."))
                     .transition(.opacity)
+            }
+            else {
+                if let data = searchViewModel.municipalitiesData {
+                    let filtered = searchText != "" ? data.filter() { $0.Municipio!.lowercased().contains(searchText.lowercased()) } : data
+                    Group {
+                        if listHasContent == false {
+                            ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
+                                .transition(.opacity)
+                        }
+                        else {
+                            DataList(data: filtered)
+                        }
+                    }
+                    .onChange(of: filtered) {
+                        withAnimation(.default) {
+                            if filtered.isEmpty {
+                                listHasContent = false
+                            }
+                            else {
+                                listHasContent = true
+                            }
+                        }
+                    }
+                    .searchable(text: $searchText, prompt: "Search municipality")
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Menu {
+                                Button {
+                                    withAnimation(.default) {
+                                        sorting = .groupedProvince
+                                    }
+                                } label: {
+                                    if sorting == .groupedProvince {
+                                        Label("Grouped by province", systemImage: "checkmark")
+                                    }
+                                    else {
+                                        Text("Grouped by province")
+                                    }
+                                }
+                                Button {
+                                    withAnimation(.default) {
+                                        sorting = .alphabetical
+                                    }
+                                } label: {
+                                    if sorting == .alphabetical {
+                                        Label("Alphabetically by municipality", systemImage: "checkmark")
+                                    }
+                                    else {
+                                        Text("Alphabetically by municipality")
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "arrow.up.arrow.down")
+                            }
+                        }
+                    }
+                }
+                else {
+                    ContentUnavailableView("Cannot load municipalities", systemImage: "exclamationmark.circle.fill", description: Text("An error occured when loading the municipalities. Try again later."))
+                        .transition(.opacity)
+                }
             }
         }
         .navigationTitle("Search")
