@@ -24,64 +24,88 @@ struct StationsSheet: View {
                 }
                 else {
                     if let data = mapManager.data?.results {
-                        let processedData = {
-                            let d = addDistancesToStations(stations: data, lastLocation: location)
-                            let filtered = searchText != "" ? d.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : d
-                            let sorted = sortStations(stations: filtered, sortingMethod: selectedSorting)
-                            if hideStationsNotOpenPublic == true {
-                                return sorted.filter() { $0.saleType != .r }
-                            }
-                            else {
-                                return sorted
-                            }
-                        }()
-                        Group {
-                            if listHasContent == false {
-                                ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
-                                    .transition(.opacity)
-                            }
-                            else {
-                                List {
-                                    Section {
-                                        ForEach(processedData, id: \.self) { item in
-                                            Button {
-                                                mapManager.showStationsSheet.toggle()
-                                                // await to prevent opening a sheet with another one already open
-                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                                                    withAnimation(.easeOut) {
-                                                        mapManager.selectStation(station: item, centerLocation: true)
+                        if !data.isEmpty {
+                            Group {
+                                let processedData = {
+                                    let d = addDistancesToStations(stations: data, lastLocation: location)
+                                    let filtered = searchText != "" ? d.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : d
+                                    let sorted = sortStations(stations: filtered, sortingMethod: selectedSorting)
+                                    if hideStationsNotOpenPublic == true {
+                                        return sorted.filter() { $0.saleType != .r }
+                                    }
+                                    else {
+                                        return sorted
+                                    }
+                                }()
+                                Group {
+                                    if listHasContent == false {
+                                        ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
+                                            .transition(.opacity)
+                                    }
+                                    else {
+                                        List {
+                                            Section {
+                                                ForEach(processedData, id: \.self) { item in
+                                                    Button {
+                                                        mapManager.showStationsSheet.toggle()
+                                                        // await to prevent opening a sheet with another one already open
+                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                                                            withAnimation(.easeOut) {
+                                                                mapManager.selectStation(station: item, centerLocation: true)
+                                                            }
+                                                            Task {
+                                                                await mapManager.fetchData(latitude: item.latitude!, longitude: item.longitude!)
+                                                            }
+                                                        })
+                                                    } label: {
+                                                        StationListEntry(station: item, sortingMethod: selectedSorting)
                                                     }
-                                                    Task {
-                                                        await mapManager.fetchData(latitude: item.latitude!, longitude: item.longitude!)
-                                                    }
-                                                })
-                                            } label: {
-                                                StationListEntry(station: item, sortingMethod: selectedSorting)
+                                                }
+                                            } header: {
+                                                Text(sortingText(sortingMethod: selectedSorting))
+                                                    .fontWeight(.semibold)
+                                                    .padding(.bottom, 12)
+                                                    .padding(.leading, -12)
+                                                    .padding(.top, -12)
+                                                    .textCase(nil)
+                                                    .font(.system(size: 14))
                                             }
                                         }
-                                    } header: {
-                                        Text(sortingText(sortingMethod: selectedSorting))
-                                            .fontWeight(.semibold)
-                                            .padding(.bottom, 12)
-                                            .padding(.leading, -12)
-                                            .padding(.top, -12)
-                                            .textCase(nil)
-                                            .font(.system(size: 14))
+                                        .animation(.default, value: processedData)
+                                        .transition(.opacity)
                                     }
                                 }
-                                .animation(.default, value: processedData)
-                                .transition(.opacity)
+                                .onChange(of: processedData) {
+                                    withAnimation(.default) {
+                                        if processedData.isEmpty {
+                                            listHasContent = false
+                                        }
+                                        else {
+                                            listHasContent = true
+                                        }
+                                    }
+                                }
+                                .toolbar {
+                                    ToolbarItem(placement: .topBarLeading) {
+                                        Button {
+                                            mapManager.showStationsSheet.toggle()
+                                        } label: {
+                                            Image(systemName: "xmark")
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(.foreground.opacity(0.5))
+                                        }
+                                        .buttonStyle(BorderedButtonStyle())
+                                        .clipShape(Circle())
+                                    }
+                                    ToolbarItem(placement: .topBarTrailing) {
+                                        SortingPicker(selectedSorting: $selectedSorting)
+                                    }
+                                }
+                                .searchable(text: $searchText, prompt: "Search service station by name")
                             }
                         }
-                        .onChange(of: processedData) {
-                            withAnimation(.default) {
-                                if processedData.isEmpty {
-                                    listHasContent = false
-                                }
-                                else {
-                                    listHasContent = true
-                                }
-                            }
+                        else {
+                            ContentUnavailableView("No nearby stations", systemImage: "fuelpump.slash.fill", description: Text("There are no nearby service stations around your current position."))
                         }
                     }
                     else {
@@ -90,23 +114,6 @@ struct StationsSheet: View {
                 }
             }
             .navigationTitle("Nearby service stations")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        mapManager.showStationsSheet.toggle()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.foreground.opacity(0.5))
-                    }
-                    .buttonStyle(BorderedButtonStyle())
-                    .clipShape(Circle())
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    SortingPicker(selectedSorting: $selectedSorting)
-                }
-            }
-            .searchable(text: $searchText, prompt: "Search service station by name")
         }
         .onAppear {
             location = locationManager.lastLocation

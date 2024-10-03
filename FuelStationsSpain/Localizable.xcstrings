@@ -627,6 +627,16 @@
         }
       }
     },
+    "No nearby stations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay estaciones cercanas"
+          }
+        }
+      }
+    },
     "No results" : {
       "localizations" : {
         "es" : {
@@ -903,6 +913,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tema"
+          }
+        }
+      }
+    },
+    "There are no nearby service stations around your current position." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay estaciones de servicio cercanas a tu posición actual."
           }
         }
       }
