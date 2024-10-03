@@ -8,7 +8,6 @@ struct SearchStationsList: View {
     @EnvironmentObject private var searchViewModel: SearchViewModel
     @EnvironmentObject private var locationManager: LocationManager
     
-    @State private var location: CLLocation? = nil
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
@@ -26,7 +25,7 @@ struct SearchStationsList: View {
                     }
                     else {
                         if let data = searchViewModel.stationsData?.results {
-                            let data = addDistancesToStations(stations: data, lastLocation: location)
+                            let data = addDistancesToStations(stations: data, lastLocation: searchViewModel.location)
                             if data.isEmpty {
                                 ContentUnavailableView("No stations", systemImage: "fuelpump.slash.fill", description: Text("This municipality has no service stations."))
                                     .transition(.opacity)
@@ -92,9 +91,6 @@ struct SearchStationsList: View {
                 }
                 .navigationTitle(selectedMunicipality.Municipio?.capitalized ?? String(localized: "Municipality"))
                 .navigationBarTitleDisplayMode(.inline)
-                .onAppear {
-                    location = locationManager.lastLocation
-                }
             }
             else {
                 ContentUnavailableView("Select a municipality", systemImage: "building.columns.fill", description: Text("Select a municipality to see it's service stations."))

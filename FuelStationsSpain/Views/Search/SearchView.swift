@@ -3,6 +3,7 @@ import SwiftUI
 struct SearchView: View {
     
     @EnvironmentObject private var searchViewModel: SearchViewModel
+    @EnvironmentObject private var locationManager: LocationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
         
@@ -17,5 +18,8 @@ struct SearchView: View {
             SearchStationDetails()
         }
         .navigationSplitViewStyle(.balanced)
+        .onAppear {
+            searchViewModel.location = locationManager.lastLocation
+        }
     }
 }

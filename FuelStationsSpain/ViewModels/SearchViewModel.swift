@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 import SwiftUI
 
 @MainActor
@@ -14,6 +15,8 @@ class SearchViewModel: ObservableObject {
     @Published var stationsLoading: Bool = true
     
     @Published var selectedStation: FuelStation? = nil
+    
+    @Published var location: CLLocation? = nil
     
     init() {
         Task {
