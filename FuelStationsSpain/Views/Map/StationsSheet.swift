@@ -48,7 +48,9 @@ struct StationsSheet: View {
                                                 mapManager.showStationsSheet.toggle()
                                                 // await to prevent opening a sheet with another one already open
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                                                    mapManager.selectStation(station: item, centerLocation: true)
+                                                    withAnimation(.easeOut) {
+                                                        mapManager.selectStation(station: item, centerLocation: true)
+                                                    }
                                                     Task {
                                                         await mapManager.fetchData(latitude: item.latitude!, longitude: item.longitude!)
                                                     }

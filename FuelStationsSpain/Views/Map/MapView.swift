@@ -62,7 +62,9 @@ fileprivate struct MapComponent: View {
             GeometryReader(content: { geometry in
                 Group {
                     Button {
-                        mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
+                        withAnimation(.easeOut) {
+                            mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
+                        }
                     } label: {
                         Image(systemName: "location.fill.viewfinder")
                             .font(.system(size: 22))
