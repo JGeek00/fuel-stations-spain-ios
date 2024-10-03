@@ -110,6 +110,8 @@ struct SearchStationDetails: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 8.0))
                             }
                         }
+                        StationDetailsComponents.MapView(station: station)
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     }
                     .padding()
                 }

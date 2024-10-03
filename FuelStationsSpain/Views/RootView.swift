@@ -8,6 +8,7 @@ struct RootView: View {
     
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var mapManager: MapManager
+    @EnvironmentObject private var tabViewManager: TabViewManager
 
     func getColorScheme(theme: Enums.Theme) -> ColorScheme? {
         switch theme {
@@ -21,26 +22,30 @@ struct RootView: View {
     }
     
     var body: some View {
-        TabView {
+        TabView(selection: $tabViewManager.selectedTab) {
             MapView()
                 .tabItem {
                     Label("Map", systemImage: "map")
                 }
+                .tag(Enums.Tabs.map)
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "star")
                 }
+                .tag(Enums.Tabs.favorites)
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
+                .tag(Enums.Tabs.search)
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
+                .tag(Enums.Tabs.settings)
                 .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
         }
         .environment(\.horizontalSizeClass, .compact)

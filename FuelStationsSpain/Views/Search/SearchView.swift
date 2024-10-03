@@ -7,7 +7,6 @@ struct SearchView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
         
     @State private var columnVisibility = NavigationSplitViewVisibility.all
-    @State private var width = 0.0
         
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {

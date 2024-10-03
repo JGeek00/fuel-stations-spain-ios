@@ -1,5 +1,6 @@
 import SwiftUI
 import AlertToast
+import MapKit
 
 struct FavoriteDetailsView: View {
     var station: FuelStation
@@ -111,6 +112,8 @@ struct FavoriteDetailsView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         }
                     }
+                    StationDetailsComponents.MapView(station: station)
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 }
                 .padding()
             }

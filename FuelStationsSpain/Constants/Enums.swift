@@ -20,6 +20,13 @@ class Enums {
         }
     }
     
+    public enum Tabs: String {
+        case map
+        case favorites
+        case search
+        case settings
+    }
+    
     public enum ApiErrorReason: String {
         case connection
         case usage
