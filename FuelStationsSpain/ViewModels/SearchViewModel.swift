@@ -8,11 +8,19 @@ class SearchViewModel: ObservableObject {
     @Published var municipalitiesError: Bool = false
     @Published var municipalitiesLoading: Bool = true
     
+    @Published var municipalitiesSearchText = ""
+    @Published var municipalitiesListHasContent = true    // To make transition
+    @Published var municipalitiesSorting: Enums.SearchSortingOptions = .groupedProvince
+    
     @Published var selectedMunicipality: Municipality? = nil
     
     @Published var stationsData: FuelStationsResult? = nil
     @Published var stationsError: Bool = false
     @Published var stationsLoading: Bool = true
+    
+    @Published var stationsSearchText = ""
+    @Published var stationsListHasContent = true    // To make transition
+    @Published var stationsSelectedSorting: Enums.StationsSortingOptions = .proximity
     
     @Published var selectedStation: FuelStation? = nil
     

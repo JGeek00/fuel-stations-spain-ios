@@ -127,6 +127,16 @@
         }
       }
     },
+    "An error occured when loading the list of service stations. Try again later." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error al cargar la lista de estaciones de servicio. Prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
     "An error occured when loading the municipalities. Try again later." : {
       "localizations" : {
         "es" : {
@@ -223,6 +233,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se han podido cargar los municipios"
+          }
+        }
+      }
+    },
+    "Cannot load stations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pueden cargar las estaciones"
           }
         }
       }
@@ -973,6 +993,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este municipio no tiene estaciones de servicio."
+          }
+        }
+      }
+    },
+    "This station does not sell to the general public" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta estación no vende al público general"
           }
         }
       }

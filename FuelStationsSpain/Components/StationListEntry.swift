@@ -77,98 +77,113 @@ struct StationListEntry: View {
             return dateFormatter
         }()
         
-        HStack {
-            VStack(alignment: .leading) {
-                HStack {
-                    if let stationId = station.id, favoritesProvider.isFavorite(stationId: stationId) && !hideFavoriteSymbol {
-                        Group {
-                            Image(systemName: "star.fill")
-                                .foregroundStyle(Color.accentColor)
-                                .font(.system(size: 12))
-                            Spacer()
-                                .frame(width: 4)
-                        }
-                        .transition(.opacity)
-                    }
-                    if let signage = station.signage {
-                        Text(signage.capitalized)
-                            .font(.system(size: 18))
-                            .fontWeight(.semibold)
-                    }
-                }
-                Spacer()
-                    .frame(height: 4)
-                if let address = station.address {
-                    Text(address.capitalized)
-                        .font(.system(size: 14))
-                }
-                if sortingMethod != .proximity {
-                    if let distance = station.distanceToUserLocation {
-                        Spacer()
-                            .frame(height: 4)
-                        if distance < 1 {
-                            Text("\(Int(distance*1000)) m from your location")
-                                .font(.system(size: 14))
-                        } else {
-                            Text("\(formattedNumber(value: distance)) Km from your location")
-                                .font(.system(size: 14))
-                        }
-                    }
-                }
-                Spacer()
-                    .frame(height: 4)
-                if let schedule = station.openingHours {
-                    let formattedSchedule = getStationSchedule(schedule)
-                    if let formattedSchedule = formattedSchedule {
-                        Group {
-                            if formattedSchedule.schedule.isEmpty && formattedSchedule.isCurrentlyOpen == true {
-                                Text("Open 24 hours")
-                                    .foregroundStyle(Color.green)
+        VStack(alignment: .leading) {
+            HStack {
+                VStack(alignment: .leading) {
+                    HStack {
+                        if let stationId = station.id, favoritesProvider.isFavorite(stationId: stationId) && !hideFavoriteSymbol {
+                            Group {
+                                Image(systemName: "star.fill")
+                                    .foregroundStyle(Color.accentColor)
+                                    .font(.system(size: 12))
+                                Spacer()
+                                    .frame(width: 4)
                             }
-                            else if formattedSchedule.isCurrentlyOpen == true {
-                                if formattedSchedule.schedule.count == 2 {
-                                    Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[1]))")
+                            .transition(.opacity)
+                        }
+                        if let signage = station.signage {
+                            Text(signage.capitalized)
+                                .font(.system(size: 18))
+                                .fontWeight(.semibold)
+                        }
+                    }
+                    Spacer()
+                        .frame(height: 4)
+                    if let address = station.address {
+                        Text(address.capitalized)
+                            .font(.system(size: 14))
+                    }
+                    if sortingMethod != .proximity {
+                        if let distance = station.distanceToUserLocation {
+                            Spacer()
+                                .frame(height: 4)
+                            if distance < 1 {
+                                Text("\(Int(distance*1000)) m from your location")
+                                    .font(.system(size: 14))
+                            } else {
+                                Text("\(formattedNumber(value: distance)) Km from your location")
+                                    .font(.system(size: 14))
+                            }
+                        }
+                    }
+                    Spacer()
+                        .frame(height: 4)
+                    if let schedule = station.openingHours {
+                        let formattedSchedule = getStationSchedule(schedule)
+                        if let formattedSchedule = formattedSchedule {
+                            Group {
+                                if formattedSchedule.schedule.isEmpty && formattedSchedule.isCurrentlyOpen == true {
+                                    Text("Open 24 hours")
                                         .foregroundStyle(Color.green)
                                 }
-                                else if formattedSchedule.schedule.count == 4 {
-                                    let now = Date()
-                                    if now < formattedSchedule.schedule[1] {
+                                else if formattedSchedule.isCurrentlyOpen == true {
+                                    if formattedSchedule.schedule.count == 2 {
                                         Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[1]))")
                                             .foregroundStyle(Color.green)
                                     }
-                                    else {
-                                        Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[3]))")
-                                            .foregroundStyle(Color.green)
+                                    else if formattedSchedule.schedule.count == 4 {
+                                        let now = Date()
+                                        if now < formattedSchedule.schedule[1] {
+                                            Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[1]))")
+                                                .foregroundStyle(Color.green)
+                                        }
+                                        else {
+                                            Text("Open until \(dateFormatter.string(from: formattedSchedule.schedule[3]))")
+                                                .foregroundStyle(Color.green)
+                                        }
                                     }
                                 }
+                                else if formattedSchedule.isCurrentlyOpen == false {
+                                    Text("Currently closed")
+                                        .foregroundStyle(Color.red)
+                                }
+                                else {
+                                    EmptyView()
+                                }
                             }
-                            else if formattedSchedule.isCurrentlyOpen == false {
-                                Text("Currently closed")
-                                    .foregroundStyle(Color.red)
-                            }
-                            else {
-                                EmptyView()
-                            }
+                            .font(.system(size: 14))
+                            .fontWeight(.medium)
                         }
-                        .font(.system(size: 14))
-                        .fontWeight(.medium)
-                    }
-                    else {
-                        EmptyView()
+                        else {
+                            EmptyView()
+                        }
                     }
                 }
+                if let value = getValue() {
+                    Spacer()
+                    Text(value)
+                        .font(.system(size: 16))
+                        .fontWeight(.semibold)
+                }
+                else {
+                    Spacer()
+                    Text(verbatim: "N/A")
+                        .font(.system(size: 16))
+                        .fontWeight(.semibold)
+                }
             }
-            if let value = getValue() {
+            if station.saleType == .r {
                 Spacer()
-                Text(value)
-                    .font(.system(size: 16))
-                    .fontWeight(.semibold)
-            }
-            else {
-                Spacer()
-                Text(verbatim: "N/A")
-                    .font(.system(size: 16))
-                    .fontWeight(.semibold)
+                    .frame(height: 6)
+                HStack {
+                    Image(systemName: "exclamationmark.circle")
+                    Spacer()
+                        .frame(width: 6)
+                    Text("This station does not sell to the general public")
+                }
+                .foregroundStyle(Color.red)
+                .font(.system(size: 14))
+                .fontWeight(.medium)
             }
         }
         .foregroundStyle(Color.foreground)

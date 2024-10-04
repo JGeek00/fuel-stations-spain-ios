@@ -7,10 +7,6 @@ struct SearchStationsList: View {
     
     @EnvironmentObject private var searchViewModel: SearchViewModel
     @EnvironmentObject private var locationManager: LocationManager
-    
-    @State private var searchText = ""
-    @State private var listHasContent = true    // To make transition
-    @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
         
     var body: some View {
         NavigationStack {
@@ -31,10 +27,10 @@ struct SearchStationsList: View {
                                     .transition(.opacity)
                             }
                             else {
-                                let sorted = sortStations(stations: data, sortingMethod: selectedSorting)
-                                let filtered = searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sorted
+                                let sorted = sortStations(stations: data, sortingMethod: searchViewModel.stationsSelectedSorting)
+                                let filtered = searchViewModel.stationsSearchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(searchViewModel.stationsSearchText.lowercased()) } : sorted
                                 Group {
-                                    if listHasContent == false {
+                                    if searchViewModel.stationsListHasContent == false {
                                         ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
                                             .transition(.opacity)
                                     }
@@ -42,14 +38,14 @@ struct SearchStationsList: View {
                                         List(selection: $searchViewModel.selectedStation) {
                                             Section {
                                                 ForEach(filtered, id: \.self) { item in
-                                                    StationListEntry(station: item, sortingMethod: selectedSorting)
+                                                    StationListEntry(station: item, sortingMethod: searchViewModel.stationsSelectedSorting)
                                                 }
                                             } header: {
                                                 HStack {
                                                     if horizontalSizeClass == .regular {
                                                         Spacer()
                                                     }
-                                                    Text(sortingText(sortingMethod: selectedSorting))
+                                                    Text(sortingText(sortingMethod: searchViewModel.stationsSelectedSorting))
                                                         .fontWeight(.semibold)
                                                         .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
                                                         .padding(.bottom, 12)
@@ -69,17 +65,17 @@ struct SearchStationsList: View {
                                 .onChange(of: filtered) {
                                     withAnimation(.default) {
                                         if filtered.isEmpty {
-                                            listHasContent = false
+                                            searchViewModel.stationsListHasContent = false
                                         }
                                         else {
-                                            listHasContent = true
+                                            searchViewModel.stationsListHasContent = true
                                         }
                                     }
                                 }
-                                .searchable(text: $searchText, prompt: "Search service station by name")
+                                .searchable(text: $searchViewModel.stationsSearchText, prompt: "Search service station by name")
                                 .toolbar {
                                     ToolbarItem(placement: .topBarTrailing) {
-                                        SortingPicker(selectedSorting: $selectedSorting)
+                                        SortingPicker(selectedSorting: $searchViewModel.stationsSelectedSorting)
                                     }
                                 }
                             }

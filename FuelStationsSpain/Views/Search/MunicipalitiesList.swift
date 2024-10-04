@@ -10,10 +10,6 @@ struct SearchMunicipalitiesList: View {
     
     @EnvironmentObject private var searchViewModel: SearchViewModel
     
-    @State private var searchText = ""
-    @State private var listHasContent = true    // To make transition
-    @State private var sorting: Enums.SearchSortingOptions = .groupedProvince
-    
     var body: some View {
         Group {
             if searchViewModel.municipalitiesLoading == true {
@@ -26,9 +22,9 @@ struct SearchMunicipalitiesList: View {
             }
             else {
                 if let data = searchViewModel.municipalitiesData {
-                    let filtered = searchText != "" ? data.filter() { $0.Municipio!.lowercased().contains(searchText.lowercased()) } : data
+                    let filtered = searchViewModel.municipalitiesSearchText != "" ? data.filter() { $0.Municipio!.lowercased().contains(searchViewModel.municipalitiesSearchText.lowercased()) } : data
                     Group {
-                        if listHasContent == false {
+                        if searchViewModel.municipalitiesListHasContent == false {
                             ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
                                 .transition(.opacity)
                         }
@@ -39,23 +35,23 @@ struct SearchMunicipalitiesList: View {
                     .onChange(of: filtered) {
                         withAnimation(.default) {
                             if filtered.isEmpty {
-                                listHasContent = false
+                                searchViewModel.municipalitiesListHasContent = false
                             }
                             else {
-                                listHasContent = true
+                                searchViewModel.municipalitiesListHasContent = true
                             }
                         }
                     }
-                    .searchable(text: $searchText, prompt: "Search municipality")
+                    .searchable(text: $searchViewModel.municipalitiesSearchText, prompt: "Search municipality")
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Menu {
                                 Button {
                                     withAnimation(.default) {
-                                        sorting = .groupedProvince
+                                        searchViewModel.municipalitiesSorting = .groupedProvince
                                     }
                                 } label: {
-                                    if sorting == .groupedProvince {
+                                    if searchViewModel.municipalitiesSorting == .groupedProvince {
                                         Label("Grouped by province", systemImage: "checkmark")
                                     }
                                     else {
@@ -64,10 +60,10 @@ struct SearchMunicipalitiesList: View {
                                 }
                                 Button {
                                     withAnimation(.default) {
-                                        sorting = .alphabetical
+                                        searchViewModel.municipalitiesSorting = .alphabetical
                                     }
                                 } label: {
-                                    if sorting == .alphabetical {
+                                    if searchViewModel.municipalitiesSorting == .alphabetical {
                                         Label("Alphabetically by municipality", systemImage: "checkmark")
                                     }
                                     else {
@@ -99,7 +95,7 @@ struct SearchMunicipalitiesList: View {
     
     @ViewBuilder
     private func DataList(data: [Municipality]) -> some View {
-        switch sorting {
+        switch searchViewModel.municipalitiesSorting {
         case .groupedProvince:
             let groupedByProvince: [Province] = {
                 var groupedMunicipalities = [String: [Municipality]]()
