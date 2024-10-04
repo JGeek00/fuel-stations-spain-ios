@@ -282,33 +282,36 @@ class StationDetailsComponents {
         
         @EnvironmentObject private var mapManager: MapManager
         @EnvironmentObject private var tabViewManager: TabViewManager
+        @EnvironmentObject private var locationManager: LocationManager
         
         @State private var camera = MapCameraPosition.region(.init(center: Config.defaultCoordinates, span: .init(latitudeDelta: delta, longitudeDelta: delta)))
         
         var body: some View {
-            Group {
+            VStack {
                 if let signage = station.signage, let latitude = station.latitude, let longitude = station.longitude {
                     Map(position: $camera, interactionModes: []) {
                         Marker(signage.capitalized, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
                     }
                     .mapStyle(.standard(pointsOfInterest: .excludingAll))
                     .frame(height: 300)
-                    .overlay(alignment: .topTrailing) {
-                        Button {
+                    Spacer()
+                        .frame(height: 4)
+                    HStack {
+                        Button("Show in map") {
                             mapManager.selectStation(station: station, centerLocation: true)
                             tabViewManager.selectedTab = .map
-                        } label: {
-                            Image(systemName: "map.fill")
-                                .font(.system(size: 22))
-                                .foregroundStyle(Color.foreground)
-                                .contentShape(Rectangle())
                         }
-                        .frame(width: 40, height: 40)
-                        .background(.regularMaterial)
-                        .cornerRadius(10)
-                        .shadow(color: .black.opacity(0.3), radius: 5)
-                        .offset(x: -12, y: 12)
+                        .frame(maxWidth: .infinity)
+                        if let lastLocation = locationManager.lastLocation {
+                            Divider()
+                                .frame(width: 1)
+                            Button("How to get there") {
+                                openInMapsApp(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
                     }
+                    .padding()
                 }
             }
             .onChange(of: station, initial: true) {

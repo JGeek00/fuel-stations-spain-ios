@@ -487,6 +487,16 @@
         }
       }
     },
+    "How to get there" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo llegar"
+          }
+        }
+      }
+    },
     "Hydrogen" : {
       "localizations" : {
         "es" : {
@@ -867,6 +877,16 @@
         }
       }
     },
+    "Show in map" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver en el mapa"
+          }
+        }
+      }
+    },
     "Sorted by %@ price" : {
       "localizations" : {
         "es" : {
@@ -993,6 +1013,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sí"
+          }
+        }
+      }
+    },
+    "Your position" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu posición"
           }
         }
       }

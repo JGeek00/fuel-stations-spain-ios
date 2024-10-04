@@ -152,6 +152,20 @@ struct StationDetailsSheet: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 8.0))
                             }
                         }
+                        if let lastLocation = locationManager.lastLocation, let latitude = station.latitude, let longitude = station.longitude, let signage = station.signage {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    openInMapsApp(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
+                                } label: {
+                                    Label("How to get there", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .clipShape(.rect(cornerRadius: 30))
+                                Spacer()
+                            }
+                            .padding(.top, 12)
+                        }
                     }
                 }
                 .padding()

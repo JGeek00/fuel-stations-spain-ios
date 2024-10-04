@@ -109,6 +109,7 @@ struct SearchStationDetails: View {
                             }
                         }
                         StationDetailsComponents.MapView(station: station)
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     }
                     .padding()
