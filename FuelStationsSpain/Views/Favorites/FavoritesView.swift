@@ -76,6 +76,12 @@ struct FavoritesView: View {
                                         }
                                     }
                                 }
+                                .searchable(text: $searchText, prompt: "Search service station by name")
+                                .toolbar {
+                                    ToolbarItem(placement: .topBarTrailing) {
+                                        SortingPicker(selectedSorting: $selectedSorting)
+                                    }
+                                }
                             }
                         }
                         else {
@@ -85,12 +91,6 @@ struct FavoritesView: View {
                     }
                 }
                 .navigationTitle("Favorites")
-                .searchable(text: $searchText, prompt: "Search service station by name")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        SortingPicker(selectedSorting: $selectedSorting)
-                    }
-                }
                 .navigationSplitViewColumnWidth(min: width*0.3, ideal: width*0.4, max: width*0.5)
             } detail: {
                 if let selectedStation = selectedStation {

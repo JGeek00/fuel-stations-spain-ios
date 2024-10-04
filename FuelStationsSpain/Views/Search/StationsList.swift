@@ -21,7 +21,7 @@ struct SearchStationsList: View {
                             .transition(.opacity)
                     }
                     else if searchViewModel.stationsError == true {
-                        ContentUnavailableView("Select a municipality", systemImage: "building.columns.fill", description: Text("Select a municipality to see it's service stations."))
+                        ContentUnavailableView("Cannot load stations", systemImage: "exclamationmark.circle.fill", description: Text("An error occured when loading the list of service stations. Try again later."))
                     }
                     else {
                         if let data = searchViewModel.stationsData?.results {
@@ -85,7 +85,7 @@ struct SearchStationsList: View {
                             }
                         }
                         else {
-                            ContentUnavailableView("Select a municipality", systemImage: "building.columns.fill", description: Text("Select a municipality to see it's service stations."))
+                            ContentUnavailableView("Cannot load stations", systemImage: "exclamationmark.circle.fill", description: Text("An error occured when loading the list of service stations. Try again later."))
                         }
                     }
                 }
