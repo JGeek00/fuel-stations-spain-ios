@@ -59,7 +59,7 @@ class MapManager: ObservableObject {
         self.latitude = value.camera.centerCoordinate.latitude
         self.longitude = value.camera.centerCoordinate.longitude
 
-        if !(self.firstLoadCompleted == true && (previousLoadCoordinates == nil || (previousLoadCoordinates != nil && distanceBetweenCoordinates(Coordinate(latitude: latitude, longitude: longitude), previousLoadCoordinates!) > Config.minimumRefetchDistance))) {
+        if !(self.firstLoadCompleted == true && (previousLoadCoordinates == nil || (previousLoadCoordinates != nil && distanceBetweenCoordinates(Coordinate(latitude: latitude, longitude: longitude), previousLoadCoordinates!) > Config.defaultFetchDistance))) {
             return
         }
         
@@ -73,7 +73,7 @@ class MapManager: ObservableObject {
             self.loading = true
         }
         
-        let result = await ApiClient.fetchServiceStationsByLocation(lat: latitude, long: longitude, distance: 30)
+        let result = await ApiClient.fetchServiceStationsByLocation(lat: latitude, long: longitude, distance: (Config.defaultFetchDistance*0.75).truncate())
         
         if result.successful == true {
             DispatchQueue.main.async {
