@@ -7,4 +7,5 @@ class StorageKeys {
     public static let favoritesIds = "FAVORITES_IDS"
     public static let hideStationsNotOpenPublic = "HIDE_STATIONS_NOT_OPEN_TO_PUBLIC"
     public static let favoriteFuel = "FAVORITE_FUEL"
+    public static let hideStationsDontHaveFavoriteFuel = "HIDE_STATIONS_DONT_HAVE_FAVORITE_FUEL"
 }

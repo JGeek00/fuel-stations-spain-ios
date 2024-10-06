@@ -7,5 +7,4 @@ class Config {
     static let defaultCoordinates = CLLocationCoordinate2D(latitude: 40.4166359, longitude: -3.7038101)
     static let mapDefaultZoom = 0.03
     static let defaultFetchDistance = 20.0
-    static let maxFavoriteFuels = 3
 }

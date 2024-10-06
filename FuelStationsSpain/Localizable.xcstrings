@@ -407,16 +407,6 @@
         }
       }
     },
-    "Fuels" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Combustibles"
-          }
-        }
-      }
-    },
     "Gas" : {
       "localizations" : {
         "es" : {
@@ -527,6 +517,16 @@
         }
       }
     },
+    "Hide stations that don't sell the selected favorite fuel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar las estaciones que no venden el combustible seleccionado como favorito"
+          }
+        }
+      }
+    },
     "How to get there" : {
       "localizations" : {
         "es" : {
@@ -543,6 +543,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hidrógeno"
+          }
+        }
+      }
+    },
+    "If you select a favorite fuel, the price will appear directly on the map on each service station marker. It will also appear directly on each favorite station and when searching stations by locality." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si seleccionas un combustible favorito, el precio aparecerá directamente en el mapa en cada marcador de estación de servicio. También aparecerá directamente en cada estación favorita, y al buscar estaciones por localidad."
           }
         }
       }
@@ -713,6 +723,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No hay estaciones"
+          }
+        }
+      }
+    },
+    "None" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguno"
           }
         }
       }
@@ -893,26 +913,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Selecciona una estación"
-          }
-        }
-      }
-    },
-    "Select favorite fuel" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seleccionar combustible favorito"
-          }
-        }
-      }
-    },
-    "Select up to %lld favorite fuels" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona hasta %lld combustibles favoritos"
           }
         }
       }

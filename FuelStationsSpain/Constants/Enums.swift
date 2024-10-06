@@ -51,7 +51,8 @@ class Enums {
         case hydrogen
     }
     
-    public enum FuelTypes: String {
+    public enum FavoriteFuelType: String {
+        case none
         case aGasoil
         case bGasoil
         case premiumGasoil

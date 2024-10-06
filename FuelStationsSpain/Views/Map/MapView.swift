@@ -23,18 +23,61 @@ fileprivate struct MapComponent: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
+    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
+    @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
+    
+    private func getFuelValue(_ item: FuelStation, property: Enums.FavoriteFuelType) -> Double? {
+        switch property {
+        case .none:
+            return nil
+        case .aGasoil:
+            return item.gasoilAPrice
+        case .bGasoil:
+            return item.gasoilBPrice
+        case .premiumGasoil:
+            return item.premiumGasoilPrice
+        case .biodiesel:
+            return item.biodieselPrice
+        case .gasoline95E10:
+            return item.gasoline95E10Price
+        case .gasoline95E5:
+            return item.gasoline95E5Price
+        case .gasoline95E5Premium:
+            return item.gasoline95E5PremiumPrice
+        case .gasoline98E10:
+            return item.gasoline98E5Price
+        case .gasoline98E5:
+            return item.gasoline98E5Price
+        case .bioethanol:
+            return item.bioethanolPrice
+        case .cng:
+            return item.cngPrice
+        case .lng:
+            return item.lngPrice
+        case .lpg:
+            return item.lpgPrice
+        case .hydrogen:
+            return item.hydrogenPrice
+        }
+    }
 
     var body: some View {
         Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
             if let stations = mapManager.data?.results {
                 let markers = {
-                    let m = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
+                    var m = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
                     if hideStationsNotOpenPublic == true {
-                        return m.filter() { $0.saleType != .r }
+                        m = m.filter() { $0.saleType != .r }
                     }
-                    else {
-                        return m
+                    if hideStationsDontHaveFavoriteFuel == true && favoriteFuel != .none {
+                        m = m.filter() { item in
+                            if getFuelValue(item, property: favoriteFuel) != nil {
+                                return true
+                            }
+                            return false
+                        }
                     }
+                    return m
                 }()
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
