@@ -51,6 +51,23 @@ class Enums {
         case hydrogen
     }
     
+    public enum FuelTypes: String {
+        case aGasoil
+        case bGasoil
+        case premiumGasoil
+        case biodiesel
+        case gasoline95E10
+        case gasoline95E5
+        case gasoline95E5Premium
+        case gasoline98E10
+        case gasoline98E5
+        case bioethanol
+        case cng
+        case lng
+        case lpg
+        case hydrogen
+    }
+    
     public enum SearchSortingOptions: String {
         case groupedProvince
         case alphabetical

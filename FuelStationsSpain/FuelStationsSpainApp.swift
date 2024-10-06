@@ -22,6 +22,7 @@ struct FuelStationsSpainApp: App {
                 .environmentObject(MapManager.shared)
                 .environmentObject(FavoritesProvider.shared)
                 .environmentObject(TabViewManager.shared)
+                .environmentObject(FavoriteFuelProvider.shared)
                 .environmentObject(FavoritesListViewModel())
                 .environmentObject(SearchViewModel())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)

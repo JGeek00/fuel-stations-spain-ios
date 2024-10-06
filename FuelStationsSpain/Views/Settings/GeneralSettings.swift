@@ -6,6 +6,11 @@ struct GeneralSettings: View {
     
     var body: some View {
         List {
+            Section("Fuels") {
+                NavigationLink("Select favorite fuel") {
+                    FavoriteFuelPicker()
+                }
+            }
             Section("Map") {
                 Toggle("Hide stations that aren't open to the general public", isOn: $hideStationsNotOpenPublic)
             }

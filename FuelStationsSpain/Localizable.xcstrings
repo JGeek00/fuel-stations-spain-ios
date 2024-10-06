@@ -377,6 +377,16 @@
         }
       }
     },
+    "Favorite fuel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combustible favorito"
+          }
+        }
+      }
+    },
     "Favorites" : {
       "localizations" : {
         "es" : {
@@ -393,6 +403,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Precio de combustible"
+          }
+        }
+      }
+    },
+    "Fuels" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combustibles"
           }
         }
       }
@@ -873,6 +893,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Selecciona una estación"
+          }
+        }
+      }
+    },
+    "Select favorite fuel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar combustible favorito"
+          }
+        }
+      }
+    },
+    "Select up to %lld favorite fuels" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona hasta %lld combustibles favoritos"
           }
         }
       }
