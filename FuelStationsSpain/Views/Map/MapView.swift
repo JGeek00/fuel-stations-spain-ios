@@ -107,7 +107,8 @@ fileprivate struct MapComponent: View {
     
     @ViewBuilder
     private func MapMarker(_ value: FuelStation) -> some View {
-        if favoriteFuel != .none, let fuelPrice: Double = FuelStation.getObjectProperty(station: value, propertyName: "\(favoriteFuel.rawValue)Price") {
+        let fuelPrice: Double? = FuelStation.getObjectProperty(station: value, propertyName: "\(favoriteFuel.rawValue)Price")
+        if favoriteFuel != .none, let fuelPrice = fuelPrice {
             PriceMarker()
                 .foregroundStyle(Color.background)
                 .frame(width: 50, height: 30)

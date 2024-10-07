@@ -50,9 +50,9 @@ let favoriteFuels: [FuelSection] = [
     FuelSection(
         label: String(localized: "Gas"),
         fuels: [
-            FavoriteFuel(label: String(localized: "Compressed Natural Gas"), fuelType: .CNG),
-            FavoriteFuel(label: String(localized: "Liquefied Natural Gas"), fuelType: .LNG),
-            FavoriteFuel(label: String(localized: "Liquefied petroleum gases"), fuelType: .LPG),
+            FavoriteFuel(label: String(localized: "Compressed Natural Gas"), fuelType: .cng),
+            FavoriteFuel(label: String(localized: "Liquefied Natural Gas"), fuelType: .lng),
+            FavoriteFuel(label: String(localized: "Liquefied petroleum gases"), fuelType: .lpg),
         ]
     ),
     FuelSection(

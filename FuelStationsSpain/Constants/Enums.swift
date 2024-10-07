@@ -63,9 +63,9 @@ class Enums {
         case gasoline98E10
         case gasoline98E5
         case bioethanol
-        case CNG
-        case LNG
-        case LPG
+        case cng
+        case lng
+        case lpg
         case hydrogen
     }
     
