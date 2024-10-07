@@ -47,10 +47,10 @@ struct StationsSheet: View {
                                             Section {
                                                 ForEach(processedData, id: \.self) { item in
                                                     Button {
-                                                        mapManager.showStationsSheet.toggle()
+                                                        mapManager.showStationsSheet = false
                                                         // await to prevent opening a sheet with another one already open
                                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                                                            withAnimation(.easeOut) {
+                                                            withAnimation(.easeOut) { 
                                                                 mapManager.selectStation(station: item, centerLocation: true)
                                                             }
                                                             Task {

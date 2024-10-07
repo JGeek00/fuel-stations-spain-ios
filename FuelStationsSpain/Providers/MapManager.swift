@@ -24,6 +24,7 @@ class MapManager: ObservableObject {
     @Published var showStationsSheet = false
     
     @Published var selectedStation: FuelStation? = nil
+    @Published var selectedStationAnimation: FuelStation? = nil  // Only affects the animation, just to improve it
     @Published var showStationSheet = false
         
     private var previousLoadCoordinates: Coordinate? = nil
@@ -111,10 +112,40 @@ class MapManager: ObservableObject {
     }
     
     func selectStation(station: FuelStation, centerLocation: Bool = false) {
+        self.selectedStationAnimation = station
         self.selectedStation = station
         if centerLocation == true {
             centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
         }
         self.showStationSheet.toggle()
+    }
+    
+    func selectStationWithDelay(station: FuelStation, centerLocation: Bool = false) {
+        Task {
+            self.selectedStationAnimation = nil
+            
+            // await to prevent opening a sheet with another one already open
+            if self.showStationSheet == true {
+                self.showStationSheet = false
+                try await Task.sleep(for: .seconds(0.7))
+            }
+            
+            self.selectedStation = station
+            self.selectedStationAnimation = station
+            
+            if centerLocation == true {
+                centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
+            }
+            
+            self.showStationSheet.toggle()
+        }
+    }
+    
+    func unselectStation() {
+        self.showStationSheet = false
+        self.selectedStationAnimation = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.selectedStation = nil
+        }
     }
 }

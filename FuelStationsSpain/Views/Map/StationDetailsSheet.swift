@@ -47,10 +47,7 @@ struct StationDetailsSheet: View {
                             .clipShape(Circle())
                         }
                         Button {
-                            mapManager.showStationSheet = false
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                mapManager.selectedStation = nil
-                            }
+                            mapManager.unselectStation()
                         } label: {
                             Image(systemName: "xmark")
                                 .fontWeight(.semibold)

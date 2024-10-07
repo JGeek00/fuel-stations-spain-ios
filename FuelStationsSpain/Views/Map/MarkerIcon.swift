@@ -1,7 +1,26 @@
 import Foundation
 import SwiftUI
 
-struct MarkerIcon: Shape {
+struct PriceMarker: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let width = rect.size.width
+        let height = rect.size.height
+        
+        path.move(to: CGPoint(x: width*0.5, y: height))
+        path.addLine(to: CGPoint(x: width*0.4, y: height*0.8))
+        path.addLine(to: CGPoint(x: 0, y: height*0.8))
+        path.addLine(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: width, y: 0))
+        path.addLine(to: CGPoint(x: width, y: height*0.8))
+        path.addLine(to: CGPoint(x: width*0.6, y: height*0.8))
+        path.closeSubpath()
+        
+        return path
+    }
+}
+
+struct NormalMarker: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let width = rect.size.width

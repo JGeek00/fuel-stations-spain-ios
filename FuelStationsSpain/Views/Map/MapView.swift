@@ -81,19 +81,36 @@ fileprivate struct MapComponent: View {
                 }()
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
-                        MarkerIcon()
-                            .foregroundStyle(LinearGradient(gradient: Gradient(colors: [Color.markerGradientStart, Color.markerGradientEnd]), startPoint: .top, endPoint: .bottom))
-                            .frame(width: 30, height: 30)
-                            .onTapGesture {
-                                Task {
-                                    // await to prevent opening a sheet with another one already open
-                                    if mapManager.showStationSheet == true {
-                                        mapManager.showStationSheet = false
-                                        try await Task.sleep(for: .seconds(0.7))
-                                    }
-                                    mapManager.selectStation(station: value)
+                        if favoriteFuel != .none, let fuelPrice = getFuelValue(value, property: favoriteFuel) {
+                            PriceMarker()
+                                .foregroundStyle(.thickMaterial)
+                                .frame(width: 50, height: 30)
+                                .overlay(alignment: .center) {
+                                    Text(verbatim: "\(formattedNumber(value: fuelPrice, digits: 3))€")
+                                        .font(.system(size: 12))
+                                        .fontWeight(.medium)
+                                        .padding(.bottom, 30*0.2)
                                 }
-                            }
+                                .overlay(
+                                    PriceMarker().stroke(Color.gray, lineWidth: 0.5)
+                                )
+                                .shadow(color: .black.opacity(0.3), radius: 5)
+                                .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
+                                .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
+                                .onTapGesture {
+                                    mapManager.selectStationWithDelay(station: value)
+                                }
+                        }
+                        else {
+                            NormalMarker()
+                                .foregroundStyle(LinearGradient(gradient: Gradient(colors: [Color.markerGradientStart, Color.markerGradientEnd]), startPoint: .top, endPoint: .bottom))
+                                .frame(width: 30, height: 30)
+                                .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
+                                .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
+                                .onTapGesture {
+                                    mapManager.selectStationWithDelay(station: value)
+                                }
+                        }
                     }
                 }
             }
@@ -123,10 +140,8 @@ fileprivate struct MapComponent: View {
                 .offset(x: geometry.size.width - 52, y: 12)
                 Group {
                     Button {
-                        if mapManager.showStationSheet == true {
-                            mapManager.showStationSheet = false
-                        }
-                        mapManager.showStationsSheet.toggle()
+                        mapManager.unselectStation()
+                        mapManager.showStationsSheet = true
                     } label: {
                         Image(systemName: "list.bullet")
                             .font(.system(size: 22))
@@ -197,7 +212,10 @@ fileprivate struct MapComponent: View {
         .sheet(isPresented: $mapManager.showStationsSheet, content: {
             StationsSheet()
         })
-        .sheet(isPresented: $mapManager.showStationSheet) {
+        .sheet(isPresented: $mapManager.showStationSheet, onDismiss: {
+            mapManager.selectedStationAnimation = nil
+            mapManager.selectedStation = nil
+        }, content: {
             if horizontalSizeClass == .compact {
                 StationDetailsSheet()
                     .presentationBackground(Material.regular)
@@ -210,6 +228,6 @@ fileprivate struct MapComponent: View {
                 StationDetailsSheet()
                     .presentationBackground(Material.regular)
             }
-        }
+        })
     }
 }
