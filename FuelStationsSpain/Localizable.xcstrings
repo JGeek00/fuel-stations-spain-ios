@@ -207,6 +207,16 @@
         }
       }
     },
+    "Cannot establish a connection to the server. Check your Internet connection or try again later." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede establecer una conexión con el servidor. Comprueba tu conexión a internet o prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
     "Cannot establish a connection with the server. Check your Internet connection." : {
       "localizations" : {
         "es" : {
@@ -283,6 +293,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gas Natural Comprimido"
+          }
+        }
+      }
+    },
+    "Connection error" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de conexión"
           }
         }
       }
@@ -987,6 +1007,16 @@
         }
       }
     },
+    "The data provider has a system to prevent overloads. Move the map slower to load the data. Restart the app and try again." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El proveedor de datos tiene un sistema para prevenir sobrecargas. Mueve el mapa más despacio para cargar los datos. Reinicia la app y prueba de nuevo."
+          }
+        }
+      }
+    },
     "Theme" : {
       "localizations" : {
         "es" : {
@@ -1083,6 +1113,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sí"
+          }
+        }
+      }
+    },
+    "You are moving the map too fast" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estás moviendo el mapa demasiado rápido"
           }
         }
       }

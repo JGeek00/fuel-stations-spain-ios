@@ -31,6 +31,9 @@ class MapManager: ObservableObject {
     private var previousLoadCoordinates: Coordinate? = nil
     private var firstLoadCompleted = false
     
+    @Published var movingMapFastAlert = false
+    @Published var connectionErrorAlert = false
+    
     var latitude = 0.0
     var longitude = 0.0
     
@@ -91,9 +94,11 @@ class MapManager: ObservableObject {
                 withAnimation(.default) {
                     if result.statusCode == 429 {
                         self.error = .usage
+                        self.movingMapFastAlert = true
                     }
                     else {
                         self.error = .connection
+                        self.connectionErrorAlert = true
                     }
                     self.loading = false
                 }

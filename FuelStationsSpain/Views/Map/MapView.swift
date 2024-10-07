@@ -84,6 +84,20 @@ fileprivate struct MapComponent: View {
                     Text("Unknown error.")
             }
         })
+        .alert("You are moving the map too fast", isPresented: $mapManager.movingMapFastAlert, actions: {
+            Button("Close") {
+                mapManager.movingMapFastAlert = false
+            }
+        }, message: {
+            Text("The data provider has a system to prevent overloads. Move the map slower to load the data. Restart the app and try again.")
+        })
+        .alert("Connection error", isPresented: $mapManager.connectionErrorAlert, actions: {
+            Button("Close") {
+                mapManager.connectionErrorAlert = true
+            }
+        }, message: {
+            Text("Cannot establish a connection to the server. Check your Internet connection or try again later.")
+        })
         .sheet(isPresented: $mapManager.showStationsSheet, content: {
             StationsSheet()
         })
