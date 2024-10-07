@@ -417,6 +417,16 @@
         }
       }
     },
+    "Finish" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finalizar"
+          }
+        }
+      }
+    },
     "Fuel price" : {
       "localizations" : {
         "es" : {
@@ -513,6 +523,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajustes generales"
+          }
+        }
+      }
+    },
+    "Get started" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empezar"
           }
         }
       }
@@ -627,6 +647,16 @@
         }
       }
     },
+    "Location access" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso a localización"
+          }
+        }
+      }
+    },
     "Location access required" : {
       "localizations" : {
         "es" : {
@@ -683,6 +713,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Las estaciones de servicio cercanas no pudieron ser cargadas debido a un error."
+          }
+        }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente"
           }
         }
       }
@@ -807,6 +847,16 @@
         }
       }
     },
+    "Previous" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anterior"
+          }
+        }
+      }
+    },
     "Prices" : {
       "localizations" : {
         "es" : {
@@ -823,6 +873,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Proximidad"
+          }
+        }
+      }
+    },
+    "Realtime information about fuel prices on Spanish service stations." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información en tiempo real sobre el precio del combustible en estaciones de servicio españolas."
           }
         }
       }
@@ -1047,6 +1107,16 @@
         }
       }
     },
+    "This application requires access to realtime location to display the nearby service stations. On the following step, location access will be requested." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta aplicación require acceso a la localización en tiempo real para mostrar las estaciones de servicio cercanas al usuario. A continuación se solicitará acceso a la localización."
+          }
+        }
+      }
+    },
     "This application requires location access to show you the nearby service stations." : {
       "localizations" : {
         "es" : {
@@ -1103,6 +1173,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cuota de uso excedida. Prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
+    "Welcome to HispaFuel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a HispaFuel"
+          }
+        }
+      }
+    },
+    "With a favorite fuel selected, the fuel station marker in the map will include the price of that fuel type on that station." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con un combustible favorito seleccionado, el marcador de la estación de servicio en el mapa incluirá el precio de ese tipo de combustible en esa estación."
           }
         }
       }
