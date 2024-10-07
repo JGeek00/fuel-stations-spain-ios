@@ -48,7 +48,7 @@ fileprivate struct MapComponent: View {
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
                         if favoriteFuel != .none, let fuelPrice = getFuelValueFromProperty(value, property: favoriteFuel) {
                             PriceMarker()
-                                .foregroundStyle(.thickMaterial)
+                                .foregroundStyle(Color.background)
                                 .frame(width: 50, height: 30)
                                 .overlay(alignment: .center) {
                                     Text(verbatim: "\(formattedNumber(value: fuelPrice, digits: 3))€")
