@@ -26,6 +26,7 @@ class MapManager: ObservableObject {
     @Published var selectedStation: FuelStation? = nil
     @Published var selectedStationAnimation: FuelStation? = nil  // Only affects the animation, just to improve it
     @Published var showStationSheet = false
+    private var isOpeningOrClosingStationSheet = false
         
     private var previousLoadCoordinates: Coordinate? = nil
     private var firstLoadCompleted = false
@@ -117,10 +118,14 @@ class MapManager: ObservableObject {
         if centerLocation == true {
             centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
         }
-        self.showStationSheet.toggle()
+        self.showStationSheet = true
     }
     
     func selectStationWithDelay(station: FuelStation, centerLocation: Bool = false) {
+        if isOpeningOrClosingStationSheet == true { return }
+        
+        self.isOpeningOrClosingStationSheet = true
+        
         Task {
             self.selectedStationAnimation = nil
             
@@ -137,15 +142,22 @@ class MapManager: ObservableObject {
                 centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
             }
             
-            self.showStationSheet.toggle()
+            self.showStationSheet = true
+            self.isOpeningOrClosingStationSheet = false
         }
     }
     
     func unselectStation() {
+        if isOpeningOrClosingStationSheet == true { return }
+        
+        self.isOpeningOrClosingStationSheet = true
+        
         self.showStationSheet = false
         self.selectedStationAnimation = nil
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.selectedStation = nil
+            
+            self.isOpeningOrClosingStationSheet = false
         }
     }
 }

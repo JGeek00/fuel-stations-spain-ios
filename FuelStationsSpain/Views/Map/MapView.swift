@@ -178,8 +178,7 @@ fileprivate struct MapComponent: View {
             StationsSheet()
         })
         .sheet(isPresented: $mapManager.showStationSheet, onDismiss: {
-            mapManager.selectedStationAnimation = nil
-            mapManager.selectedStation = nil
+            mapManager.unselectStation()
         }, content: {
             if horizontalSizeClass == .compact {
                 StationDetailsSheet()
