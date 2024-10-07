@@ -10,45 +10,13 @@ struct GeneralSettings: View {
         List {
             Section {
                 Picker("Favorite fuel", selection: $favoriteFuel) {
-                    Section {
-                        Text("None")
-                            .tag(Enums.FavoriteFuelType.none)
-                    }
-                    Section("Gasoil") {
-                        Text("A Gasoil")
-                            .tag(Enums.FavoriteFuelType.aGasoil)
-                        Text("Premium Gasoil")
-                            .tag(Enums.FavoriteFuelType.premiumGasoil)
-                        Text("B Gasoil")
-                            .tag(Enums.FavoriteFuelType.bGasoil)
-                        Text("Biodiesel")
-                            .tag(Enums.FavoriteFuelType.biodiesel)
-                    }
-                    Section("Gasoline") {
-                        Text("Gasoline 95 E5")
-                            .tag(Enums.FavoriteFuelType.gasoline95E5)
-                        Text("Gasoline 95 E5 Premium")
-                            .tag(Enums.FavoriteFuelType.gasoline95E5Premium)
-                        Text("Gasoline 95 E10")
-                            .tag(Enums.FavoriteFuelType.gasoline95E10)
-                        Text("Gasoline 98 E5")
-                            .tag(Enums.FavoriteFuelType.gasoline98E5)
-                        Text("Gasoline 98 E10")
-                            .tag(Enums.FavoriteFuelType.gasoline98E10)
-                        Text("Bioethanol")
-                            .tag(Enums.FavoriteFuelType.bioethanol)
-                    }
-                    Section("Gas") {
-                        Text("Compressed Natural Gas")
-                            .tag(Enums.FavoriteFuelType.cng)
-                        Text("Liquefied Natural Gas")
-                            .tag(Enums.FavoriteFuelType.lng)
-                        Text("Liquefied petroleum gases")
-                            .tag(Enums.FavoriteFuelType.lpg)
-                    }
-                    Section("Others") {
-                        Text("Hydrogen")
-                            .tag(Enums.FavoriteFuelType.hydrogen)
+                    ForEach(favoriteFuels, id: \.self) { fuelGroup in
+                        Section(fuelGroup.label) {
+                            ForEach(fuelGroup.fuels, id: \.self) { fuel in
+                                Text(fuel.label)
+                                    .tag(fuel.fuelType)
+                            }
+                        }
                     }
                 }
             } footer: {

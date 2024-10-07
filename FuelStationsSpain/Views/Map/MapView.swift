@@ -36,7 +36,8 @@ fileprivate struct MapComponent: View {
                     }
                     if hideStationsDontHaveFavoriteFuel == true && favoriteFuel != .none {
                         m = m.filter() { item in
-                            if getFuelValueFromProperty(item, property: favoriteFuel) != nil {
+                            let price: Double? = FuelStation.getObjectProperty(station: item, propertyName: "\(favoriteFuel.rawValue)Price")
+                            if price != nil {
                                 return true
                             }
                             return false
@@ -106,7 +107,7 @@ fileprivate struct MapComponent: View {
     
     @ViewBuilder
     private func MapMarker(_ value: FuelStation) -> some View {
-        if favoriteFuel != .none, let fuelPrice = getFuelValueFromProperty(value, property: favoriteFuel) {
+        if favoriteFuel != .none, let fuelPrice: Double = FuelStation.getObjectProperty(station: value, propertyName: "\(favoriteFuel.rawValue)Price") {
             PriceMarker()
                 .foregroundStyle(Color.background)
                 .frame(width: 50, height: 30)

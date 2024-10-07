@@ -43,6 +43,16 @@ struct FuelStation: Codable, Hashable {
         case lpgPrice = "LPGPrice"
         case gasoilAPrice, gasoilBPrice, premiumGasoilPrice, gasoline95E10Price, gasoline95E5Price, gasoline95E5PremiumPrice, gasoline98E10Price, gasoline98E5Price, hydrogenPrice
     }
+    
+    static func getObjectProperty<T>(station: FuelStation, propertyName: String) -> T? {
+        let mirror = Mirror(reflecting: station)
+        for child in mirror.children {
+            if let label = child.label, label == propertyName {
+                return child.value as? T
+            }
+        }
+        return nil
+    }
 }
 
 enum Margin: String, Codable, Hashable {
