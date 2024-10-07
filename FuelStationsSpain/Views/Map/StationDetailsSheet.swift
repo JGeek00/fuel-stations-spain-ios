@@ -47,7 +47,7 @@ struct StationDetailsSheet: View {
                             .clipShape(Circle())
                         }
                         Button {
-                            mapManager.unselectStation()
+                            mapManager.dismissStationDetailsSheet()
                         } label: {
                             Image(systemName: "xmark")
                                 .fontWeight(.semibold)
@@ -173,6 +173,7 @@ struct StationDetailsSheet: View {
             .toast(isPresenting: $showRemovedFavoritesToast, duration: 3, tapToDismiss: true) {
                 AlertToast(displayMode: .alert, type: .systemImage("star.slash.fill", .foreground), title: String(localized: "Removed from favorites"))
             }
+            .animation(.easeOut, value: mapManager.selectedStation)
         }
         else {
             ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))

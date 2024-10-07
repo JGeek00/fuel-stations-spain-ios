@@ -23,10 +23,10 @@ class MapManager: ObservableObject {
     
     @Published var showStationsSheet = false
     
+    @Published var showStationDetailsSheet = false
     @Published var selectedStation: FuelStation? = nil
-    @Published var selectedStationAnimation: FuelStation? = nil  // Only affects the animation, just to improve it
-    @Published var showStationSheet = false
-    private var isOpeningOrClosingStationSheet = false
+    @Published var selectedStationAnimation: FuelStation? = nil   // Used just for the map marker animation
+    private var isOpeningOrClosingSheet = false
         
     private var previousLoadCoordinates: Coordinate? = nil
     private var firstLoadCompleted = false
@@ -113,51 +113,28 @@ class MapManager: ObservableObject {
     }
     
     func selectStation(station: FuelStation, centerLocation: Bool = false) {
-        self.selectedStationAnimation = station
+        if isOpeningOrClosingSheet == true { return }
+        
+        self.isOpeningOrClosingSheet = true
+        
         self.selectedStation = station
+        self.selectedStationAnimation = station
+        self.showStationDetailsSheet = true
         if centerLocation == true {
             centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
         }
-        self.showStationSheet = true
+        
+        self.isOpeningOrClosingSheet = false
     }
     
-    func selectStationWithDelay(station: FuelStation, centerLocation: Bool = false) {
-        if isOpeningOrClosingStationSheet == true { return }
-        
-        self.isOpeningOrClosingStationSheet = true
-        
-        Task {
-            self.selectedStationAnimation = nil
-            
-            // await to prevent opening a sheet with another one already open
-            if self.showStationSheet == true {
-                self.showStationSheet = false
-                try await Task.sleep(for: .seconds(0.7))
-            }
-            
-            self.selectedStation = station
-            self.selectedStationAnimation = station
-            
-            if centerLocation == true {
-                centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
-            }
-            
-            self.showStationSheet = true
-            self.isOpeningOrClosingStationSheet = false
-        }
-    }
-    
-    func unselectStation() {
-        if isOpeningOrClosingStationSheet == true { return }
-        
-        self.isOpeningOrClosingStationSheet = true
-        
-        self.showStationSheet = false
+    func dismissStationDetailsSheet() {
+        self.isOpeningOrClosingSheet = true
+        self.showStationDetailsSheet = false
         self.selectedStationAnimation = nil
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        // Wait until sheet is completely closed
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.selectedStation = nil
-            
-            self.isOpeningOrClosingStationSheet = false
+            self.isOpeningOrClosingSheet = false
         }
     }
 }

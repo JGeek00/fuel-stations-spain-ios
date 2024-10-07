@@ -25,7 +25,7 @@ fileprivate struct MapComponent: View {
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
-
+    
     var body: some View {
         Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
             if let stations = mapManager.data?.results {
@@ -46,36 +46,7 @@ fileprivate struct MapComponent: View {
                 }()
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
-                        if favoriteFuel != .none, let fuelPrice = getFuelValueFromProperty(value, property: favoriteFuel) {
-                            PriceMarker()
-                                .foregroundStyle(Color.background)
-                                .frame(width: 50, height: 30)
-                                .overlay(alignment: .center) {
-                                    Text(verbatim: "\(formattedNumber(value: fuelPrice, digits: 3))€")
-                                        .font(.system(size: 12))
-                                        .fontWeight(.medium)
-                                        .padding(.bottom, 30*0.2)
-                                }
-                                .overlay(
-                                    PriceMarker().stroke(Color.gray, lineWidth: 0.5)
-                                )
-                                .shadow(color: .black.opacity(0.3), radius: 5)
-                                .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
-                                .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
-                                .onTapGesture {
-                                    mapManager.selectStationWithDelay(station: value)
-                                }
-                        }
-                        else {
-                            NormalMarker()
-                                .foregroundStyle(LinearGradient(gradient: Gradient(colors: [Color.markerGradientStart, Color.markerGradientEnd]), startPoint: .top, endPoint: .bottom))
-                                .frame(width: 30, height: 30)
-                                .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
-                                .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
-                                .onTapGesture {
-                                    mapManager.selectStationWithDelay(station: value)
-                                }
-                        }
+                        MapMarker(value)
                     }
                 }
             }
@@ -84,69 +55,7 @@ fileprivate struct MapComponent: View {
             mapManager.onMapCameraChange(value)
         })
         .overlay(alignment: .topLeading) {
-            GeometryReader(content: { geometry in
-                Group {
-                    Button {
-                        withAnimation(.easeOut) {
-                            mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
-                        }
-                    } label: {
-                        Image(systemName: "location.fill.viewfinder")
-                            .font(.system(size: 22))
-                            .foregroundStyle(locationManager.lastLocation != nil ? Color.foreground : Color.gray)
-                            .contentShape(Rectangle())
-                    }
-                    .disabled(locationManager.lastLocation == nil)
-                    .frame(width: 40, height: 40)
-                    .background(.regularMaterial)
-                    .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.3), radius: 5)
-                }
-                .offset(x: geometry.size.width - 52, y: 12)
-                Group {
-                    Button {
-                        mapManager.unselectStation()
-                        mapManager.showStationsSheet = true
-                    } label: {
-                        Image(systemName: "list.bullet")
-                            .font(.system(size: 22))
-                            .foregroundStyle(Color.foreground)
-                            .contentShape(Rectangle())
-                    }
-                    .frame(width: 40, height: 40)
-                    .background(.regularMaterial)
-                    .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.3), radius: 5)
-                }
-                .offset(x: geometry.size.width - 52, y: 70)
-                if mapManager.loading == true || mapManager.error != nil {
-                    Group {
-                        Button {
-                            mapManager.showErrorAlert.toggle()
-                        } label: {
-                            Group {
-                                if mapManager.loading == true {
-                                    ProgressView()
-                                        .font(.system(size: 24))
-                                }
-                                else {
-                                    Image(systemName: "exclamationmark.circle.fill")
-                                        .font(.system(size: 22))
-                                        .foregroundStyle(Color.red)
-                                }
-                            }
-                            .contentShape(Rectangle())
-                        }
-                        .frame(width: 40, height: 40)
-                        .background(.regularMaterial)
-                        .cornerRadius(10)
-                        .shadow(color: .black.opacity(0.3), radius: 5)
-                        .disabled(mapManager.loading)
-                    }
-                    .offset(x: 12, y: 50)
-                    .transition(.opacity)
-                }
-            })
+            MapOverlay()
         }
         .alert("Success", isPresented: $mapManager.showSuccessAlert, actions: {
             Button("Close") {
@@ -177,8 +86,8 @@ fileprivate struct MapComponent: View {
         .sheet(isPresented: $mapManager.showStationsSheet, content: {
             StationsSheet()
         })
-        .sheet(isPresented: $mapManager.showStationSheet, onDismiss: {
-            mapManager.unselectStation()
+        .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
+            mapManager.dismissStationDetailsSheet()
         }, content: {
             if horizontalSizeClass == .compact {
                 StationDetailsSheet()
@@ -191,6 +100,107 @@ fileprivate struct MapComponent: View {
             else {
                 StationDetailsSheet()
                     .presentationBackground(Material.regular)
+            }
+        })
+    }
+    
+    @ViewBuilder
+    private func MapMarker(_ value: FuelStation) -> some View {
+        if favoriteFuel != .none, let fuelPrice = getFuelValueFromProperty(value, property: favoriteFuel) {
+            PriceMarker()
+                .foregroundStyle(Color.background)
+                .frame(width: 50, height: 30)
+                .overlay(alignment: .center) {
+                    Text(verbatim: "\(formattedNumber(value: fuelPrice, digits: 3))€")
+                        .font(.system(size: 12))
+                        .fontWeight(.medium)
+                        .padding(.bottom, 30*0.2)
+                }
+                .overlay(
+                    PriceMarker().stroke(Color.gray, lineWidth: 0.5)
+                )
+                .shadow(color: .black.opacity(0.3), radius: 5)
+                .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
+                .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
+                .onTapGesture {
+                    mapManager.selectStation(station: value)
+                }
+        }
+        else {
+            NormalMarker()
+                .foregroundStyle(LinearGradient(gradient: Gradient(colors: [Color.markerGradientStart, Color.markerGradientEnd]), startPoint: .top, endPoint: .bottom))
+                .frame(width: 30, height: 30)
+                .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
+                .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
+                .onTapGesture {
+                    mapManager.selectStation(station: value)
+                }
+        }
+    }
+    
+    @ViewBuilder
+    func MapOverlay() -> some View {
+        GeometryReader(content: { geometry in
+            Group {
+                Button {
+                    withAnimation(.easeOut) {
+                        mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
+                    }
+                } label: {
+                    Image(systemName: "location.fill.viewfinder")
+                        .font(.system(size: 22))
+                        .foregroundStyle(locationManager.lastLocation != nil ? Color.foreground : Color.gray)
+                        .contentShape(Rectangle())
+                }
+                .disabled(locationManager.lastLocation == nil)
+                .frame(width: 40, height: 40)
+                .background(.regularMaterial)
+                .cornerRadius(10)
+                .shadow(color: .black.opacity(0.3), radius: 5)
+            }
+            .offset(x: geometry.size.width - 52, y: 12)
+            Group {
+                Button {
+                    mapManager.dismissStationDetailsSheet()
+                    mapManager.showStationsSheet = true
+                } label: {
+                    Image(systemName: "list.bullet")
+                        .font(.system(size: 22))
+                        .foregroundStyle(Color.foreground)
+                        .contentShape(Rectangle())
+                }
+                .frame(width: 40, height: 40)
+                .background(.regularMaterial)
+                .cornerRadius(10)
+                .shadow(color: .black.opacity(0.3), radius: 5)
+            }
+            .offset(x: geometry.size.width - 52, y: 70)
+            if mapManager.loading == true || mapManager.error != nil {
+                Group {
+                    Button {
+                        mapManager.showErrorAlert.toggle()
+                    } label: {
+                        Group {
+                            if mapManager.loading == true {
+                                ProgressView()
+                                    .font(.system(size: 24))
+                            }
+                            else {
+                                Image(systemName: "exclamationmark.circle.fill")
+                                    .font(.system(size: 22))
+                                    .foregroundStyle(Color.red)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .frame(width: 40, height: 40)
+                    .background(.regularMaterial)
+                    .cornerRadius(10)
+                    .shadow(color: .black.opacity(0.3), radius: 5)
+                    .disabled(mapManager.loading)
+                }
+                .offset(x: 12, y: 50)
+                .transition(.opacity)
             }
         })
     }
