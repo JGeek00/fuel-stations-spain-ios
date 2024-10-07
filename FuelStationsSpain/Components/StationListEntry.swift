@@ -19,6 +19,8 @@ struct StationListEntry: View {
     
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     
+    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
+    
     private func getValue() -> String? {
         func format(_ value: Double?) -> String? {
             if let value = value {
@@ -157,6 +159,47 @@ struct StationListEntry: View {
                         else {
                             EmptyView()
                         }
+                    }
+                    if sortingMethod == .proximity && favoriteFuel != .none, let value = getFuelValueFromProperty(station, property: favoriteFuel) {
+                        let fuelName = {
+                            switch favoriteFuel {
+                            case .none:
+                                return ""
+                            case .aGasoil:
+                                return String(localized: "A Gasoil")
+                            case .bGasoil:
+                                return String(localized: "B Gasoil")
+                            case .premiumGasoil:
+                                return String(localized: "Premium Gasoil")
+                            case .biodiesel:
+                                return String(localized: "Biodiesel")
+                            case .gasoline95E10:
+                                return String(localized: "Gasoline 95 E10")
+                            case .gasoline95E5:
+                                return String(localized: "Gasoline 95 E5")
+                            case .gasoline95E5Premium:
+                                return String(localized: "Gasoline 95 E5 Premium")
+                            case .gasoline98E10:
+                                return String(localized: "Gasoline 98 E10")
+                            case .gasoline98E5:
+                                return String(localized: "Gasoline 98 E5")
+                            case .bioethanol:
+                                return String(localized: "Bioethanol")
+                            case .cng:
+                                return String(localized: "Compressed Natural Gas")
+                            case .lng:
+                                return String(localized: "Liquefied Natural Gas")
+                            case .lpg:
+                                return String(localized: "Liquefied petroleum gases")
+                            case .hydrogen:
+                                return String(localized: "Hydrogen")
+                            }
+                        }()
+                        Spacer()
+                            .frame(height: 4)
+                        Text(verbatim: "\(fuelName): \(formattedNumber(value: value, digits: 3)) €")
+                            .font(.system(size: 14))
+                            .transition(.opacity)
                     }
                 }
                 if let value = getValue() {

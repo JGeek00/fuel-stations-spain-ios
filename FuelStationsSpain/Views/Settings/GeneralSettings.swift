@@ -56,7 +56,9 @@ struct GeneralSettings: View {
             }
             Section("Map") {
                 Toggle("Hide stations that aren't open to the general public", isOn: $hideStationsNotOpenPublic)
-                Toggle("Hide stations that don't sell the selected favorite fuel", isOn: $hideStationsDontHaveFavoriteFuel)
+                if favoriteFuel != .none {
+                    Toggle("Hide stations that don't sell the selected favorite fuel", isOn: $hideStationsDontHaveFavoriteFuel)
+                }
             }
         }
         .navigationTitle("General settings")

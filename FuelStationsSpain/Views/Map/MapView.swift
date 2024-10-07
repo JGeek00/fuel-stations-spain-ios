@@ -25,41 +25,6 @@ fileprivate struct MapComponent: View {
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
-    
-    private func getFuelValue(_ item: FuelStation, property: Enums.FavoriteFuelType) -> Double? {
-        switch property {
-        case .none:
-            return nil
-        case .aGasoil:
-            return item.gasoilAPrice
-        case .bGasoil:
-            return item.gasoilBPrice
-        case .premiumGasoil:
-            return item.premiumGasoilPrice
-        case .biodiesel:
-            return item.biodieselPrice
-        case .gasoline95E10:
-            return item.gasoline95E10Price
-        case .gasoline95E5:
-            return item.gasoline95E5Price
-        case .gasoline95E5Premium:
-            return item.gasoline95E5PremiumPrice
-        case .gasoline98E10:
-            return item.gasoline98E5Price
-        case .gasoline98E5:
-            return item.gasoline98E5Price
-        case .bioethanol:
-            return item.bioethanolPrice
-        case .cng:
-            return item.cngPrice
-        case .lng:
-            return item.lngPrice
-        case .lpg:
-            return item.lpgPrice
-        case .hydrogen:
-            return item.hydrogenPrice
-        }
-    }
 
     var body: some View {
         Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
@@ -71,7 +36,7 @@ fileprivate struct MapComponent: View {
                     }
                     if hideStationsDontHaveFavoriteFuel == true && favoriteFuel != .none {
                         m = m.filter() { item in
-                            if getFuelValue(item, property: favoriteFuel) != nil {
+                            if getFuelValueFromProperty(item, property: favoriteFuel) != nil {
                                 return true
                             }
                             return false
@@ -81,7 +46,7 @@ fileprivate struct MapComponent: View {
                 }()
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
-                        if favoriteFuel != .none, let fuelPrice = getFuelValue(value, property: favoriteFuel) {
+                        if favoriteFuel != .none, let fuelPrice = getFuelValueFromProperty(value, property: favoriteFuel) {
                             PriceMarker()
                                 .foregroundStyle(.thickMaterial)
                                 .frame(width: 50, height: 30)
