@@ -29,7 +29,7 @@ class FavoritesProvider: ObservableObject {
         return favorites.contains() { $0.id == stationId }
     }
     
-    func addFavorite(stationId: String) -> Bool {
+    func addFavorite(stationId: String) {
         let fetchRequest: NSFetchRequest = FavoriteStation.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", stationId as CVarArg)
         do {
@@ -40,16 +40,14 @@ class FavoritesProvider: ObservableObject {
                 newFavorite.date = Date()
                 try coredataContext.save()
                 _ = self.fetchFavorites()
-                return true
+                ToastProvider.shared.showToast(icon: "star.fill", title: String(localized: "Added to favorites"))
             }
-            return false
         } catch {
             print("Failed to fetch items: \(error)")
-            return false
         }
     }
     
-    func removeFavorite(stationId: String) -> Bool {
+    func removeFavorite(stationId: String) {
         let fetchRequest: NSFetchRequest<FavoriteStation> = FavoriteStation.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", stationId as CVarArg)
         do {
@@ -58,12 +56,10 @@ class FavoritesProvider: ObservableObject {
                 coredataContext.delete(favoriteToDelete)
                 try coredataContext.save()
                 _ = self.fetchFavorites()
-                return true
+                ToastProvider.shared.showToast(icon: "star.slash.fill", title: String(localized: "Removed from favorites"))
             }
-            return false
         } catch {
             print("Failed to fetch or delete: \(error)")
-            return false
         }
     }
 }

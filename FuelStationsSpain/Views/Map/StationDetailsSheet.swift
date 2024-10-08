@@ -11,9 +11,7 @@ struct StationDetailsSheetHeader: View {
     @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
-    
-    @State private var showAddedFavoritesToast = false
-    @State private var showRemovedFavoritesToast = false
+    @EnvironmentObject private var toastProvider: ToastProvider
     
     var body: some View {
         if let station = mapManager.selectedStation {
@@ -30,16 +28,10 @@ struct StationDetailsSheetHeader: View {
                     let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
                     Button {
                         if isFavorite == true {
-                            if favoritesProvider.removeFavorite(stationId: stationId) == true {
-                                showAddedFavoritesToast = false
-                                showRemovedFavoritesToast = true
-                            }
+                            favoritesProvider.removeFavorite(stationId: stationId)
                         }
                         else {
-                            if favoritesProvider.addFavorite(stationId: stationId) == true {
-                                showRemovedFavoritesToast = false
-                                showAddedFavoritesToast = true
-                            }
+                            favoritesProvider.addFavorite(stationId: stationId)
                         }
                     } label: {
                         Image(systemName: isFavorite == true ? "star.fill" : "star")
@@ -69,7 +61,7 @@ struct StationDetailsSheetHeader: View {
     
 }
 
-struct StationDetailsSheet: View {
+struct StationDetailsSheetContent: View {
 
     @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager

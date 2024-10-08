@@ -5,6 +5,8 @@ import Sentry
 struct FuelStationsSpainApp: App {
     let persistenceController = PersistenceController.shared
     
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
     init() {
         #if RELEASE
         SentrySDK.start { options in
@@ -23,6 +25,7 @@ struct FuelStationsSpainApp: App {
                 .environmentObject(FavoritesProvider.shared)
                 .environmentObject(TabViewManager.shared)
                 .environmentObject(OnboardingViewModel.shared)
+                .environmentObject(ToastProvider.shared)
                 .environmentObject(FavoritesListViewModel())
                 .environmentObject(SearchViewModel())
                 .environmentObject(IAPManager())

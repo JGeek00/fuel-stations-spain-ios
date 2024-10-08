@@ -1,5 +1,4 @@
 import SwiftUI
-import BottomSheet
 
 struct RootView: View {
     

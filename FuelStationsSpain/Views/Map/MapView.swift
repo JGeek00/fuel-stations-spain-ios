@@ -102,7 +102,7 @@ fileprivate struct MapComponent: View {
         .sheet(isPresented: $mapManager.showStationsSheet, content: {
             StationsSheet()
         })
-        .if(horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad) { view in
+        .if(UIDevice.current.userInterfaceIdiom == .pad) { view in
             Group {
                 view
                     .bottomSheet(
@@ -112,7 +112,7 @@ fileprivate struct MapComponent: View {
                             StationDetailsSheetHeader(isSideSheet: true)
                         }
                     ) {
-                        StationDetailsSheet()
+                        StationDetailsSheetContent()
                             .padding(.top)
                     }
                     .sheetWidth(.relative(0.4))
@@ -121,7 +121,7 @@ fileprivate struct MapComponent: View {
                     .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
             }
         }
-        .if(horizontalSizeClass == .compact || UIDevice.current.userInterfaceIdiom != .pad) { view in
+        .if(UIDevice.current.userInterfaceIdiom != .pad) { view in
             view
                 .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
                     mapManager.selectedStationAnimation = nil
@@ -131,7 +131,7 @@ fileprivate struct MapComponent: View {
                         if mapManager.selectedStation != nil {
                             ScrollView {
                                 StationDetailsSheetHeader(isSideSheet: false)
-                                StationDetailsSheet()
+                                StationDetailsSheetContent()
                             }
                             .transition(.opacity)
                         }

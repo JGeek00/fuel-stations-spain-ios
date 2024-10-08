@@ -1,5 +1,4 @@
 import SwiftUI
-import AlertToast
 
 struct SearchStationDetails: View {
     
@@ -7,9 +6,6 @@ struct SearchStationDetails: View {
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
-    
-    @State private var showAddedFavoritesToast = false
-    @State private var showRemovedFavoritesToast = false
         
     var body: some View {
         NavigationStack {
@@ -122,17 +118,12 @@ struct SearchStationDetails: View {
                         let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
                         Button {
                             if isFavorite == true {
-                                if favoritesProvider.removeFavorite(stationId: stationId) == true {
-                                    showAddedFavoritesToast = false
-                                    showRemovedFavoritesToast = true
-                                }
+                                favoritesProvider.removeFavorite(stationId: stationId)
                             }
                             else {
-                                if favoritesProvider.addFavorite(stationId: stationId) == true {
-                                    showRemovedFavoritesToast = false
-                                    showAddedFavoritesToast = true
-                                }
-                            }                    } label: {
+                                favoritesProvider.addFavorite(stationId: stationId)
+                            }
+                        } label: {
                             Image(systemName: isFavorite == true ? "star.fill" : "star")
                                 .fontWeight(.semibold)
                                 .animation(.default, value: isFavorite)
@@ -140,12 +131,6 @@ struct SearchStationDetails: View {
                         .buttonStyle(BorderedButtonStyle())
                         .clipShape(Circle())
                     }
-                }
-                .toast(isPresenting: $showAddedFavoritesToast, duration: 3, tapToDismiss: true) {
-                    AlertToast(displayMode: .alert, type: .systemImage("star.fill", .foreground), title: String(localized: "Added to favorites"))
-                }
-                .toast(isPresenting: $showRemovedFavoritesToast, duration: 3, tapToDismiss: true) {
-                    AlertToast(displayMode: .alert, type: .systemImage("star.slash.fill", .foreground), title: String(localized: "Removed from favorites"))
                 }
             }
             else {
