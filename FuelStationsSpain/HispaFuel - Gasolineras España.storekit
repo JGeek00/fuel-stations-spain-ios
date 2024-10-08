@@ -1,0 +1,180 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "3CABB6F9",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "7.99",
+      "familyShareable" : false,
+      "internalID" : "6736655450",
+      "localizations" : [
+        {
+          "description" : "Darle una propina grande al desarrollador.",
+          "displayName" : "Propina grande",
+          "locale" : "es_ES"
+        },
+        {
+          "description" : "Give a big tip to the developer.",
+          "displayName" : "Big tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.jgeek00.FuelStationsSpain.BigTip",
+      "referenceName" : "Big tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "6736655378",
+      "localizations" : [
+        {
+          "description" : "Give a glorious tip to the developer.",
+          "displayName" : "Glorious tip",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Darle una propina gloriosa al desarrollador.",
+          "displayName" : "Propina gloriosa",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "com.jgeek00.FuelStationsSpain.GloriousTip",
+      "referenceName" : "Glorious tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "6736655261",
+      "localizations" : [
+        {
+          "description" : "Give a medium tip to the developer.",
+          "displayName" : "Medium tip",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Darle una propina mediana al desarrollador.",
+          "displayName" : "Propina mediana",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "com.jgeek00.FuelStationsSpain.MediumTip",
+      "referenceName" : "Medium tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "6736655116",
+      "localizations" : [
+        {
+          "description" : "Darle una propina pequeña al desarrollador.",
+          "displayName" : "Propina pequeña",
+          "locale" : "es_ES"
+        },
+        {
+          "description" : "Give a small tip to the developer.",
+          "displayName" : "Small tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.jgeek00.FuelStationsSpain.SmallTip",
+      "referenceName" : "Small tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "12.99",
+      "familyShareable" : false,
+      "internalID" : "6736655370",
+      "localizations" : [
+        {
+          "description" : "Darle una propina muy grande al desarrollador",
+          "displayName" : "Propina muy grande",
+          "locale" : "es_ES"
+        },
+        {
+          "description" : "Give a very big tip to the developer.",
+          "displayName" : "Very big tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.jgeek00.FuelStationsSpain.VeryBigTip",
+      "referenceName" : "Very big tip",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6720709096",
+    "_developerTeamID" : "38Z3B9TJTR",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 750089152.19579101,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

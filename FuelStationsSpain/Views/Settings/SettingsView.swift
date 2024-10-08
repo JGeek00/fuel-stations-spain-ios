@@ -47,11 +47,11 @@ struct SettingsView: View {
                 }
                 
                 Section {
-//                    NavigationLink {
-//                        TipsView()
-//                    } label: {
-//                        ListRowWithIconEntry(systemIcon: "dollarsign.circle.fill", iconColor: .green, label: "Give a tip to the developer")
-//                    }
+                    NavigationLink {
+                        TipsView()
+                    } label: {
+                        ListRowWithIconEntry(systemIcon: "dollarsign.circle.fill", iconColor: .green, label: "Give a tip to the developer")
+                    }
                     Button {
                         contactDeveloperSafariOpen.toggle()
                     } label: {
