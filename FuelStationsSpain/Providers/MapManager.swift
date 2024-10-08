@@ -26,7 +26,7 @@ class MapManager: ObservableObject {
     @Published var showStationDetailsSheet = false
     @Published var selectedStation: FuelStation? = nil
     @Published var selectedStationAnimation: FuelStation? = nil   // Used just for the map marker animation
-    private var isOpeningOrClosingSheet = false
+    var isOpeningOrClosingSheet = false
         
     private var previousLoadCoordinates: Coordinate? = nil
     private var firstLoadCompleted = false
@@ -130,16 +130,5 @@ class MapManager: ObservableObject {
         }
         
         self.isOpeningOrClosingSheet = false
-    }
-    
-    func dismissStationDetailsSheet() {
-        self.isOpeningOrClosingSheet = true
-        self.showStationDetailsSheet = false
-        self.selectedStationAnimation = nil
-        // Wait until sheet is completely closed
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.selectedStation = nil
-            self.isOpeningOrClosingSheet = false
-        }
     }
 }

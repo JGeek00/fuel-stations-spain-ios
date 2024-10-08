@@ -47,7 +47,8 @@ struct StationDetailsSheet: View {
                             .clipShape(Circle())
                         }
                         Button {
-                            mapManager.dismissStationDetailsSheet()
+                            mapManager.showStationDetailsSheet = false
+                            mapManager.selectedStationAnimation = nil
                         } label: {
                             Image(systemName: "xmark")
                                 .fontWeight(.semibold)

@@ -102,19 +102,26 @@ fileprivate struct MapComponent: View {
             StationsSheet()
         })
         .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
-            mapManager.dismissStationDetailsSheet()
+            mapManager.selectedStationAnimation = nil
+            mapManager.isOpeningOrClosingSheet = true
         }, content: {
-            if horizontalSizeClass == .compact {
-                StationDetailsSheet()
-                    .presentationBackground(Material.regular)
-                    .presentationDetents([.fraction(0.5), .fraction(0.99)])
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .fraction(0.99))
-                    )
+            Group {
+                if horizontalSizeClass == .compact {
+                    StationDetailsSheet()
+                        .presentationBackground(Material.regular)
+                        .presentationDetents([.fraction(0.5), .fraction(0.99)])
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .fraction(0.99))
+                        )
+                }
+                else {
+                    StationDetailsSheet()
+                        .presentationBackground(Material.regular)
+                }
             }
-            else {
-                StationDetailsSheet()
-                    .presentationBackground(Material.regular)
+            .onDisappear {
+                mapManager.selectedStation = nil
+                mapManager.isOpeningOrClosingSheet = false
             }
         })
     }
@@ -177,7 +184,8 @@ fileprivate struct MapComponent: View {
             .offset(x: geometry.size.width - 52, y: 12)
             Group {
                 Button {
-                    mapManager.dismissStationDetailsSheet()
+                    mapManager.showStationDetailsSheet = false
+                    mapManager.selectedStationAnimation = nil
                     mapManager.showStationsSheet = true
                 } label: {
                     Image(systemName: "list.bullet")

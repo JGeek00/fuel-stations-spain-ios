@@ -48,15 +48,12 @@ struct StationsSheet: View {
                                                 ForEach(processedData, id: \.self) { item in
                                                     Button {
                                                         mapManager.showStationsSheet = false
-                                                        // await to prevent opening a sheet with another one already open
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                                                            withAnimation(.easeOut) { 
-                                                                mapManager.selectStation(station: item, centerLocation: true)
-                                                            }
-                                                            Task {
-                                                                await mapManager.fetchData(latitude: item.latitude!, longitude: item.longitude!)
-                                                            }
-                                                        })
+                                                        withAnimation(.easeOut) {
+                                                            mapManager.selectStation(station: item, centerLocation: true)
+                                                        }
+                                                        Task {
+                                                            await mapManager.fetchData(latitude: item.latitude!, longitude: item.longitude!)
+                                                        }
                                                     } label: {
                                                         StationListEntry(station: item, sortingMethod: selectedSorting)
                                                     }
