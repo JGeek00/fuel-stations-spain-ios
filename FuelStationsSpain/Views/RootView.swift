@@ -69,6 +69,7 @@ struct RootView: View {
             else {
                 locationManager.requestLocationAccess()
             }
+            requestAppReview()
         }
     }
 }
