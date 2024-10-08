@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import BottomSheet
 
 struct MapView: View {
     
@@ -25,7 +26,7 @@ fileprivate struct MapComponent: View {
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
-    
+
     var body: some View {
         Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
             if let stations = mapManager.data?.results {
@@ -101,29 +102,55 @@ fileprivate struct MapComponent: View {
         .sheet(isPresented: $mapManager.showStationsSheet, content: {
             StationsSheet()
         })
-        .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
-            mapManager.selectedStationAnimation = nil
-            mapManager.isOpeningOrClosingSheet = true
-        }, content: {
+        .if(horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad) { view in
             Group {
-                if horizontalSizeClass == .compact {
-                    StationDetailsSheet()
-                        .presentationBackground(Material.regular)
-                        .presentationDetents([.fraction(0.5), .fraction(0.99)])
-                        .presentationBackgroundInteraction(
-                            .enabled(upThrough: .fraction(0.99))
-                        )
-                }
-                else {
-                    StationDetailsSheet()
-                        .presentationBackground(Material.regular)
-                }
+                view
+                    .bottomSheet(
+                        bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
+                        switchablePositions: [.absoluteBottom(70), .relativeTop(0.9)],
+                        headerContent: {
+                            StationDetailsSheetHeader(isSideSheet: true)
+                        }
+                    ) {
+                        StationDetailsSheet()
+                            .padding(.top)
+                    }
+                    .sheetWidth(.relative(0.4))
+                    .enableAccountingForKeyboardHeight()
+                    .enableAppleScrollBehavior()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
             }
-            .onDisappear {
-                mapManager.selectedStation = nil
-                mapManager.isOpeningOrClosingSheet = false
-            }
-        })
+        }
+        .if(horizontalSizeClass == .compact || UIDevice.current.userInterfaceIdiom != .pad) { view in
+            view
+                .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
+                    mapManager.selectedStationAnimation = nil
+                    mapManager.isOpeningOrClosingSheet = true
+                }, content: {
+                    Group {
+                        if mapManager.selectedStation != nil {
+                            ScrollView {
+                                StationDetailsSheetHeader(isSideSheet: false)
+                                StationDetailsSheet()
+                            }
+                            .transition(.opacity)
+                        }
+                        else {
+                            ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
+                                .transition(.opacity)
+                        }
+                    }
+                    .presentationBackground(Material.regular)
+                    .presentationDetents([.fraction(0.5), .fraction(0.99)])
+                    .presentationBackgroundInteraction(
+                        .enabled(upThrough: .fraction(0.99))
+                    )
+                    .onDisappear {
+                        mapManager.selectedStation = nil
+                        mapManager.isOpeningOrClosingSheet = false
+                    }
+                })
+        }
     }
     
     @ViewBuilder
@@ -185,7 +212,9 @@ fileprivate struct MapComponent: View {
             Group {
                 Button {
                     mapManager.showStationDetailsSheet = false
+                    mapManager.stationDetailsSheetPosition = .hidden
                     mapManager.selectedStationAnimation = nil
+                    mapManager.selectedStation = nil
                     mapManager.showStationsSheet = true
                 } label: {
                     Image(systemName: "list.bullet")

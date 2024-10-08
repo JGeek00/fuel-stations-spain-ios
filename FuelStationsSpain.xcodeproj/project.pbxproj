@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D0EA6C62CB5BD4A00AEEE65 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 0D0EA6C52CB5BD4A00AEEE65 /* BottomSheet */; };
 		0D5F58D92CA4C6C400342D3F /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 0D5F58D82CA4C6BD00342D3F /* README.md */; };
 		0D5F59742CA4CF5500342D3F /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5F59732CA4CF5500342D3F /* SentrySwiftUI */; };
 		0D5F5B162CA62D9A00342D3F /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5F5B152CA62D9A00342D3F /* AlertToast */; };
@@ -33,6 +34,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D5F59742CA4CF5500342D3F /* SentrySwiftUI in Frameworks */,
+				0D0EA6C62CB5BD4A00AEEE65 /* BottomSheet in Frameworks */,
 				0D5F5B162CA62D9A00342D3F /* AlertToast in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -80,6 +82,7 @@
 			packageProductDependencies = (
 				0D5F59732CA4CF5500342D3F /* SentrySwiftUI */,
 				0D5F5B152CA62D9A00342D3F /* AlertToast */,
+				0D0EA6C52CB5BD4A00AEEE65 /* BottomSheet */,
 			);
 			productName = FuelStationsSpain;
 			productReference = 0D5F58712CA42B8300342D3F /* FuelStationsSpain.app */;
@@ -113,6 +116,7 @@
 			packageReferences = (
 				0D5F59722CA4CF5500342D3F /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				0D5F5B142CA62D9A00342D3F /* XCRemoteSwiftPackageReference "AlertToast" */,
+				0D0EA6C42CB5BD4A00AEEE65 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0D5F58722CA42B8300342D3F /* Products */;
@@ -362,6 +366,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0D0EA6C42CB5BD4A00AEEE65 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lucaszischka/BottomSheet";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
 		0D5F59722CA4CF5500342D3F /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
@@ -381,6 +393,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0D0EA6C52CB5BD4A00AEEE65 /* BottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D0EA6C42CB5BD4A00AEEE65 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			productName = BottomSheet;
+		};
 		0D5F59732CA4CF5500342D3F /* SentrySwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0D5F59722CA4CF5500342D3F /* XCRemoteSwiftPackageReference "sentry-cocoa" */;

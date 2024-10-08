@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import MapKit
 import SwiftUI
+import BottomSheet
 
 @MainActor
 class MapManager: ObservableObject {
@@ -24,6 +25,7 @@ class MapManager: ObservableObject {
     @Published var showStationsSheet = false
     
     @Published var showStationDetailsSheet = false
+    @Published var stationDetailsSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedStation: FuelStation? = nil
     @Published var selectedStationAnimation: FuelStation? = nil   // Used just for the map marker animation
     var isOpeningOrClosingSheet = false
@@ -120,11 +122,18 @@ class MapManager: ObservableObject {
     func selectStation(station: FuelStation, centerLocation: Bool = false) {
         if isOpeningOrClosingSheet == true { return }
         
+        let stationWasSelected = self.selectedStation != nil
+        
         self.isOpeningOrClosingSheet = true
         
-        self.selectedStation = station
+        withAnimation(.default) {
+            self.selectedStation = station
+        }
         self.selectedStationAnimation = station
         self.showStationDetailsSheet = true
+        if stationWasSelected == false {
+            self.stationDetailsSheetPosition = .absoluteBottom(70)
+        }
         if centerLocation == true {
             centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
         }

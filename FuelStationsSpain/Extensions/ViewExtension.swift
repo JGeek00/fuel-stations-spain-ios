@@ -21,4 +21,12 @@ extension View {
     func customBackgroundWithMaterial() -> some View {
         modifier(ConditionalBackgroundWithMaterial())
     }
+    
+    @ViewBuilder func `if`<Content: View>(_ condition: @autoclosure () -> Bool, transform: (Self) -> Content) -> some View {
+        if condition() {
+            transform(self)
+        } else {
+            self
+        }
+    }
 }
