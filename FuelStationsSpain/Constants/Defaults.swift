@@ -5,4 +5,6 @@ class Defaults {
     static let hideStationsNotOpenPublic = false
     static let favoriteFuel = Enums.FavoriteFuelType.none
     static let hideStationsDontHaveFavoriteFuel = false
+    static let closedStationsShowMethod = Enums.ClosedStationsMode.showDimmed
+    static let showRedClockClosedStations = true
 }

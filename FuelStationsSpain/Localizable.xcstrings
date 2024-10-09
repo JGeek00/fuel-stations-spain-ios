@@ -287,6 +287,16 @@
         }
       }
     },
+    "Closed stations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estaciones cerradas"
+          }
+        }
+      }
+    },
     "Compressed Natural Gas" : {
       "localizations" : {
         "es" : {
@@ -573,6 +583,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Hola! Soy el desarrollador de My Links. My Links es gratuito y quiero que así lo siga siendo, pero al ofrecer la aplicación en la App Store tengo algunos costes, como la licencia de desarrollador de Apple. Aprecio cualquier donación que me ayude a pagar estos costes."
+          }
+        }
+      }
+    },
+    "Hide completely" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar completamente"
           }
         }
       }
@@ -1067,12 +1087,42 @@
         }
       }
     },
+    "Show dimmed" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar atenuadas"
+          }
+        }
+      }
+    },
     "Show in map" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver en el mapa"
+          }
+        }
+      }
+    },
+    "Show normally" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar normalmente"
+          }
+        }
+      }
+    },
+    "Show red clock on closed stations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar reloj rojo en estaciones cerradas"
           }
         }
       }

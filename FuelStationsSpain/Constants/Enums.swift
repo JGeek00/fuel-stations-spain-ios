@@ -73,4 +73,10 @@ class Enums {
         case groupedProvince
         case alphabetical
     }
+    
+    public enum ClosedStationsMode: String {
+        case showNormally
+        case showDimmed
+        case hideCompletely
+    }
 }
