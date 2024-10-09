@@ -13,10 +13,14 @@ struct GeneralSettings: View {
             Section {
                 Picker("Favorite fuel", selection: $favoriteFuel) {
                     ForEach(favoriteFuels, id: \.self) { fuelGroup in
-                        Section(fuelGroup.label) {
+                        Section {
                             ForEach(fuelGroup.fuels, id: \.self) { fuel in
                                 Text(fuel.label)
                                     .tag(fuel.fuelType)
+                            }
+                        } header: {
+                            if let label = fuelGroup.label {
+                                Text(label)
                             }
                         }
                     }

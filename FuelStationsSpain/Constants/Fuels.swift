@@ -11,10 +11,10 @@ struct FavoriteFuel: Sendable, Hashable {
 }
 
 struct FuelSection: Sendable, Hashable {
-    let label: String
+    let label: String?
     let fuels: [FavoriteFuel]
     
-    init(label: String, fuels: [FavoriteFuel]) {
+    init(label: String?, fuels: [FavoriteFuel]) {
         self.label = label
         self.fuels = fuels
     }
@@ -22,7 +22,7 @@ struct FuelSection: Sendable, Hashable {
 
 let favoriteFuels: [FuelSection] = [
     FuelSection(
-        label: String(reflecting: ""),
+        label: nil,
         fuels: [
             FavoriteFuel(label: String(localized: "None"), fuelType: .none),
         ]
