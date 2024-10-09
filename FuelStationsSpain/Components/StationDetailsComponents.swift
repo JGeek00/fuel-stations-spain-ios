@@ -2,6 +2,34 @@ import SwiftUI
 import MapKit
 
 class StationDetailsComponents {
+    struct FavoriteButton: View {
+        var stationId: String
+        
+        init(stationId: String) {
+            self.stationId = stationId
+        }
+        
+        @EnvironmentObject private var favoritesProvider: FavoritesProvider
+        
+        var body: some View {
+            let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
+            Button {
+                if isFavorite == true {
+                    favoritesProvider.removeFavorite(stationId: stationId)
+                }
+                else {
+                    favoritesProvider.addFavorite(stationId: stationId)
+                }
+            } label: {
+                Image(systemName: isFavorite == true ? "star.fill" : "star")
+                    .fontWeight(.semibold)
+                    .animation(.default, value: isFavorite)
+            }
+            .buttonStyle(BorderedButtonStyle())
+            .clipShape(Circle())
+        }
+    }
+    
     struct ScheduleItem: View {
         var station: FuelStation
         

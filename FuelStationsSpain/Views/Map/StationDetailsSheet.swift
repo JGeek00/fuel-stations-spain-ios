@@ -25,21 +25,7 @@ struct StationDetailsSheetHeader: View {
                 }
                 Spacer()
                 if let stationId = station.id {
-                    let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
-                    Button {
-                        if isFavorite == true {
-                            favoritesProvider.removeFavorite(stationId: stationId)
-                        }
-                        else {
-                            favoritesProvider.addFavorite(stationId: stationId)
-                        }
-                    } label: {
-                        Image(systemName: isFavorite == true ? "star.fill" : "star")
-                            .fontWeight(.semibold)
-                            .animation(.default, value: isFavorite)
-                    }
-                    .buttonStyle(BorderedButtonStyle())
-                    .clipShape(Circle())
+                    StationDetailsComponents.FavoriteButton(stationId: stationId)
                 }
                 if isSideSheet == false {
                     Button {
