@@ -108,7 +108,7 @@ fileprivate struct MapComponent: View {
                 view
                     .bottomSheet(
                         bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
-                        switchablePositions: [.absoluteBottom(70), .relativeTop(0.9)],
+                        switchablePositions: [.absoluteBottom(70), .dynamicTop],
                         headerContent: {
                             StationDetailsSheetHeader(isSideSheet: true)
                         }

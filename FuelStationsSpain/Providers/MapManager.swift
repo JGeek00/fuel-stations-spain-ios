@@ -121,9 +121,7 @@ class MapManager: ObservableObject {
     
     func selectStation(station: FuelStation, centerLocation: Bool = false) {
         if isOpeningOrClosingSheet == true { return }
-        
-        let stationWasSelected = self.selectedStation != nil
-        
+                
         self.isOpeningOrClosingSheet = true
         
         withAnimation(.default) {
@@ -131,9 +129,7 @@ class MapManager: ObservableObject {
         }
         self.selectedStationAnimation = station
         self.showStationDetailsSheet = true
-        if stationWasSelected == false {
-            self.stationDetailsSheetPosition = .absoluteBottom(70)
-        }
+        self.stationDetailsSheetPosition = .dynamicTop
         if centerLocation == true {
             centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
         }

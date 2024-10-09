@@ -1,5 +1,6 @@
 import SwiftUI
 import AlertToast
+import BottomSheet
 
 struct StationDetailsSheetHeader: View {
     var isSideSheet: Bool
@@ -35,6 +36,25 @@ struct StationDetailsSheetHeader: View {
                         Image(systemName: "xmark")
                             .fontWeight(.semibold)
                             .foregroundColor(.foreground.opacity(0.5))
+                    }
+                    .buttonStyle(BorderedButtonStyle())
+                    .clipShape(Circle())
+                }
+                else {
+                    Button {
+                        if mapManager.stationDetailsSheetPosition == .dynamicTop {
+                            mapManager.stationDetailsSheetPosition = .absoluteTop(70)
+                        }
+                        else {
+                            mapManager.stationDetailsSheetPosition = .dynamicTop
+                        }
+                    } label: {
+                        Image(systemName: "chevron.up")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.foreground.opacity(0.5))
+                            .padding(4.5)
+                            .rotationEffect(mapManager.stationDetailsSheetPosition == .dynamicTop ? .degrees(0) : .degrees(180), anchor: .center)
+                            .animation(.default, value: mapManager.stationDetailsSheetPosition)
                     }
                     .buttonStyle(BorderedButtonStyle())
                     .clipShape(Circle())
