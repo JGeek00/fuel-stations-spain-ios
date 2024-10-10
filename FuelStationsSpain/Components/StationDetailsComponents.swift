@@ -300,6 +300,238 @@ class StationDetailsComponents {
         }
     }
     
+    struct PriceScale: View {
+        var station: FuelStation
+        
+        init(station: FuelStation) {
+            self.station = station
+        }
+        
+        @EnvironmentObject private var mapManager: MapManager
+        
+        @State private var expandedContent = false
+        @State private var chevronAngle: Double = 0
+        
+        var body: some View {
+            if let nearbyStations = mapManager.data?.results, nearbyStations.count > 1 {
+                if let aGasoilPrice = station.gasoilAPrice, let gasoline95Price = station.gasoline95E5Price {
+                    let avgPercentage: Double? = {
+                        let stations: [FuelStation] = nearbyStations.filter() { $0.gasoilAPrice != nil && $0.gasoline95E5Price != nil }
+                        let aGasoilPrices: [Double] = stations.map() { $0.gasoilAPrice! }
+                        let gasoline95Prices: [Double] = stations.map() { $0.gasoline95E5Price! }
+                        
+                        let minAGasoil = aGasoilPrices.min()
+                        let maxAGasoil = aGasoilPrices.max()
+                        let minGasoline95 = gasoline95Prices.min()
+                        let maxGasoline95 = gasoline95Prices.max()
+                        if let minAGasoil = minAGasoil, let maxAGasoil = maxAGasoil, let minGasoline95 = minGasoline95, let maxGasoline95 = maxGasoline95 {
+                            let gasoilPercentage = ((aGasoilPrice - minAGasoil) / (maxAGasoil - minAGasoil)) * 100
+                            let gasoline95Percentage = ((gasoline95Price - minGasoline95) / (maxGasoline95 - minGasoline95)) * 100
+                            return (gasoilPercentage + gasoline95Percentage) / 2
+                        }
+                        return nil
+                    }()
+                    
+                    if let avgPercentage = avgPercentage {
+                        let color: Color = {
+                            if avgPercentage < 35.0 {
+                                return Color.green
+                            }
+                            else if avgPercentage < 65.0 {
+                                return Color.orange
+                            }
+                            else {
+                                return Color.red
+                            }
+                        }()
+                        
+                        Button {
+                            withAnimation(.default) {
+                                expandedContent.toggle()
+                                chevronAngle = chevronAngle.isZero ? 180 : 0
+                            }
+                        } label: {
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    VStack {
+                                        Image(systemName: "gauge.with.needle.fill")
+                                            .foregroundStyle(Color.white)
+                                            .frame(width: 28, height: 28)
+                                            .background(.green)
+                                            .cornerRadius(6)
+                                        Spacer()
+                                    }
+                                    Spacer()
+                                        .frame(width: 12)
+                                    VStack(alignment: .leading) {
+                                        Text("Price range")
+                                            .font(.system(size: 16))
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                            .frame(height: 8)
+                                        
+                                        VStack {
+                                            Gauge(
+                                                value: "\(Int(avgPercentage.rounded()))%",
+                                                percentage: avgPercentage.rounded(),
+                                                color: color,
+                                                size: 60
+                                            )
+                                            Spacer()
+                                                .frame(height: 4)
+                                            Group {
+                                                if avgPercentage.rounded() == 0 {
+                                                    Text("This service station is, in general terms, ") + Text("the cheapest ").foregroundStyle(Color.green) + Text("service station in the area.")
+                                                }
+                                                else if avgPercentage.rounded() == 100 {
+                                                    Text("This service station is, in general terms, ") + Text("the most expensive ").foregroundStyle(Color.red) + Text("service station in the area.")
+                                                }
+                                                else {
+                                                    Text("This service station is, in general terms, ") + Text("a \(Int(avgPercentage.rounded()))% more expensive ").foregroundStyle(color) + Text("than the cheapest service station in the area.")
+                                                }
+                                            }
+                                            .font(.system(size: 14))
+                                            .fontWeight(.medium)
+                                            .multilineTextAlignment(.center)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.down")
+                                        .foregroundStyle(Color.blue)
+                                        .font(.system(size: 18))
+                                        .fontWeight(.medium)
+                                        .rotationEffect(.degrees(chevronAngle))
+                                        .animation(.default, value: chevronAngle)
+                                    
+                                }
+                                if expandedContent == true {
+                                    Spacer()
+                                        .frame(height: 12)
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        FuelPriceRange(fuelName: String(localized: "A Gasoil"), fuelParameter: "gasoilAPrice")
+                                        FuelPriceRange(fuelName: String(localized: "B Gasoil"), fuelParameter: "gasoilBPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Premium Gasoil"), fuelParameter: "premiumGasoilPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Biodiesel"), fuelParameter: "biodieselPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5"), fuelParameter: "gasoline95E5Price")
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5 Premium"), fuelParameter: "gasoline95E5PremiumPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E10"), fuelParameter: "gasoline95E10Price")
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 98 E5"), fuelParameter: "gasoline98E5Price")
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 98 E10"), fuelParameter: "gasoline98E10Price")
+                                        FuelPriceRange(fuelName: String(localized: "Bioethanol"), fuelParameter: "bioethanolPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Compressed Natural Gas"), fuelParameter: "cngPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Liquefied Natural Gas"), fuelParameter: "lngPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Liquefied petroleum gases"), fuelParameter: "lpgPrice")
+                                        FuelPriceRange(fuelName: String(localized: "Hydrogen"), fuelParameter: "hydrogenPrice")
+                                    }
+                                }
+                            }
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
+                        .padding()
+                    }
+                }
+                else {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            VStack {
+                                Image(systemName: "gauge.with.needle.fill")
+                                    .foregroundStyle(Color.white)
+                                    .frame(width: 28, height: 28)
+                                    .background(.green)
+                                    .cornerRadius(6)
+                                Spacer()
+                            }
+                            Spacer()
+                                .frame(width: 12)
+                            VStack(alignment: .leading) {
+                                Text("Price range")
+                                    .font(.system(size: 16))
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                    .frame(height: 8)
+                                VStack(alignment: .leading, spacing: 6) {
+                                    FuelPriceRange(fuelName: String(localized: "A Gasoil"), fuelParameter: "gasoilAPrice")
+                                    FuelPriceRange(fuelName: String(localized: "B Gasoil"), fuelParameter: "gasoilBPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Premium Gasoil"), fuelParameter: "premiumGasoilPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Biodiesel"), fuelParameter: "biodieselPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5"), fuelParameter: "gasoline95E5Price")
+                                    FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5 Premium"), fuelParameter: "gasoline95E5PremiumPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Gasoline 95 E10"), fuelParameter: "gasoline95E10Price")
+                                    FuelPriceRange(fuelName: String(localized: "Gasoline 98 E5"), fuelParameter: "gasoline98E5Price")
+                                    FuelPriceRange(fuelName: String(localized: "Gasoline 98 E10"), fuelParameter: "gasoline98E10Price")
+                                    FuelPriceRange(fuelName: String(localized: "Bioethanol"), fuelParameter: "bioethanolPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Compressed Natural Gas"), fuelParameter: "cngPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Liquefied Natural Gas"), fuelParameter: "lngPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Liquefied petroleum gases"), fuelParameter: "lpgPrice")
+                                    FuelPriceRange(fuelName: String(localized: "Hydrogen"), fuelParameter: "hydrogenPrice")
+                                }
+                            }
+                        }
+                    }
+                    .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
+                    .padding()
+                }
+            }
+        }
+        
+        @ViewBuilder
+        func FuelPriceRange(fuelName: String, fuelParameter: String) -> some View {
+            if let nearbyStations = mapManager.data?.results, let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: fuelParameter) {
+                let prices = nearbyStations.map { station in
+                    let value: Double? = FuelStation.getObjectProperty(station: station, propertyName: fuelParameter)
+                    return value
+                }.filter() { $0 != nil } as! [Double]
+                let percentage: Double? = {
+                    if prices.count <= 1 {
+                        return nil
+                    }
+                    
+                    let maxPrice = prices.max()
+                    let minPrice = prices.min()
+                    if let maxPrice = maxPrice, let minPrice = minPrice {
+                        let percentage = ((fuelPrice - minPrice) / (maxPrice - minPrice)) * 100
+                        return percentage
+                    }
+                    return nil
+                }()
+                if let percentage = percentage {
+                    let color: Color = {
+                        if percentage < 35.0 {
+                            return Color.green
+                        }
+                        else if percentage < 65.0 {
+                            return Color.orange
+                        }
+                        else {
+                            return Color.red
+                        }
+                    }()
+                    
+                    HStack {
+                        Text(fuelName)
+                        Spacer()
+                        Text(verbatim: "\(Int(percentage.rounded()))%")
+                            .fontWeight(.medium)
+                            .foregroundStyle(color)
+                    }
+                    .font(.system(size: 14))
+                }
+                else {
+                    HStack {
+                        Text(fuelName)
+                        Spacer()
+                        Text(verbatim: "N/A")
+                            .fontWeight(.medium)
+                    }
+                    .font(.system(size: 14))
+                }
+            }
+        }
+    }
+    
     static fileprivate let delta = 0.003
     struct MapView: View {
         var station: FuelStation

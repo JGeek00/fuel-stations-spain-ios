@@ -67,6 +67,16 @@
         }
       }
     },
+    "a %lld%% more expensive " : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "un %lld%% más cara "
+          }
+        }
+      }
+    },
     "A Gasoil" : {
       "localizations" : {
         "es" : {
@@ -907,6 +917,16 @@
         }
       }
     },
+    "Price range" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escala de precio"
+          }
+        }
+      }
+    },
     "Prices" : {
       "localizations" : {
         "es" : {
@@ -1077,6 +1097,16 @@
         }
       }
     },
+    "service station in the area." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " en este área."
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "es" : {
@@ -1167,12 +1197,42 @@
         }
       }
     },
+    "than the cheapest service station in the area." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "que la estación de servicio más barata de este área."
+          }
+        }
+      }
+    },
+    "the cheapest " : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "la estación de servicio más barata"
+          }
+        }
+      }
+    },
     "The data provider has a system to prevent overloads. Move the map slower to load the data. Restart the app and try again." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "El proveedor de datos tiene un sistema para prevenir sobrecargas. Mueve el mapa más despacio para cargar los datos. Reinicia la app y prueba de nuevo."
+          }
+        }
+      }
+    },
+    "the most expensive " : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "la estación de servicio más cara"
           }
         }
       }
@@ -1253,6 +1313,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este municipio no tiene estaciones de servicio."
+          }
+        }
+      }
+    },
+    "This service station is, in general terms, " : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta estación de servicio es, en términos generales, "
           }
         }
       }
