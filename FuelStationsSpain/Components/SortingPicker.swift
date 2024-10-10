@@ -47,7 +47,7 @@ struct SortingPicker: View {
     }
 }
 
-fileprivate struct MenuItem: View {
+struct MenuItem: View {
     var label: String
     @Binding var selectedOption: Enums.StationsSortingOptions
     var value: Enums.StationsSortingOptions

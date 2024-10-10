@@ -11,4 +11,5 @@ class StorageKeys {
     public static let hideStationsDontHaveFavoriteFuel = "HIDE_STATIONS_DONT_HAVE_FAVORITE_FUEL"
     public static let closedStationsShowMethod = "CLOSED_STATIONS_SHOW_METHOD"
     public static let showRedClockClosedStations = "SHOW_RED_CLOCK_CLOSED_STATIONS"
+    public static let defaultListSorting = "DEFAULT_LIST_SORTING"
 }

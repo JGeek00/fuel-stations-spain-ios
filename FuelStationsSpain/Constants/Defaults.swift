@@ -7,4 +7,5 @@ class Defaults {
     static let hideStationsDontHaveFavoriteFuel = false
     static let closedStationsShowMethod = Enums.ClosedStationsMode.showDimmed
     static let showRedClockClosedStations = true
+    static let defaultListSorting = Enums.StationsSortingOptions.proximity
 }

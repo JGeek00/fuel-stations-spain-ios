@@ -6,6 +6,8 @@ struct SearchView: View {
     @EnvironmentObject private var locationManager: LocationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
+    @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
         
     @State private var columnVisibility = NavigationSplitViewVisibility.all
         
@@ -20,6 +22,7 @@ struct SearchView: View {
         .navigationSplitViewStyle(.balanced)
         .onAppear {
             searchViewModel.location = locationManager.lastLocation
+            searchViewModel.stationsSelectedSorting = defaultListSorting
         }
     }
 }

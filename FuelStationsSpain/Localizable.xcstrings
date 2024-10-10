@@ -417,6 +417,16 @@
         }
       }
     },
+    "Default sorting" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenación por defecto"
+          }
+        }
+      }
+    },
     "Error" : {
       "localizations" : {
         "es" : {
@@ -733,6 +743,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gases licuados del petróleo"
+          }
+        }
+      }
+    },
+    "Lists" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listas"
           }
         }
       }

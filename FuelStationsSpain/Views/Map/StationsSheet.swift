@@ -7,7 +7,8 @@ struct StationsSheet: View {
     @EnvironmentObject private var locationManager: LocationManager
     
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
-    
+    @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
+
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     
@@ -114,6 +115,7 @@ struct StationsSheet: View {
         }
         .onAppear {
             location = locationManager.lastLocation
+            selectedSorting = defaultListSorting
         }
     }
 }

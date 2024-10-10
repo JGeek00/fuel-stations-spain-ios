@@ -9,6 +9,8 @@ struct FavoritesView: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
+    @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
+    
     @State private var selectedStation: FuelStation? = nil
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
@@ -108,6 +110,7 @@ struct FavoritesView: View {
             }
             .onAppear {
                 location = locationManager.lastLocation
+                selectedSorting = defaultListSorting
             }
             .onChange(of: proxy.size.width) {
                 width = proxy.size.width
