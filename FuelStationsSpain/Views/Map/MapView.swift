@@ -305,7 +305,7 @@ fileprivate struct MapMarkerItem: View {
         Circle()
             .offset(x: 6, y: -6)
             .frame(width: 15, height: 15)
-            .foregroundStyle(Color.white)
+            .foregroundStyle(Color.background)
             .overlay(alignment: .center) {
                 Image(systemName: "clock.fill")
                     .offset(x: 6, y: -6)
