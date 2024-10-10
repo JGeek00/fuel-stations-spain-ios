@@ -457,6 +457,26 @@
         }
       }
     },
+    "For the general calculation" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para el cálculo general"
+          }
+        }
+      }
+    },
+    "For the individual calculations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para los cálculos individuales"
+          }
+        }
+      }
+    },
     "Fuel price" : {
       "localizations" : {
         "es" : {
@@ -627,6 +647,16 @@
         }
       }
     },
+    "How is it calculated?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo se calcula?"
+          }
+        }
+      }
+    },
     "How to get there" : {
       "localizations" : {
         "es" : {
@@ -653,6 +683,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Si seleccionas un combustible favorito, el precio aparecerá directamente en el mapa en cada marcador de estación de servicio. También aparecerá directamente en cada estación favorita, y al buscar estaciones por localidad."
+          }
+        }
+      }
+    },
+    "In this case, the price of this fuel at all nearby service stations that supply it will be taken.\nThen, the minimum price and the maximum price will be taken and a range will be elaborated with them.\nThen, it is calculated where in the range is the price of the service station being analyzed." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En este caso, se tomará el precio de este combustible en todas las estaciones de servicio cercanas que lo suministren. \nDespués, se tomará el precio mínimo y el precio máximo, y se elaborará un rango con ellos. \nLuego, se calcula en qué punto del rango se encuentra el precio de la estación de servicio que se está analizando."
           }
         }
       }
@@ -923,6 +963,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Escala de precio"
+          }
+        }
+      }
+    },
+    "Price scale calculation" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cálculo de la escala de precio"
           }
         }
       }
@@ -1303,6 +1353,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esta aplicación necesita acceso a la localización para mostrar las estaciones de servicio cercanas."
+          }
+        }
+      }
+    },
+    "This calculation is only available if the service station supplies at least Gasoil A and Gasoline 95 E5.\nIn this case, all nearby service stations that also supply Gasoil A and Gasoline 95 E5 will be taken.\nThen, for each of these two fuels, the minimum and maximum price is taken from among all the selected service stations, and with these two values a range is established.\nThen, the price of that fuel at the service station being analyzed is taken, and the point within the range is calculated, and thus the percentage is obtained." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este cálculo solo está disponible si la estación de servicio suministra al menos Gasóleo A y Gasolina 95 E5.\nEn este caso se tomarán todas las estaciones de servicio cercanas que también suministren Gasóleo A y Gasolina 95 E5. Se eligen estos dos combustibles por ser los más habituales.\nDespués, por cada uno de estos dos combustibles, se saca el precio mínimo y el precio máximo de entre todas las estaciones de servicio seleccionadas, y con esos dos valores se establece un rango.\nLuego, se toma el precio de ese combustible en la estación de servicio que se está analizando, y se calcula en que punto dentro del rango se encuentra, y de esa manera se obtiene el porcentaje."
           }
         }
       }
