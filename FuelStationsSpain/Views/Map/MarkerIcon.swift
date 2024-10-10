@@ -4,18 +4,58 @@ import SwiftUI
 struct PriceMarker: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        let width = rect.size.width
-        let height = rect.size.height
-        
-        path.move(to: CGPoint(x: width*0.5, y: height))
-        path.addLine(to: CGPoint(x: width*0.4, y: height*0.8))
-        path.addLine(to: CGPoint(x: 0, y: height*0.8))
-        path.addLine(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: width, y: 0))
-        path.addLine(to: CGPoint(x: width, y: height*0.8))
-        path.addLine(to: CGPoint(x: width*0.6, y: height*0.8))
-        path.closeSubpath()
-        
+
+        let radius: CGFloat = 6
+        let pointerSize: CGFloat = 6
+
+        // Start at the top-left corner
+        path.move(to: CGPoint(x: rect.minX + radius, y: rect.minY))
+
+        // Top edge
+        path.addLine(to: CGPoint(x: rect.maxX - radius, y: rect.minY))
+        path.addArc(
+            center: CGPoint(x: rect.maxX - radius, y: rect.minY + radius),
+            radius: radius,
+            startAngle: .degrees(270),
+            endAngle: .degrees(0),
+            clockwise: false
+        )
+
+        // Right edge
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - radius - pointerSize))
+        path.addArc(
+            center: CGPoint(x: rect.maxX - radius, y: rect.maxY - radius - pointerSize),
+            radius: radius,
+            startAngle: .degrees(0),
+            endAngle: .degrees(90),
+            clockwise: false
+        )
+
+        // Bottom edge with pointer
+        path.addLine(to: CGPoint(x: rect.midX + pointerSize, y: rect.maxY - pointerSize))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))  // Triangle tip
+        path.addLine(to: CGPoint(x: rect.midX - pointerSize, y: rect.maxY - pointerSize))
+        path.addLine(to: CGPoint(x: rect.minX + radius, y: rect.maxY - pointerSize))
+
+        // Left edge
+        path.addArc(
+            center: CGPoint(x: rect.minX + radius, y: rect.maxY - radius - pointerSize),
+            radius: radius,
+            startAngle: .degrees(90),
+            endAngle: .degrees(180),
+            clockwise: false
+        )
+
+        // Close the path by connecting back to the starting point
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + radius))
+        path.addArc(
+            center: CGPoint(x: rect.minX + radius, y: rect.minY + radius),
+            radius: radius,
+            startAngle: .degrees(180),
+            endAngle: .degrees(270),
+            clockwise: false
+        )
+
         return path
     }
 }
