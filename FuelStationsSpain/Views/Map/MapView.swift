@@ -26,8 +26,16 @@ fileprivate struct MapComponent: View {
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
+    @AppStorage(StorageKeys.mapStyle, store: UserDefaults.shared) private var mapStyle: Enums.MapStyle = Defaults.mapStyle
 
     var body: some View {
+        let mpStyle: MapStyle = {
+            switch mapStyle {
+            case .standard: return MapStyle.standard
+            case .hybrid: return MapStyle.hybrid
+            case .satellite: return MapStyle.imagery
+            }
+        }()
         Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
             if let stations = mapManager.data?.results {
                 let markers = {
@@ -54,6 +62,7 @@ fileprivate struct MapComponent: View {
                 }
             }
         }
+        .mapStyle(mpStyle)
         .onMapCameraChange(frequency: .onEnd, { value in
             mapManager.onMapCameraChange(value)
         })

@@ -677,6 +677,16 @@
         }
       }
     },
+    "Hybrid" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Híbrido"
+          }
+        }
+      }
+    },
     "Hydrogen" : {
       "localizations" : {
         "es" : {
@@ -793,6 +803,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mapa"
+          }
+        }
+      }
+    },
+    "Map style" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estilo de mapa"
           }
         }
       }
@@ -1087,6 +1107,16 @@
         }
       }
     },
+    "Satellite" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satélite"
+          }
+        }
+      }
+    },
     "Search" : {
       "localizations" : {
         "es" : {
@@ -1243,6 +1273,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ordenado por proximidad"
+          }
+        }
+      }
+    },
+    "Standard" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estándar"
           }
         }
       }

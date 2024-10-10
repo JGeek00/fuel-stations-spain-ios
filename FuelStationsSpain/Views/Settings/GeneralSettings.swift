@@ -8,6 +8,7 @@ struct GeneralSettings: View {
     @AppStorage(StorageKeys.closedStationsShowMethod, store: UserDefaults.shared) private var closedStationsShowMethod: Enums.ClosedStationsMode = Defaults.closedStationsShowMethod
     @AppStorage(StorageKeys.showRedClockClosedStations, store: UserDefaults.shared) private var showRedClockClosedStations = Defaults.showRedClockClosedStations
     @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
+    @AppStorage(StorageKeys.mapStyle, store: UserDefaults.shared) private var mapStyle = Defaults.mapStyle
     
     var body: some View {
         List {
@@ -30,6 +31,14 @@ struct GeneralSettings: View {
                 Text("If you select a favorite fuel, the price will appear directly on the map on each service station marker. It will also appear directly on each favorite station and when searching stations by locality.")
             }
             Section("Map") {
+                Picker("Map style", selection: $mapStyle) {
+                    Text("Standard")
+                        .tag(Enums.MapStyle.standard)
+                    Text("Hybrid")
+                        .tag(Enums.MapStyle.hybrid)
+                    Text("Satellite")
+                        .tag(Enums.MapStyle.satellite)
+                }
                 Toggle("Hide stations that aren't open to the general public", isOn: $hideStationsNotOpenPublic)
                 if favoriteFuel != .none {
                     Toggle("Hide stations that don't sell the selected favorite fuel", isOn: $hideStationsDontHaveFavoriteFuel)

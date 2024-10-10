@@ -8,4 +8,5 @@ class Defaults {
     static let closedStationsShowMethod = Enums.ClosedStationsMode.showDimmed
     static let showRedClockClosedStations = true
     static let defaultListSorting = Enums.StationsSortingOptions.proximity
+    static let mapStyle = Enums.MapStyle.standard
 }

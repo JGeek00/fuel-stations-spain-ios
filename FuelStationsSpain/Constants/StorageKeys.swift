@@ -12,4 +12,5 @@ class StorageKeys {
     public static let closedStationsShowMethod = "CLOSED_STATIONS_SHOW_METHOD"
     public static let showRedClockClosedStations = "SHOW_RED_CLOCK_CLOSED_STATIONS"
     public static let defaultListSorting = "DEFAULT_LIST_SORTING"
+    public static let mapStyle = "MAP_STYLE"
 }

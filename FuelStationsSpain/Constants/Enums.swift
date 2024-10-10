@@ -79,4 +79,10 @@ class Enums {
         case showDimmed
         case hideCompletely
     }
+    
+    public enum MapStyle: String {
+        case standard
+        case hybrid
+        case satellite
+    }
 }
