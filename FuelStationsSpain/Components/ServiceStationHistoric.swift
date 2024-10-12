@@ -48,6 +48,16 @@ struct ServiceStationHistoric: View {
         }
     }
     
+    private func formatDate(_ dateString: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let date = dateFormatter.date(from: dateString) {
+            return date
+        } else {
+            return nil
+        }
+    }
+    
     @State private var chartData: [ChartPoint] = []
     @State private var chartMinValue: Double = 0.0
     @State private var chartMaxValue: Double = 0.0
@@ -124,42 +134,56 @@ struct ServiceStationHistoric: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
                 else if serviceStationHistoricViewModel.data != nil {
-                    
-                    if chartData.isEmpty {
+                    if chartData.isEmpty || chartData.count < 3 {
                         ContentUnavailableView("No data available", systemImage: "fuelpump.slash.fill", description: Text("There is no data for the selected fuel."))
                             .transition(.opacity)
                     }
                     else {
-                        Chart {
-                            ForEach(chartData, id: \.self) { item in
-                                LineMark(
-                                    x: .value(String(localized: "Date"), item.date),
-                                    y: .value(String(localized: "Price (€)"), item.value)
-                                )
-                                .interpolationMethod(.catmullRom)
-                                AreaMark(
-                                    x: .value(String(localized: "Date"), item.date),
-                                    y: .value(String(localized: "Price (€)"), item.value)
-                                )
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [
-                                            .blue.opacity(0.5),
-                                            .blue.opacity(0.2),
-                                            .blue.opacity(0.05)
-                                        ],
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                                .interpolationMethod(.catmullRom)
+                        VStack {
+                            Group {
+                                let dateFormatter: DateFormatter = {
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                                    return dateFormatter
+                                }()
+                                if let startDate = dateFormatter.date(from: chartData[0].date), let endDate = dateFormatter.date(from: chartData[chartData.count-1].date) {
+                                    Text(startDate, format: .dateTime.weekday().day().month().year()) + Text(verbatim: " - ") + Text(endDate, format: .dateTime.weekday().day().month().year())
+                                }
                             }
+                            .fontWeight(.semibold)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            Chart {
+                                ForEach(chartData, id: \.self) { item in
+                                    LineMark(
+                                        x: .value(String(localized: "Date"), item.date),
+                                        y: .value(String(localized: "Price (€)"), item.value)
+                                    )
+                                    .interpolationMethod(.catmullRom)
+                                    AreaMark(
+                                        x: .value(String(localized: "Date"), item.date),
+                                        y: .value(String(localized: "Price (€)"), item.value)
+                                    )
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [
+                                                .blue.opacity(0.5),
+                                                .blue.opacity(0.2),
+                                                .blue.opacity(0.05)
+                                            ],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
+                                    .interpolationMethod(.catmullRom)
+                                }
+                            }
+                            .chartYScale(domain: chartMinValue...chartMaxValue)
+                            .chartYAxisLabel(String(localized: "Price (€)"))
+                            .chartXAxis(Visibility.hidden)
+                            .frame(height: 350)
+                            .transition(.opacity)
                         }
-                        .chartYScale(domain: chartMinValue...chartMaxValue)
-                        .chartYAxisLabel(String(localized: "Price (€)"))
-                        .chartXAxis(Visibility.hidden)
-                        .frame(height: 350)
-                        .transition(.opacity)
                     }
                 }
                 else {
