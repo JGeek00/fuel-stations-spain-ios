@@ -107,6 +107,19 @@ struct SearchStationDetails: View {
                         StationDetailsComponents.MapView(station: station)
                             .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        
+                        HStack {
+                            NavigationLink {
+                                ServiceStationHistoric()
+                                    .environmentObject(ServiceStationHistoricViewModel(station: station))
+                            } label: {
+                                Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .clipShape(RoundedRectangle(cornerRadius: 30))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 12)
                     }
                     .padding()
                 }

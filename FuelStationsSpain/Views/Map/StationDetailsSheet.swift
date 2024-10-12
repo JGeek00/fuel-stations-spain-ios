@@ -75,6 +75,7 @@ struct StationDetailsSheetContent: View {
     
     @State private var showAddedFavoritesToast = false
     @State private var showRemovedFavoritesToast = false
+    @State private var showHistoricPricesSheet = false
     
     var body: some View {
         if let station = mapManager.selectedStation {
@@ -185,6 +186,14 @@ struct StationDetailsSheetContent: View {
                         .buttonStyle(.borderedProminent)
                         .clipShape(.rect(cornerRadius: 30))
                         Spacer()
+                        Button {
+                            showHistoricPricesSheet = true
+                        } label: {
+                            Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                        Spacer()
                     }
                     .padding(.top, 12)
                 }
@@ -199,6 +208,25 @@ struct StationDetailsSheetContent: View {
             }
             .animation(.easeOut, value: mapManager.selectedStation)
             .transition(.opacity)
+            .sheet(isPresented: $showHistoricPricesSheet) {
+                NavigationStack {
+                    ServiceStationHistoric()
+                        .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button {
+                                    showHistoricPricesSheet = false
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.foreground.opacity(0.5))
+                                }
+                                .buttonStyle(BorderedButtonStyle())
+                                .clipShape(Circle())
+                            }
+                        }
+                }
+                .environmentObject(ServiceStationHistoricViewModel(station: station))
+            }
         }
     }
 }
