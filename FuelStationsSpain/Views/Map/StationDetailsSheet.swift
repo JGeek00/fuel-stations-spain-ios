@@ -72,9 +72,8 @@ struct StationDetailsSheetContent: View {
     @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
-    
-    @State private var showAddedFavoritesToast = false
-    @State private var showRemovedFavoritesToast = false
+    @EnvironmentObject private var toastProvider: ToastProvider
+
     @State private var showHistoricPricesSheet = false
     
     var body: some View {
@@ -93,14 +92,20 @@ struct StationDetailsSheetContent: View {
                         return nil
                     }()
                     
-                    StationDetailsComponents.ListItem(
-                        icon: "mappin",
-                        iconColor: .red,
-                        title: address.capitalized,
-                        subtitle: distanceText
-                    )
-                    .customBackgroundWithMaterial()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    Button {
+                        UIPasteboard.general.string = address.capitalized
+                        toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
+                    } label: {
+                        StationDetailsComponents.ListItem(
+                            icon: "mappin",
+                            iconColor: .red,
+                            title: address.capitalized,
+                            subtitle: distanceText
+                        )
+                        .customBackgroundWithMaterial()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    }
+                    .buttonStyle(.plain)
                 }
                 if let locality = station.locality {
                     StationDetailsComponents.ListItem(
@@ -200,12 +205,6 @@ struct StationDetailsSheetContent: View {
             }
             .padding(.bottom)
             .padding(.horizontal)
-            .toast(isPresenting: $showAddedFavoritesToast, duration: 3, tapToDismiss: true) {
-                AlertToast(displayMode: .alert, type: .systemImage("star.fill", .foreground), title: String(localized: "Added to favorites"))
-            }
-            .toast(isPresenting: $showRemovedFavoritesToast, duration: 3, tapToDismiss: true) {
-                AlertToast(displayMode: .alert, type: .systemImage("star.slash.fill", .foreground), title: String(localized: "Removed from favorites"))
-            }
             .animation(.easeOut, value: mapManager.selectedStation)
             .transition(.opacity)
             .sheet(isPresented: $showHistoricPricesSheet) {

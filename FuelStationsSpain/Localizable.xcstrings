@@ -167,6 +167,16 @@
         }
       }
     },
+    "Address copied to the clipboard" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirección copiada al portapapeles"
+          }
+        }
+      }
+    },
     "Alphabetically by municipality" : {
       "localizations" : {
         "es" : {
@@ -1093,17 +1103,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anterior"
-          }
-        }
-      }
-    },
-    "Price" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Precio"
           }
         }
       }

@@ -6,6 +6,7 @@ struct SearchStationDetails: View {
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
+    @EnvironmentObject private var toastProvider: ToastProvider
         
     var body: some View {
         NavigationStack {
@@ -25,14 +26,20 @@ struct SearchStationDetails: View {
                                 return nil
                             }()
                             
-                            StationDetailsComponents.ListItem(
-                                icon: "mappin",
-                                iconColor: .red,
-                                title: address.capitalized,
-                                subtitle: distanceText
-                            )
-                            .background(Color.listItemBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            Button {
+                                UIPasteboard.general.string = address.capitalized
+                                toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
+                            } label: {
+                                StationDetailsComponents.ListItem(
+                                    icon: "mappin",
+                                    iconColor: .red,
+                                    title: address.capitalized,
+                                    subtitle: distanceText
+                                )
+                                .customBackgroundWithMaterial()
+                                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            }
+                            .buttonStyle(.plain)
                         }
                         if let locality = station.locality {
                             StationDetailsComponents.ListItem(
