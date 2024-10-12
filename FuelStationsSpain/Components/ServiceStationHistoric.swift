@@ -24,6 +24,7 @@ struct ServiceStationHistoric: View {
     @State private var chartData: [ChartPoint] = []
     @State private var chartMinValue: Double = 0.0
     @State private var chartMaxValue: Double = 0.0
+    @State private var selectedChartPoint: String?
     
     private func getSelectedFuelData(data: [FuelStationHistoric], selectedFuel: Enums.FuelType) -> [ChartPoint] {
         switch selectedFuel {
@@ -183,6 +184,18 @@ struct ServiceStationHistoric: View {
                                     )
                                     .interpolationMethod(.catmullRom)
                                 }
+
+                            }
+                            .chartOverlay { proxy in
+                                Color.clear
+                                    .onContinuousHover { phase in
+                                        switch phase {
+                                        case let .active(location):
+                                            selectedChartPoint = proxy.value(atX: location.x, as: String.self)
+                                        case .ended:
+                                            selectedChartPoint = nil
+                                        }
+                                    }
                             }
                             .chartYScale(domain: chartMinValue...chartMaxValue)
                             .chartYAxisLabel(String(localized: "Price (€)"))
