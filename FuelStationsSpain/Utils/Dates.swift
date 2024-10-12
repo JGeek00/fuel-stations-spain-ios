@@ -10,3 +10,13 @@ func formatDate(_ value: String) -> Date? {
         return nil
     }
 }
+
+func getSQLDateFormat(_ date: Date) -> String {
+    let calendar = Calendar.current
+
+    let day = calendar.component(.day, from: date)
+    let month = calendar.component(.month, from: date)
+    let year = calendar.component(.year, from: date)
+    
+    return "\(year)-\(String(format: "%02d", month))-\(String(format: "%02d", day))"
+}

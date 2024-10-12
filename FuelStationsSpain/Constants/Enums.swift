@@ -85,4 +85,29 @@ class Enums {
         case hybrid
         case satellite
     }
+    
+    public enum HistoricTime: String {
+        case week1
+        case month1
+        case month3
+        case month6
+        case year1
+    }
+    
+    public enum FuelType: String {
+        case gasoilA
+        case gasoilB
+        case premiumGasoil
+        case biodiesel
+        case gasoline95E10
+        case gasoline95E5
+        case gasoline95E5Premium
+        case gasoline98E10
+        case gasoline98E5
+        case bioethanol
+        case cng
+        case lng
+        case lpg
+        case hydrogen
+    }
 }

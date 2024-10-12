@@ -38,4 +38,16 @@ class ApiClient {
         )
         return result
     }
+    
+    static func fetchServiceStationHistoric(stationId: String, startDate: Date, endDate: Date) async -> StatusResponse<[FuelStationHistoric]> {
+        let result: StatusResponse<[FuelStationHistoric]> = await httpRequest(
+            url: "https://fuelapi.jgeek00.com/service-stations-historic",
+            queryParameters: [
+                URLQueryItem(name: "id", value: stationId),
+                URLQueryItem(name: "startDate", value: getSQLDateFormat(startDate)),
+                URLQueryItem(name: "endDate", value: getSQLDateFormat(endDate)),
+            ]
+        )
+        return result
+    }
 }

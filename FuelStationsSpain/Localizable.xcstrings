@@ -67,6 +67,56 @@
         }
       }
     },
+    "1 month" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 mes"
+          }
+        }
+      }
+    },
+    "1 week" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 semana"
+          }
+        }
+      }
+    },
+    "1 year" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 año"
+          }
+        }
+      }
+    },
+    "3 months" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3 meses"
+          }
+        }
+      }
+    },
+    "6 months" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6 meses"
+          }
+        }
+      }
+    },
     "a %lld%% more expensive " : {
       "localizations" : {
         "es" : {
@@ -153,6 +203,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ocurrió un error al cargar los municipios. Prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
+    "An error occured when loading the price history. Try again later." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error al cargar el histórico de precios. Prueba de nuevo más tarde."
           }
         }
       }
@@ -253,6 +313,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se han podido cargar los municipios"
+          }
+        }
+      }
+    },
+    "Cannot load price history" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede cargar el histórico de precios"
           }
         }
       }
@@ -417,6 +487,16 @@
         }
       }
     },
+    "Date" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha"
+          }
+        }
+      }
+    },
     "Default sorting" : {
       "localizations" : {
         "es" : {
@@ -483,6 +563,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para los cálculos individuales"
+          }
+        }
+      }
+    },
+    "Fuel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combustible"
           }
         }
       }
@@ -877,6 +967,16 @@
         }
       }
     },
+    "No data available" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay datos disponibles"
+          }
+        }
+      }
+    },
     "No favorite stations" : {
       "localizations" : {
         "es" : {
@@ -993,6 +1093,37 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anterior"
+          }
+        }
+      }
+    },
+    "Price" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precio"
+          }
+        }
+      }
+    },
+    "Price (€)" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precio (€)"
+          }
+        }
+      }
+    },
+    "Price history" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Histórico de precios"
           }
         }
       }
@@ -1387,6 +1518,16 @@
         }
       }
     },
+    "There is no data for the selected fuel." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay datos para el combustible seleccionado."
+          }
+        }
+      }
+    },
     "This application receives the data from a public API of the Spanish government." : {
       "localizations" : {
         "es" : {
@@ -1453,6 +1594,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esta estación no vende al público general"
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo"
           }
         }
       }
