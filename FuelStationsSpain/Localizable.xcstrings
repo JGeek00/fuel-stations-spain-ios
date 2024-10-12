@@ -1057,6 +1057,26 @@
         }
       }
     },
+    "Open in Apple Maps" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir en Apple Maps"
+          }
+        }
+      }
+    },
+    "Open in Google Maps" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir en Google Maps"
+          }
+        }
+      }
+    },
     "Open until %@" : {
       "localizations" : {
         "es" : {

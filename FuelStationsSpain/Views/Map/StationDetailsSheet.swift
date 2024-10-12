@@ -73,6 +73,8 @@ struct StationDetailsSheetContent: View {
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var toastProvider: ToastProvider
+    
+    @Environment(\.openURL) private var openURL
 
     @State private var showHistoricPricesSheet = false
     
@@ -183,8 +185,13 @@ struct StationDetailsSheetContent: View {
                 if let lastLocation = locationManager.lastLocation, let latitude = station.latitude, let longitude = station.longitude, let signage = station.signage {
                     HStack {
                         Spacer()
-                        Button {
-                            openInMapsApp(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
+                        Menu {
+                            Button("Open in Apple Maps") {
+                                openInAppleMaps(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
+                            }
+                            Button("Open in Google Maps") {
+                                openURL(URL(string: "https://www.google.com/maps/search/?api=1&query=\(station.latitude!)%2C\(station.longitude!)")!)
+                            }
                         } label: {
                             Label("How to get there", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
                         }

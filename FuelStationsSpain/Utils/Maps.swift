@@ -1,7 +1,7 @@
 import Foundation
 import MapKit
 
-func openInMapsApp(sourceLatitude: Double, sourceLongitude: Double, destinationLatitude: Double, destinationLongitude: Double, stationName: String) {
+func openInAppleMaps(sourceLatitude: Double, sourceLongitude: Double, destinationLatitude: Double, destinationLongitude: Double, stationName: String) {
     let source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: sourceLatitude, longitude: sourceLongitude)))
     source.name = String(localized: "Your position")
             

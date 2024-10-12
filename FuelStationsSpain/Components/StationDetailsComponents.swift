@@ -610,6 +610,8 @@ class StationDetailsComponents {
         @EnvironmentObject private var tabViewManager: TabViewManager
         @EnvironmentObject private var locationManager: LocationManager
         
+        @Environment(\.openURL) private var openURL
+        
         @State private var camera = MapCameraPosition.region(.init(center: Config.defaultCoordinates, span: .init(latitudeDelta: delta, longitudeDelta: delta)))
         
         var body: some View {
@@ -631,10 +633,17 @@ class StationDetailsComponents {
                         if let lastLocation = locationManager.lastLocation {
                             Divider()
                                 .frame(width: 1)
-                            Button("How to get there") {
-                                openInMapsApp(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
+                            Menu {
+                                Button("Open in Apple Maps") {
+                                    openInAppleMaps(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
+                                }
+                                Button("Open in Google Maps") {
+                                    openURL(URL(string: "https://www.google.com/maps/search/?api=1&query=\(station.latitude!)%2C\(station.longitude!)")!)
+                                }
+                            } label: {
+                                Text("How to get there")
+                                    .frame(maxWidth: .infinity)
                             }
-                            .frame(maxWidth: .infinity)
                         }
                     }
                     .padding()
