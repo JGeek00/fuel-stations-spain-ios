@@ -12,8 +12,18 @@ fileprivate struct ChartPoint: Hashable {
 }
 
 struct ServiceStationHistoric: View {
+    var station: FuelStation
     
-    @EnvironmentObject private var serviceStationHistoricViewModel: ServiceStationHistoricViewModel
+    init(station: FuelStation) {
+        self.station = station
+        _serviceStationHistoricViewModel = StateObject(wrappedValue: ServiceStationHistoricViewModel(station: station))
+    }
+    
+    @StateObject private var serviceStationHistoricViewModel: ServiceStationHistoricViewModel
+    
+    @State private var chartData: [ChartPoint] = []
+    @State private var chartMinValue: Double = 0.0
+    @State private var chartMaxValue: Double = 0.0
     
     private func getSelectedFuelData(data: [FuelStationHistoric], selectedFuel: Enums.FuelType) -> [ChartPoint] {
         switch selectedFuel {
@@ -57,10 +67,6 @@ struct ServiceStationHistoric: View {
             return nil
         }
     }
-    
-    @State private var chartData: [ChartPoint] = []
-    @State private var chartMinValue: Double = 0.0
-    @State private var chartMaxValue: Double = 0.0
     
     var body: some View {
         List {
@@ -181,9 +187,10 @@ struct ServiceStationHistoric: View {
                             .chartYScale(domain: chartMinValue...chartMaxValue)
                             .chartYAxisLabel(String(localized: "Price (€)"))
                             .chartXAxis(Visibility.hidden)
+                            .animation(.easeOut, value: serviceStationHistoricViewModel.selectedFuel)
                             .frame(height: 350)
-                            .transition(.opacity)
                         }
+                        .transition(.opacity)
                     }
                 }
                 else {

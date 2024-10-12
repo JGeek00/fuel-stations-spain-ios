@@ -121,8 +121,7 @@ struct FavoriteDetailsView: View {
                     
                     HStack {
                         NavigationLink {
-                            ServiceStationHistoric()
-                                .environmentObject(ServiceStationHistoricViewModel(station: station))
+                            ServiceStationHistoric(station: station)
                         } label: {
                             Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
                         }

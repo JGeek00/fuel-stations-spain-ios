@@ -216,7 +216,7 @@ struct StationDetailsSheetContent: View {
             .transition(.opacity)
             .sheet(isPresented: $showHistoricPricesSheet) {
                 NavigationStack {
-                    ServiceStationHistoric()
+                    ServiceStationHistoric(station: station)
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 Button {
@@ -231,7 +231,6 @@ struct StationDetailsSheetContent: View {
                             }
                         }
                 }
-                .environmentObject(ServiceStationHistoricViewModel(station: station))
             }
         }
     }
