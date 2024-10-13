@@ -21,6 +21,8 @@ struct StationListEntry: View {
     
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     
+    @State private var showHowToGetThere: Bool = false
+    
     private func getValue() -> String? {
         func format(_ value: Double?) -> String? {
             if let value = value {
@@ -215,6 +217,29 @@ struct StationListEntry: View {
                         Label("Add to favorites", systemImage: "star.fill")
                     }
                 }
+            }
+            Button {
+                showHowToGetThere = true
+            } label: {
+                Label("How to get there", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
+            }
+        }
+        .sheet(isPresented: $showHowToGetThere) {
+            NavigationStack {
+                HowToReachStation(station: station)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button {
+                                showHowToGetThere = false
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.foreground.opacity(0.5))
+                            }
+                            .buttonStyle(BorderedButtonStyle())
+                            .clipShape(Circle())
+                        }
+                    }
             }
         }
     }

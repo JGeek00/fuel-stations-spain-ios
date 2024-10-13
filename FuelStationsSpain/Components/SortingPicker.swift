@@ -65,3 +65,15 @@ struct MenuItem: View {
         }
     }
 }
+
+#Preview {
+    @Previewable @State var selected: Enums.StationsSortingOptions = .proximity
+    NavigationStack {
+        VStack {}
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    SortingPicker(selectedSorting: $selected)
+                }
+            }
+    }
+}

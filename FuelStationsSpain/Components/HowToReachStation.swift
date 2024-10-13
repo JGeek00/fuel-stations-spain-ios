@@ -130,6 +130,7 @@ struct HowToReachStation: View {
                     .padding(8)
                     .fontSize(14)
                     .fontWeight(.semibold)
+                    .foregroundStyle(Color.foreground)
                     .background(Material.regular)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .shadow(color: .black.opacity(0.3), radius: 5)
