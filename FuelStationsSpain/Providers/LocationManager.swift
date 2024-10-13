@@ -33,4 +33,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         self.lastLocation = location
     }
+    
+    func setMockData() {
+        authorizationStatus = .authorizedWhenInUse
+        firstLocation = .init(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude)
+        lastLocation = .init(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude)
+    }
 }

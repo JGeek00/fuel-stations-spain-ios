@@ -74,9 +74,8 @@ struct StationDetailsSheetContent: View {
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var toastProvider: ToastProvider
     
-    @Environment(\.openURL) private var openURL
-
     @State private var showHistoricPricesSheet = false
+    @State private var showHowToReachSheet = false
     
     var body: some View {
         if let station = mapManager.selectedStation {
@@ -182,35 +181,28 @@ struct StationDetailsSheetContent: View {
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     }
                 }
-                if let lastLocation = locationManager.lastLocation, let latitude = station.latitude, let longitude = station.longitude, let signage = station.signage {
-                    HStack {
-                        Spacer()
-                        Menu {
-                            Button("Open in Apple Maps") {
-                                openInAppleMaps(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
-                            }
-                            Button("Open in Google Maps") {
-                                openURL(URL(string: "https://www.google.com/maps/search/?api=1&query=\(station.latitude!)%2C\(station.longitude!)")!)
-                            }
-                        } label: {
-                            Label("How to get there", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .clipShape(.rect(cornerRadius: 30))
-                        Spacer()
-                        Button {
-                            showHistoricPricesSheet = true
-                        } label: {
-                            Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
-                        Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        showHowToReachSheet = true
+                    } label: {
+                        Label("How to get there", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
                     }
-                    .padding(.top, 12)
+                    .buttonStyle(.borderedProminent)
+                    .clipShape(.rect(cornerRadius: 30))
+                    Spacer()
+                    Button {
+                        showHistoricPricesSheet = true
+                    } label: {
+                        Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .clipShape(RoundedRectangle(cornerRadius: 30))
+                    Spacer()
                 }
+                .padding(.top, 12)
             }
             .padding(.bottom)
             .padding(.horizontal)
@@ -223,6 +215,24 @@ struct StationDetailsSheetContent: View {
                             ToolbarItem(placement: .topBarLeading) {
                                 Button {
                                     showHistoricPricesSheet = false
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.foreground.opacity(0.5))
+                                }
+                                .buttonStyle(BorderedButtonStyle())
+                                .clipShape(Circle())
+                            }
+                        }
+                }
+            }
+            .sheet(isPresented: $showHowToReachSheet) {
+                NavigationStack {
+                    HowToReachStation(station: station)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button {
+                                    showHowToReachSheet = false
                                 } label: {
                                     Image(systemName: "xmark")
                                         .fontWeight(.semibold)

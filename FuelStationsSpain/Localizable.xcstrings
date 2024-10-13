@@ -887,12 +887,32 @@
         }
       }
     },
+    "Location access is required to show the map." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso a localización requerido para mostrar el mapa."
+          }
+        }
+      }
+    },
     "Location access required" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acceso a localización requerido"
+          }
+        }
+      }
+    },
+    "Location unavailable" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Localización no disponible"
           }
         }
       }

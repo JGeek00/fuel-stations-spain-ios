@@ -29,3 +29,15 @@ func hoursDifference() -> Int {
     // Calculate the difference in hours
     return differenceInSeconds / 3600
 }
+
+func timeIntervalToDHM(_ timeInterval: TimeInterval) -> (days: Int, hours: Int, minutes: Int) {
+    // Round the total seconds to the nearest minute
+    let totalMinutes = Int(round(timeInterval / 60))
+    
+    // Calculate days, hours, and minutes
+    let days = totalMinutes / (24 * 60)
+    let hours = (totalMinutes % (24 * 60)) / 60
+    let minutes = totalMinutes % 60
+    
+    return (days, hours, minutes)
+}
