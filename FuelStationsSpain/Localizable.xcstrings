@@ -717,12 +717,12 @@
         }
       }
     },
-    "Hi! I'm the developer of My Links.\nMy Links is free and I want it to remain free, but by offering this application on the App Store I run into some costs, such as Apple's developer license. I would appreciate a lot every donation to help me paying this costs.\nThank you." : {
+    "Hi! I'm the developer of HispaFuel.\nHispaFuel is free and I want it to remain free, but by offering this application on the App Store I run into some costs, such as Apple's developer license and the mantenience of the API. I would appreciate a lot every donation to help me paying this costs.\nThank you." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Hola! Soy el desarrollador de My Links. My Links es gratuito y quiero que así lo siga siendo, pero al ofrecer la aplicación en la App Store tengo algunos costes, como la licencia de desarrollador de Apple. Aprecio cualquier donación que me ayude a pagar estos costes."
+            "value" : "¡Hola! Soy el desarrollador de HispaFuel. HispaFuel es gratuito y quiero que así lo siga siendo, pero al ofrecer la aplicación en la App Store tengo algunos costes, como la licencia de desarrollador de Apple y el mantenimiento de la API. Aprecio cualquier donación que me ayude a pagar estos costes."
           }
         }
       }

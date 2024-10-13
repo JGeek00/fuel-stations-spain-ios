@@ -18,7 +18,7 @@ struct TipsView: View {
                             }
                         }
                     } header: {
-                        Text("Hi! I'm the developer of My Links.\nMy Links is free and I want it to remain free, but by offering this application on the App Store I run into some costs, such as Apple's developer license. I would appreciate a lot every donation to help me paying this costs.\nThank you.")
+                        Text("Hi! I'm the developer of HispaFuel.\nHispaFuel is free and I want it to remain free, but by offering this application on the App Store I run into some costs, such as Apple's developer license and the mantenience of the API. I would appreciate a lot every donation to help me paying this costs.\nThank you.")
                             .padding(.bottom, 12)
                             .textCase(nil)
                     }
