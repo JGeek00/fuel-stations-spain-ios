@@ -630,21 +630,12 @@ class StationDetailsComponents {
                             tabViewManager.selectedTab = .map
                         }
                         .frame(maxWidth: .infinity)
-                        if let lastLocation = locationManager.lastLocation {
-                            Divider()
-                                .frame(width: 1)
-                            Menu {
-                                Button("Open in Apple Maps") {
-                                    openInAppleMaps(sourceLatitude: lastLocation.coordinate.latitude, sourceLongitude: lastLocation.coordinate.longitude, destinationLatitude: latitude, destinationLongitude: longitude, stationName: signage.capitalized)
-                                }
-                                Button("Open in Google Maps") {
-                                    openURL(URL(string: "https://www.google.com/maps/search/?api=1&query=\(station.latitude!)%2C\(station.longitude!)")!)
-                                }
-                            } label: {
-                                Text("How to get there")
-                                    .frame(maxWidth: .infinity)
-                            }
+                        Divider()
+                            .frame(width: 1)
+                        NavigationLink("How to get there") {
+                            HowToReachStation(station: station)
                         }
+                        .frame(maxWidth: .infinity)
                     }
                     .padding()
                 }
