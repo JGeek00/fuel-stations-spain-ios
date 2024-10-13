@@ -123,7 +123,7 @@ struct ServiceStationHistoric: View {
             .pickerStyle(.segmented)
         }
         .listRowBackground(Color.listBackground)
-        .padding(.horizontal, -20)
+        .listRowInsets(.init())
         .disabled(serviceStationHistoricViewModel.loading)
     }
     
