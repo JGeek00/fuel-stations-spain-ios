@@ -65,14 +65,14 @@ class StationDetailsComponents {
                         HStack {
                             Image(systemName: "clock.fill")
                                 .foregroundStyle(Color.white)
-                                .frame(width: 28, height: 28)
+                                .frameDynamicSize(width: 28, height: 28)
                                 .background(.blue)
                                 .cornerRadius(6)
                             Spacer()
                                 .frame(width: 12)
                             VStack(alignment: .leading) {
                                 Text("Opening hours")
-                                    .font(.system(size: 16))
+                                    .fontSize(16)
                                     .fontWeight(.semibold)
                                 Spacer()
                                     .frame(height: 8)
@@ -107,13 +107,13 @@ class StationDetailsComponents {
                                             .foregroundStyle(Color.gray)
                                     }
                                 }
-                                .font(.system(size: 14))
+                                .fontSize(14)
                                 .fontWeight(.medium)
                             }
                             Spacer()
                             Image(systemName: "chevron.down")
                                 .foregroundStyle(Color.blue)
-                                .font(.system(size: 18))
+                                .fontSize(18)
                                 .fontWeight(.medium)
                                 .rotationEffect(.degrees(chevronAngle))
                                 .animation(.default, value: chevronAngle)
@@ -160,7 +160,7 @@ class StationDetailsComponents {
                                     }
                                 }
                             }
-                            .font(.system(size: 14))
+                            .fontSize(14)
                             .transition(.opacity)
                             .padding(.leading, 40)
                         }
@@ -190,14 +190,14 @@ class StationDetailsComponents {
             HStack(alignment: .top) {
                 Image(systemName: "eurosign.circle.fill")
                     .foregroundStyle(Color.white)
-                    .frame(width: 28, height: 28)
+                    .frameDynamicSize(width: 28, height: 28)
                     .background(.orange)
                     .cornerRadius(6)
                 Spacer()
                     .frame(width: 12)
                 VStack(alignment: .leading) {
                     Text("Prices")
-                        .font(.system(size: 16))
+                        .fontSize(16)
                         .fontWeight(.semibold)
                     Spacer()
                         .frame(height: 8)
@@ -232,7 +232,7 @@ class StationDetailsComponents {
                     Spacer()
                     Text("\(formattedNumber(value: value, digits: 3)) €")
                 }
-                .font(.system(size: 14))
+                .fontSize(14)
             }
             else {
                 EmptyView()
@@ -267,20 +267,20 @@ class StationDetailsComponents {
             return HStack {
                 Image(systemName: icon)
                     .foregroundStyle(Color.white)
-                    .frame(width: 28, height: 28)
+                    .frameDynamicSize(width: 28, height: 28)
                     .background(iconColor)
                     .cornerRadius(6)
                 Spacer()
                     .frame(width: 12)
                 VStack(alignment: .leading) {
                     Text(title)
-                        .font(.system(size: 16))
+                        .fontSize(16)
                         .fontWeight(.semibold)
                     if let subtitle = subtitle {
                         Spacer()
                             .frame(height: 8)
                         Text(subtitle)
-                            .font(.system(size: 14))
+                            .fontSize(14)
                             .foregroundStyle(Color.gray)
                             .fontWeight(.medium)
                     }
@@ -358,7 +358,7 @@ class StationDetailsComponents {
                                         VStack {
                                             Image(systemName: "gauge.with.needle.fill")
                                                 .foregroundStyle(Color.white)
-                                                .frame(width: 28, height: 28)
+                                                .frameDynamicSize(width: 28, height: 28)
                                                 .background(.green)
                                                 .cornerRadius(6)
                                             Spacer()
@@ -367,7 +367,7 @@ class StationDetailsComponents {
                                             .frame(width: 12)
                                         VStack(alignment: .leading) {
                                             Text("Price range")
-                                                .font(.system(size: 16))
+                                                .fontSize(16)
                                                 .fontWeight(.semibold)
                                             Spacer()
                                                 .frame(height: 8)
@@ -392,7 +392,7 @@ class StationDetailsComponents {
                                                         Text("This service station is, in general terms, ") + Text("a \(Int(avgPercentage.rounded()))% more expensive ").foregroundStyle(color) + Text("than the cheapest service station in the area.")
                                                     }
                                                 }
-                                                .font(.system(size: 14))
+                                                .fontSize(14)
                                                 .fontWeight(.medium)
                                                 .multilineTextAlignment(.center)
                                             }
@@ -401,7 +401,7 @@ class StationDetailsComponents {
                                         Spacer()
                                         Image(systemName: "chevron.down")
                                             .foregroundStyle(Color.blue)
-                                            .font(.system(size: 18))
+                                            .fontSize(18)
                                             .fontWeight(.medium)
                                             .rotationEffect(.degrees(chevronAngle))
                                             .animation(.default, value: chevronAngle)
@@ -447,7 +447,7 @@ class StationDetailsComponents {
                                 VStack {
                                     Image(systemName: "gauge.with.needle.fill")
                                         .foregroundStyle(Color.white)
-                                        .frame(width: 28, height: 28)
+                                        .frameDynamicSize(width: 28, height: 28)
                                         .background(.green)
                                         .cornerRadius(6)
                                     Spacer()
@@ -456,7 +456,7 @@ class StationDetailsComponents {
                                     .frame(width: 12)
                                 VStack(alignment: .leading) {
                                     Text("Price range")
-                                        .font(.system(size: 16))
+                                        .fontSize(16)
                                         .fontWeight(.semibold)
                                     Spacer()
                                         .frame(height: 8)
@@ -535,7 +535,7 @@ class StationDetailsComponents {
                             .fontWeight(.medium)
                             .foregroundStyle(color)
                     }
-                    .font(.system(size: 14))
+                    .fontSize(14)
                 }
                 else {
                     HStack {
@@ -544,7 +544,7 @@ class StationDetailsComponents {
                         Text(verbatim: "N/A")
                             .fontWeight(.medium)
                     }
-                    .font(.system(size: 14))
+                    .fontSize(14)
                 }
             }
         }
@@ -565,14 +565,14 @@ class StationDetailsComponents {
                             .frame(height: 12)
                         Text("For the general calculation")
                             .fontWeight(.semibold)
-                            .font(.system(size: 20))
+                            .fontSize(20)
                             .padding(.bottom, 4)
                         Text("This calculation is only available if the service station supplies at least Gasoil A and Gasoline 95 E5.\nIn this case, all nearby service stations that also supply Gasoil A and Gasoline 95 E5 will be taken.\nThen, for each of these two fuels, the minimum and maximum price is taken from among all the selected service stations, and with these two values a range is established.\nThen, the price of that fuel at the service station being analyzed is taken, and the point within the range is calculated, and thus the percentage is obtained.")
                         Spacer()
                             .frame(height: 24)
                         Text("For the individual calculations")
                             .fontWeight(.semibold)
-                            .font(.system(size: 20))
+                            .fontSize(20)
                             .padding(.bottom, 4)
                         Text("In this case, the price of this fuel at all nearby service stations that supply it will be taken.\nThen, the minimum price and the maximum price will be taken and a range will be elaborated with them.\nThen, it is calculated where in the range is the price of the service station being analyzed.")
                     }

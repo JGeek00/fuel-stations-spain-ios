@@ -70,7 +70,7 @@ struct SearchStationDetails: View {
                                             Text("Yes")
                                         }
                                         .foregroundStyle(Color.green)
-                                        .font(.system(size: 14))
+                                        .fontSize(14)
                                         .fontWeight(.medium)
                                     )
                                 case .r:
@@ -82,7 +82,7 @@ struct SearchStationDetails: View {
                                             Text("No")
                                         }
                                         .foregroundStyle(Color.red)
-                                        .font(.system(size: 14))
+                                        .fontSize(14)
                                         .fontWeight(.medium)
                                     )
                                 }
@@ -102,7 +102,7 @@ struct SearchStationDetails: View {
                                 ) {
                                     AnyView(
                                         Text(date, format: .dateTime.weekday().day().hour().minute())
-                                            .font(.system(size: 14))
+                                            .fontSize(14)
                                             .foregroundStyle(Color.gray)
                                             .fontWeight(.medium)
                                     )

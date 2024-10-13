@@ -23,6 +23,8 @@ fileprivate struct MapComponent: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
@@ -173,17 +175,17 @@ fileprivate struct MapComponent: View {
                     }
                 } label: {
                     Image(systemName: "location.fill.viewfinder")
-                        .font(.system(size: 22))
+                        .fontSize(22)
                         .foregroundStyle(locationManager.lastLocation != nil ? Color.foreground : Color.gray)
                         .contentShape(Rectangle())
                 }
                 .disabled(locationManager.lastLocation == nil)
-                .frame(width: 40, height: 40)
+                .frameDynamicSize(width: 40, height: 40)
                 .background(.regularMaterial)
                 .cornerRadius(10)
                 .shadow(color: .black.opacity(0.3), radius: 5)
             }
-            .offset(x: geometry.size.width - 52, y: 12)
+            .offset(x: geometry.size.width - (52 * fontSizeMultiplier(for: dynamicTypeSize)), y: 12 * fontSizeMultiplier(for: dynamicTypeSize))
             Group {
                 Button {
                     mapManager.showStationDetailsSheet = false
@@ -193,16 +195,16 @@ fileprivate struct MapComponent: View {
                     mapManager.showStationsSheet = true
                 } label: {
                     Image(systemName: "list.bullet")
-                        .font(.system(size: 22))
+                        .fontSize(22)
                         .foregroundStyle(Color.foreground)
                         .contentShape(Rectangle())
                 }
-                .frame(width: 40, height: 40)
+                .frameDynamicSize(width: 40, height: 40)
                 .background(.regularMaterial)
                 .cornerRadius(10)
                 .shadow(color: .black.opacity(0.3), radius: 5)
             }
-            .offset(x: geometry.size.width - 52, y: 70)
+            .offset(x: geometry.size.width - (52 * fontSizeMultiplier(for: dynamicTypeSize)), y: 70 * fontSizeMultiplier(for: dynamicTypeSize))
             if mapManager.loading == true || mapManager.error != nil {
                 Group {
                     Button {
@@ -211,23 +213,23 @@ fileprivate struct MapComponent: View {
                         Group {
                             if mapManager.loading == true {
                                 ProgressView()
-                                    .font(.system(size: 24))
+                                    .fontSize(24)
                             }
                             else {
                                 Image(systemName: "exclamationmark.circle.fill")
-                                    .font(.system(size: 22))
+                                    .fontSize(22)
                                     .foregroundStyle(Color.red)
                             }
                         }
                         .contentShape(Rectangle())
                     }
-                    .frame(width: 40, height: 40)
+                    .frameDynamicSize(width: 40, height: 40)
                     .background(.regularMaterial)
                     .cornerRadius(10)
                     .shadow(color: .black.opacity(0.3), radius: 5)
                     .disabled(mapManager.loading)
                 }
-                .offset(x: 12, y: 50)
+                .offset(x: 12 * fontSizeMultiplier(for: dynamicTypeSize), y: 50 * fontSizeMultiplier(for: dynamicTypeSize))
                 .transition(.opacity)
             }
         })
@@ -243,6 +245,8 @@ fileprivate struct MapMarkerItem: View {
     
     @EnvironmentObject private var mapManager: MapManager
     
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    
     @AppStorage(StorageKeys.closedStationsShowMethod, store: UserDefaults.shared) private var closedStationsShowMethod: Enums.ClosedStationsMode = Defaults.closedStationsShowMethod
     @AppStorage(StorageKeys.showRedClockClosedStations, store: UserDefaults.shared) private var showRedClockClosedStations = Defaults.showRedClockClosedStations
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
@@ -256,10 +260,10 @@ fileprivate struct MapMarkerItem: View {
                 if favoriteFuel != .none, let fuelPrice = fuelPrice {
                     PriceMarker()
                         .foregroundStyle(Color.background)
-                        .frame(width: 60, height: 34)
+                        .frameDynamicSize(width: 60, height: 34)
                         .overlay(alignment: .center) {
                             Text(verbatim: "\(formattedNumber(value: fuelPrice, digits: 3))€")
-                                .font(.system(size: 14))
+                                .fontSize(14)
                                 .fontWeight(.semibold)
                                 .padding(.bottom, 30*0.2)
                         }
@@ -280,7 +284,7 @@ fileprivate struct MapMarkerItem: View {
                 else {
                     NormalMarker()
                         .foregroundStyle(LinearGradient(gradient: Gradient(colors: [Color.markerGradientStart, Color.markerGradientEnd]), startPoint: .top, endPoint: .bottom))
-                        .frame(width: 30, height: 30)
+                        .frameDynamicSize(width: 30, height: 30)
                         .overlay(alignment: .topTrailing, content: {
                             if formattedSchedule?.isCurrentlyOpen == false && showRedClockClosedStations == true {
                                 RedClock()
@@ -303,14 +307,14 @@ fileprivate struct MapMarkerItem: View {
     @ViewBuilder
     private func RedClock() -> some View {
         Circle()
-            .offset(x: 6, y: -6)
-            .frame(width: 15, height: 15)
+            .offset(x: 6 * fontSizeMultiplier(for: dynamicTypeSize), y: -6 * fontSizeMultiplier(for: dynamicTypeSize))
+            .frameDynamicSize(width: 15, height: 15)
             .foregroundStyle(Color.background)
             .overlay(alignment: .center) {
                 Image(systemName: "clock.fill")
-                    .offset(x: 6, y: -6)
+                    .offset(x: 6 * fontSizeMultiplier(for: dynamicTypeSize), y: -6 * fontSizeMultiplier(for: dynamicTypeSize))
                     .foregroundStyle(Color.red)
-                    .font(.system(size: 14))
+                    .fontSize(14)
             }
     }
     

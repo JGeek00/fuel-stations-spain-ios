@@ -16,13 +16,13 @@ struct Welcome: View {
                 Spacer()
                     .frame(height: 24)
                 Text("Welcome to HispaFuel")
-                    .font(.system(size: verticalSizeClass == .regular ? 40 : 36))
+                    .fontSize(verticalSizeClass == .regular ? 40 : 36)
                     .fontWeight(.bold)
                     .padding(.bottom, 12)
                     .multilineTextAlignment(.center)
                 Text("Realtime information about fuel prices on Spanish service stations.")
                     .fontWeight(.medium)
-                    .font(.system(size: verticalSizeClass == .regular ? 30 : 26))
+                    .fontSize(verticalSizeClass == .regular ? 30 : 26)
                     .foregroundStyle(Color.gray)
                     .multilineTextAlignment(.center)
             }
@@ -37,7 +37,7 @@ struct Welcome: View {
                 } label: {
                     Text("Get started")
                         .fontWeight(.medium)
-                        .font(.system(size: 20))
+                        .fontSize(20)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
                 }

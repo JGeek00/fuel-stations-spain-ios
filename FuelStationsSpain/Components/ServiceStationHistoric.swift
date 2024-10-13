@@ -134,6 +134,7 @@ struct ServiceStationHistoric: View {
                     Text(first, format: .dateTime.weekday().day().month().year()) + Text(verbatim: " - ") + Text(last, format: .dateTime.weekday().day().month().year())
                 }
                 .fontWeight(.semibold)
+                .multilineTextAlignment(.center)
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .animation(.easeOut, value: serviceStationHistoricViewModel.chartData)

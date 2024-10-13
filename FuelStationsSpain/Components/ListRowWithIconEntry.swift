@@ -29,6 +29,7 @@ struct ListRowWithIconEntry: View {
                 Image(systemName: systemIcon!)
                     .foregroundStyle(Color.white)
                     .frame(width: 28, height: 28)
+                    .font(.system(size: 18))
                     .background(iconColor)
                     .cornerRadius(6)
             }
@@ -40,6 +41,7 @@ struct ListRowWithIconEntry: View {
                 }
                 .foregroundStyle(Color.black)
                 .frame(width: 28, height: 28)
+                .font(.system(size: 18))
                 .background(iconColor)
                 .cornerRadius(6)
             }
@@ -47,5 +49,11 @@ struct ListRowWithIconEntry: View {
                 .padding(.leading, 8)
         }
         .foregroundStyle(textColor)
+    }
+}
+
+#Preview {
+    List {
+        ListRowWithIconEntry(systemIcon: "gear", iconColor: .blue, label: "Settings")
     }
 }

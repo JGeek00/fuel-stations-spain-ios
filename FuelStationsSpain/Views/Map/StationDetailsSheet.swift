@@ -19,7 +19,7 @@ struct StationDetailsSheetHeader: View {
             HStack {
                 if let name = station.signage {
                     Text(verbatim: name.capitalized)
-                        .font(.system(size: 30))
+                        .fontSize(30)
                         .fontWeight(.bold)
                         .truncationMode(.tail)
                         .lineLimit(1)
@@ -138,7 +138,7 @@ struct StationDetailsSheetContent: View {
                                     Text("Yes")
                                 }
                                 .foregroundStyle(Color.green)
-                                .font(.system(size: 14))
+                                .fontSize(14)
                                 .fontWeight(.medium)
                             )
                         case .r:
@@ -150,7 +150,7 @@ struct StationDetailsSheetContent: View {
                                     Text("No")
                                 }
                                 .foregroundStyle(Color.red)
-                                .font(.system(size: 14))
+                                .fontSize(14)
                                 .fontWeight(.medium)
                             )
                         }
@@ -173,7 +173,7 @@ struct StationDetailsSheetContent: View {
                         ) {
                             AnyView(
                                 Text(date, format: .dateTime.weekday().day().hour().minute())
-                                    .font(.system(size: 14))
+                                    .fontSize(14)
                                     .foregroundStyle(Color.gray)
                                     .fontWeight(.medium)
                             )
@@ -202,6 +202,8 @@ struct StationDetailsSheetContent: View {
                             showHistoricPricesSheet = true
                         } label: {
                             Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                         }
                         .buttonStyle(.borderedProminent)
                         .clipShape(RoundedRectangle(cornerRadius: 30))

@@ -7,11 +7,11 @@ struct LocationAccessRequest: View {
     var body: some View {
         VStack(alignment: .leading) {
             Image(systemName: "location.fill")
-                .font(.system(size: 60))
+                .fontSize(60)
             Spacer()
                 .frame(height: 24)
             Text("Location access")
-                .font(.system(size: 30))
+                .fontSize(30)
                 .fontWeight(.semibold)
                 .padding(.bottom, 12)
             Spacer()

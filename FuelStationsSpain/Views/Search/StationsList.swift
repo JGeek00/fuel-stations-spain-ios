@@ -52,7 +52,7 @@ struct SearchStationsList: View {
                                                         .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
                                                         .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
                                                         .textCase(nil)
-                                                        .font(.system(size: 14))
+                                                        .fontSize(14)
                                                     Spacer()
                                                 }
                                             }

@@ -79,7 +79,7 @@ struct SettingsView: View {
                         Spacer()
                         Text("Created on 🇪🇸 by JGeek00")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 16))
+                            .fontSize(16)
                         Spacer()
                     }
                     .padding(.top, 8)

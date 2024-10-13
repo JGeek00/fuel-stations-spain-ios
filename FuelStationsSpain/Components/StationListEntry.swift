@@ -87,7 +87,7 @@ struct StationListEntry: View {
                             Group {
                                 Image(systemName: "star.fill")
                                     .foregroundStyle(Color.accentColor)
-                                    .font(.system(size: 12))
+                                    .fontSize(12)
                                 Spacer()
                                     .frame(width: 4)
                             }
@@ -95,7 +95,7 @@ struct StationListEntry: View {
                         }
                         if let signage = station.signage {
                             Text(signage.capitalized)
-                                .font(.system(size: 18))
+                                .fontSize(18)
                                 .fontWeight(.semibold)
                         }
                     }
@@ -103,7 +103,7 @@ struct StationListEntry: View {
                         .frame(height: 4)
                     if let address = station.address {
                         Text(address.capitalized)
-                            .font(.system(size: 14))
+                            .fontSize(14)
                     }
                     if sortingMethod != .proximity {
                         if let distance = station.distanceToUserLocation {
@@ -111,10 +111,10 @@ struct StationListEntry: View {
                                 .frame(height: 4)
                             if distance < 1 {
                                 Text("\(Int(distance*1000)) m from your location")
-                                    .font(.system(size: 14))
+                                    .fontSize(14)
                             } else {
                                 Text("\(formattedNumber(value: distance)) Km from your location")
-                                    .font(.system(size: 14))
+                                    .fontSize(14)
                             }
                         }
                     }
@@ -153,7 +153,7 @@ struct StationListEntry: View {
                                     EmptyView()
                                 }
                             }
-                            .font(.system(size: 14))
+                            .fontSize(14)
                             .fontWeight(.medium)
                         }
                         else {
@@ -164,20 +164,20 @@ struct StationListEntry: View {
                         Spacer()
                             .frame(height: 4)
                         Text(verbatim: "\(fuelName): \(formattedNumber(value: value, digits: 3)) €")
-                            .font(.system(size: 14))
+                            .fontSize(14)
                             .transition(.opacity)
                     }
                 }
                 if let value = getValue() {
                     Spacer()
                     Text(value)
-                        .font(.system(size: 16))
+                        .fontSize(16)
                         .fontWeight(.semibold)
                 }
                 else {
                     Spacer()
                     Text(verbatim: "N/A")
-                        .font(.system(size: 16))
+                        .fontSize(16)
                         .fontWeight(.semibold)
                 }
             }
@@ -191,7 +191,7 @@ struct StationListEntry: View {
                     Text("This station does not sell to the general public")
                 }
                 .foregroundStyle(Color.red)
-                .font(.system(size: 14))
+                .fontSize(14)
                 .fontWeight(.medium)
             }
         }
@@ -201,10 +201,10 @@ struct StationListEntry: View {
                 Button {
                     withAnimation(.default) {
                         if favoritesProvider.isFavorite(stationId: stationId) {
-                            _ = favoritesProvider.removeFavorite(stationId: stationId)
+                            favoritesProvider.removeFavorite(stationId: stationId)
                         }
                         else {
-                            _ = favoritesProvider.addFavorite(stationId: stationId)
+                            favoritesProvider.addFavorite(stationId: stationId)
                         }
                     }
                 } label: {
@@ -218,4 +218,12 @@ struct StationListEntry: View {
             }
         }
     }
+}
+
+#Preview {
+    let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
+    List {
+        StationListEntry(station: station, sortingMethod: .aGasoil)
+    }
+    .environmentObject(FavoritesProvider.shared)
 }

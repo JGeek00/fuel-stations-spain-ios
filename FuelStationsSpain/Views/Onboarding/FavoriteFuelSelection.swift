@@ -11,11 +11,11 @@ struct FavoriteFuelSelection: View {
             List {
                 VStack(alignment: .leading) {
                     Image(systemName: "fuelpump.fill")
-                        .font(.system(size: 60))
+                        .fontSize(60)
                     Spacer()
                         .frame(height: 24)
                     Text("Favorite fuel")
-                        .font(.system(size: 30))
+                        .fontSize(30)
                         .fontWeight(.semibold)
                     Spacer()
                         .frame(height: 12)

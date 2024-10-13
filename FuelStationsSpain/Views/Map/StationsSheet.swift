@@ -66,7 +66,7 @@ struct StationsSheet: View {
                                                     .padding(.leading, -12)
                                                     .padding(.top, -12)
                                                     .textCase(nil)
-                                                    .font(.system(size: 14))
+                                                    .fontSize(14)
                                             }
                                         }
                                         .animation(.default, value: processedData)
