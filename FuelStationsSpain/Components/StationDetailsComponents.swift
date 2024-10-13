@@ -183,9 +183,7 @@ class StationDetailsComponents {
         init(station: FuelStation) {
             self.station = station
         }
-        
-        @EnvironmentObject private var mapManager: MapManager
-            
+                    
         var body: some View {
             HStack(alignment: .top) {
                 Image(systemName: "eurosign.circle.fill")
@@ -630,6 +628,7 @@ class StationDetailsComponents {
                             tabViewManager.selectedTab = .map
                         }
                         .frame(maxWidth: .infinity)
+                        .disabled(runningOnPreview())
                         Divider()
                             .frame(width: 1)
                         NavigationLink("How to get there") {
@@ -646,5 +645,41 @@ class StationDetailsComponents {
                 }
             }
         }
+    }
+}
+
+#Preview("FavoriteButton") {
+    StationDetailsComponents.FavoriteButton(stationId: "5272")
+        .environmentObject(FavoritesProvider.shared)
+}
+
+#Preview("ScheduleItem") {
+    let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
+    let locationManager: LocationManager = {
+        let manager =  LocationManager()
+        manager.setMockData()
+        return manager
+    }()
+    
+    ScrollView {
+        StationDetailsComponents.ScheduleItem(station: station)
+            .environmentObject(locationManager)
+    }
+}
+
+#Preview("PricesItem") {
+    let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
+    
+    ScrollView {
+        StationDetailsComponents.PricesItem(station: station)
+    }
+}
+
+#Preview("MapView") {
+    let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
+    
+    ScrollView {
+        StationDetailsComponents.MapView(station: station)
+            .environmentObject(MapManager.shared)
     }
 }
