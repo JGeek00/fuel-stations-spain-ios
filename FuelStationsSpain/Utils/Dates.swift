@@ -20,3 +20,9 @@ func getSQLDateFormat(_ date: Date) -> String {
     
     return "\(year)-\(String(format: "%02d", month))-\(String(format: "%02d", day))"
 }
+
+func convertToLocalTime(date: Date) -> Date {
+    let timeZone = TimeZone.current
+    let secondsFromGMT = timeZone.secondsFromGMT(for: date)
+    return date.addingTimeInterval(TimeInterval(secondsFromGMT))
+}
