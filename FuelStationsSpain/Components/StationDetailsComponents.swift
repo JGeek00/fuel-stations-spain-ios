@@ -4,9 +4,11 @@ import MapKit
 class StationDetailsComponents {
     struct FavoriteButton: View {
         var stationId: String
+        var backgroundCircle: Bool
         
-        init(stationId: String) {
+        init(stationId: String, backgroundCircle: Bool = true) {
             self.stationId = stationId
+            self.backgroundCircle = backgroundCircle
         }
         
         @EnvironmentObject private var favoritesProvider: FavoritesProvider
@@ -25,8 +27,11 @@ class StationDetailsComponents {
                     .fontWeight(.semibold)
                     .animation(.default, value: isFavorite)
             }
-            .buttonStyle(BorderedButtonStyle())
-            .clipShape(Circle())
+            .if(backgroundCircle == true) { view in
+                view
+                    .buttonStyle(BorderedButtonStyle())
+                    .clipShape(Circle())
+            }
         }
     }
     

@@ -13,7 +13,11 @@ struct FavoriteDetailsView: View {
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     @EnvironmentObject private var toastProvider: ToastProvider
     
+    @State private var defineStationAliasOpen = false
+    @State private var stationAliasTextField: String = ""
+    
     var body: some View {
+        let alias = favoritesProvider.favorites.first(where: { $0.id == station.id! })?.alias
         NavigationStack {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 12) {
@@ -29,6 +33,18 @@ struct FavoriteDetailsView: View {
                             }
                             return nil
                         }()
+                        
+                        if let stationAlias = alias, !stationAlias.isEmpty {
+                            StationDetailsComponents.ListItem(
+                                icon: "pencil",
+                                iconColor: .gray,
+                                title: String(localized: "Station alias"),
+                                subtitle: stationAlias
+                            )
+                            .customBackgroundWithMaterial()
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .animation(.default, value: alias)
+                        }
                         
                         Button {
                             UIPasteboard.general.string = address.capitalized
@@ -138,8 +154,30 @@ struct FavoriteDetailsView: View {
             .background(Color.listBackground)
             .toolbar {
                 if let stationId = station.id {
-                    StationDetailsComponents.FavoriteButton(stationId: stationId)
+                    StationDetailsComponents.FavoriteButton(stationId: stationId, backgroundCircle: false)
                 }
+                Menu {
+                    Button {
+                        stationAliasTextField = alias ?? ""
+                        defineStationAliasOpen = true
+                    } label: {
+                        Label("Set station alias", systemImage: "pencil")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+            }
+            .alert("Define station alias", isPresented: $defineStationAliasOpen) {
+                TextField("Alias", text: $stationAliasTextField)
+                Button("Cancel", role: .cancel) {
+                    defineStationAliasOpen = false
+                }
+                Button("Save") {
+                    favoritesProvider.setFavoriteAlias(stationId: station.id!, newAlias: stationAliasTextField)
+                    defineStationAliasOpen = false
+                }
+            } message: {
+                Text("You can define an alias for this station. This will make it easier for you to identify it.")
             }
         }
     }

@@ -62,4 +62,20 @@ class FavoritesProvider: ObservableObject {
             print("Failed to fetch or delete: \(error)")
         }
     }
+    
+    func setFavoriteAlias(stationId: String, newAlias: String) {
+        let fetchRequest: NSFetchRequest<FavoriteStation> = FavoriteStation.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", stationId as CVarArg)
+        do {
+            let result = try coredataContext.fetch(fetchRequest)
+            if let favorite = result.first {
+                favorite.alias = newAlias
+                try coredataContext.save()
+                _ = self.fetchFavorites()
+                ToastProvider.shared.showToast(icon: "pencil", title: String(localized: "Station alias updated"))
+            }
+        } catch {
+            print("Failed to fetch or delete: \(error)")
+        }
+    }
 }

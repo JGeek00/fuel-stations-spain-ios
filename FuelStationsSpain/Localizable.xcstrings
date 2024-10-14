@@ -187,6 +187,16 @@
         }
       }
     },
+    "Alias" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias"
+          }
+        }
+      }
+    },
     "Alphabetically by municipality" : {
       "localizations" : {
         "es" : {
@@ -293,6 +303,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bioetanol"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
           }
         }
       }
@@ -553,6 +573,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ordenación por defecto"
+          }
+        }
+      }
+    },
+    "Define station alias" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Definir alias de estación"
           }
         }
       }
@@ -1347,6 +1377,16 @@
         }
       }
     },
+    "Save" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
+        }
+      }
+    },
     "Search" : {
       "localizations" : {
         "es" : {
@@ -1447,6 +1487,16 @@
         }
       }
     },
+    "Set station alias" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Definir alias de estación"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "es" : {
@@ -1523,6 +1573,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estándar"
+          }
+        }
+      }
+    },
+    "Station alias" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias de estación"
+          }
+        }
+      }
+    },
+    "Station alias updated" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias de estación actualizado"
           }
         }
       }
@@ -1793,6 +1863,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estás moviendo el mapa demasiado rápido"
+          }
+        }
+      }
+    },
+    "You can define an alias for this station. This will make it easier for you to identify it." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes definir un alias para esta estación. De esta manera te resultará más fácil identificarla."
           }
         }
       }

@@ -81,6 +81,8 @@ struct StationListEntry: View {
             return dateFormatter
         }()
         
+        let alias = favoritesProvider.favorites.first(where: { $0.id == station.id! })?.alias
+        
         VStack(alignment: .leading) {
             HStack {
                 VStack(alignment: .leading) {
@@ -95,7 +97,12 @@ struct StationListEntry: View {
                             }
                             .transition(.opacity)
                         }
-                        if let signage = station.signage {
+                        if let stationAlias = alias, !stationAlias.isEmpty {
+                            Text(stationAlias)
+                                .fontSize(18)
+                                .fontWeight(.semibold)
+                        }
+                        else if let signage = station.signage {
                             Text(signage.capitalized)
                                 .fontSize(18)
                                 .fontWeight(.semibold)
