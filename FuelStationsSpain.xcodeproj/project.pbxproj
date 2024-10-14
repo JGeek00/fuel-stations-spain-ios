@@ -126,11 +126,11 @@
 		0D5F58682CA42B8300342D3F = {
 			isa = PBXGroup;
 			children = (
-				0DB7146C2CBC8DEE008A0BAC /* PriceWidgetExtension.entitlements */,
 				0D5F58732CA42B8300342D3F /* FuelStationsSpain */,
 				0DB7144E2CBC8A65008A0BAC /* PriceWidget */,
 				0DB714492CBC8A65008A0BAC /* Frameworks */,
 				0D5F58722CA42B8300342D3F /* Products */,
+				0DB7146C2CBC8DEE008A0BAC /* PriceWidgetExtension.entitlements */,
 				0D5F58D82CA4C6BD00342D3F /* README.md */,
 				0D7E9C2E2CAC870000CAC020 /* .gitignore */,
 			);
