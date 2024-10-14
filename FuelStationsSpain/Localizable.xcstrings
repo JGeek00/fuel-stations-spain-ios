@@ -247,6 +247,16 @@
         }
       }
     },
+    "An update of the application is available on the App Store. New versions include new features and bug fixes. Some app features may not work properly until you update the app." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una actualización de la aplicación está disponible en la App Store. Las nuevas versiones incluyen nuevas características y correcciónes de errores. Algunas características de la aplicación podrían no funcionar correctamente hasta que la actualices."
+          }
+        }
+      }
+    },
     "App repository" : {
       "localizations" : {
         "es" : {
@@ -1813,6 +1823,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error desconocido."
+          }
+        }
+      }
+    },
+    "Update available" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualización disponible"
+          }
+        }
+      }
+    },
+    "Update now" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar ahora"
           }
         }
       }

@@ -1,9 +1,19 @@
 import Foundation
 
+func fetchAppStoreInfo() async -> StatusResponse<AppStoreInfoResult> {
+    let result: StatusResponse<AppStoreInfoResult> = await httpRequest(
+        url: "https://itunes.apple.com/lookup",
+        queryParameters: [
+            URLQueryItem(name: "bundleId", value: "com.jgeek00.FuelStationsSpain"),
+        ]
+    )
+    return result
+}
+
 class ApiClient {
     static func fetchServiceStationsByLocation(lat: Double, long: Double, distance: Int) async -> StatusResponse<FuelStationsResult> {
         let result: StatusResponse<FuelStationsResult> = await httpRequest(
-            url: "https://fuelapi.jgeek00.com/service-stations",
+            url: "\(Config.apiBaseUrl)/service-stations",
             queryParameters: [
                 URLQueryItem(name: "coordinates", value: "\(lat),\(long)"),
                 URLQueryItem(name: "distance", value: String(distance))
@@ -14,7 +24,7 @@ class ApiClient {
     
     static func fetchServiceStationsById(stationIds: [String]) async -> StatusResponse<FuelStationsResult> {
         let result: StatusResponse<FuelStationsResult> = await httpRequest(
-            url: "https://fuelapi.jgeek00.com/service-stations",
+            url: "\(Config.apiBaseUrl)/service-stations",
             queryParameters: stationIds.map({ item in
                 URLQueryItem(name: "id", value: item)
             })
@@ -31,7 +41,7 @@ class ApiClient {
     
     static func fetchServiceStationsByMunicipality(municipalityId: String) async -> StatusResponse<FuelStationsResult> {
         let result: StatusResponse<FuelStationsResult> = await httpRequest(
-            url: "https://fuelapi.jgeek00.com/service-stations",
+            url: "\(Config.apiBaseUrl)/service-stations",
             queryParameters: [
                 URLQueryItem(name: "municipalityId", value: municipalityId)
             ]
@@ -41,7 +51,7 @@ class ApiClient {
     
     static func fetchServiceStationHistoric(stationId: String, startDate: Date, endDate: Date) async -> StatusResponse<[FuelStationHistoric]> {
         let result: StatusResponse<[FuelStationHistoric]> = await httpRequest(
-            url: "https://fuelapi.jgeek00.com/service-stations-historic",
+            url: "\(Config.apiBaseUrl)/service-stations-historic",
             queryParameters: [
                 URLQueryItem(name: "id", value: stationId),
                 URLQueryItem(name: "startDate", value: getSQLDateFormat(startDate)),

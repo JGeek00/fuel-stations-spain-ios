@@ -29,6 +29,7 @@ struct FuelStationsSpainApp: App {
                 .environmentObject(FavoritesListViewModel())
                 .environmentObject(SearchViewModel())
                 .environmentObject(IAPManager())
+                .environmentObject(AppUpdatesProvider.shared)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

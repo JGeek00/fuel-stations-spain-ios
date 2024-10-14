@@ -66,6 +66,7 @@
 				Constants/Enums.swift,
 				FuelStationsSpain.xcdatamodeld,
 				Localizable.xcstrings,
+				Models/AppStoreInfoResult.swift,
 				Models/FuelStationsHistoricResult.swift,
 				Models/FuelStationsResult.swift,
 				Models/MunicipalitiesResult.swift,
