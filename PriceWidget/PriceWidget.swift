@@ -131,14 +131,20 @@ struct PriceWidgetEntryView : View {
 
     var body: some View {
         if let data = entry.data, let selectedFuel = entry.configuration.selectedFuel {
+            let alias = getFavoriteAlias(favoriteId: data.id!)
             VStack(alignment: .leading) {
                 Group {
-                    Text(verbatim: data.signage!.capitalized)
-                        .fontWeight(.semibold)
-                        .font(.system(size: 18))
-                        .lineLimit(2)
-                        .truncationMode(.tail)
+                    if let alias = alias, !alias.isEmpty {
+                        Text(verbatim: alias)
+                    }
+                    else {
+                        Text(verbatim: data.signage!.capitalized)
+                    }
                 }
+                .fontWeight(.semibold)
+                .font(.system(size: 18))
+                .lineLimit(2)
+                .truncationMode(.tail)
                 Spacer()
                 Group {
                     Text(verbatim: selectedFuel.label)

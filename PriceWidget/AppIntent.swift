@@ -70,41 +70,7 @@ struct ServiceStation: AppEntity {
     }
 }
 
-struct ServiceStationsQuery: EntityQuery {
-    func generateLabel(_ station: FuelStation) -> String {
-        if let locality = station.locality {
-            return "\(station.signage!.capitalized): \(station.address!.capitalized) (\(locality.capitalized))"
-        }
-        else {
-            return "\(station.signage!.capitalized): \(station.address!.capitalized)"
-        }
-    }
-    
-    func fetchFavorites() -> [FavoriteStation]? {
-        let coredataContext = PersistenceController.shared.container.viewContext
-        let fetchRequest: NSFetchRequest = FavoriteStation.fetchRequest()
-        do {
-            let items = try coredataContext.fetch(fetchRequest)
-            return items
-        } catch {
-            print("Failed to fetch items: \(error)")
-            return nil
-        }
-    }
-    
-    func getStations() async -> [FuelStation] {
-        let favorites = fetchFavorites()
-        if let favorites = favorites, favorites.isEmpty { return [] }
-        guard let favorites = favorites else { return [] }
-        let result = await ApiClient.fetchServiceStationsById(stationIds: favorites.map() { $0.id! })
-        if let data = result.data?.results {
-            return data
-        }
-        else {
-            return []
-        }
-    }
-    
+struct ServiceStationsQuery: EntityQuery {    
     func entities(for identifiers: [ServiceStation.ID]) async throws -> [ServiceStation] {
         let data = await getStations().map() { ServiceStation(id: $0.id!, value: $0, label: generateLabel($0)) }.filter { identifiers.contains($0.id) }
         return data
