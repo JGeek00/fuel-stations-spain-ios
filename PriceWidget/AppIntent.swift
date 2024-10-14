@@ -94,6 +94,7 @@ struct ServiceStationsQuery: EntityQuery {
     
     func getStations() async -> [FuelStation] {
         let favorites = fetchFavorites()
+        if let favorites = favorites, favorites.isEmpty { return [] }
         guard let favorites = favorites else { return [] }
         let result = await ApiClient.fetchServiceStationsById(stationIds: favorites.map() { $0.id! })
         if let data = result.data?.results {

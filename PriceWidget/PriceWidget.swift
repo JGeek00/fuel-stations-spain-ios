@@ -118,10 +118,18 @@ struct PriceWidgetEntryView : View {
             .fontDesign(.rounded)
         }
         else {
-            Text("Press and hold the widget, and tap on edit to choose the necessary parameters.")
-                .multilineTextAlignment(.center)
-                .font(.system(size: 14))
-                .fontWeight(.medium)
+            VStack {
+                Text("Press and hold the widget, and tap on edit to choose the necessary parameters.")
+                    .multilineTextAlignment(.center)
+                    .font(.system(size: 10))
+                    .fontWeight(.medium)
+                Spacer()
+                    .frame(height: 8)
+                Text("You must have at least one service station on favorites to use this widget.")
+                    .multilineTextAlignment(.center)
+                    .font(.system(size: 10))
+                    .foregroundStyle(Color.gray)
+            }
         }
     }
 }

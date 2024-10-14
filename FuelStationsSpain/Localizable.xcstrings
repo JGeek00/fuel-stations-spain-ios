@@ -1787,6 +1787,16 @@
         }
       }
     },
+    "You must have at least one service station on favorites to use this widget." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debes tener al menos una estación de servicio en favoritos para usar este widget."
+          }
+        }
+      }
+    },
     "Your position" : {
       "localizations" : {
         "es" : {
