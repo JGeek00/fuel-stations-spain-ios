@@ -30,6 +30,8 @@ fileprivate struct MapComponent: View {
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
     @AppStorage(StorageKeys.mapStyle, store: UserDefaults.shared) private var mapStyle: Enums.MapStyle = Defaults.mapStyle
 
+    @Namespace private var mapScope
+    
     var body: some View {
         let mpStyle: MapStyle = {
             switch mapStyle {
@@ -38,7 +40,7 @@ fileprivate struct MapComponent: View {
             case .satellite: return MapStyle.imagery
             }
         }()
-        Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000)) {
+        Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000), scope: mapScope) {
             if let stations = mapManager.data?.results {
                 let markers = {
                     var m = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
@@ -65,12 +67,18 @@ fileprivate struct MapComponent: View {
             }
         }
         .mapStyle(mpStyle)
+        .mapControls {
+            MapScaleView()
+        }
         .onMapCameraChange(frequency: .onEnd, { value in
             mapManager.onMapCameraChange(value)
         })
-        .overlay(alignment: .topLeading) {
-            MapOverlay()
+        .overlay(alignment: .topTrailing) {
+            MapOverlayRightButtons()
         }
+        .overlay(alignment: .topLeading, content: {
+            MapOverlayLeftButtons()
+        })
         .alert("Success", isPresented: $mapManager.showSuccessAlert, actions: {
             Button("Close") {
                 mapManager.showSuccessAlert.toggle()
@@ -163,76 +171,84 @@ fileprivate struct MapComponent: View {
                     }
                 })
         }
+        .mapScope(mapScope)
     }
     
     @ViewBuilder
-    private func MapOverlay() -> some View {
-        GeometryReader(content: { geometry in
+    private func MapOverlayRightButtons() -> some View {
+        VStack {
+            Button {
+                withAnimation(.easeOut) {
+                    mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
+                }
+            } label: {
+                Image(systemName: "location.fill.viewfinder")
+                    .fontSize(22)
+                    .foregroundStyle(locationManager.lastLocation != nil ? Color.foreground : Color.gray)
+                    .contentShape(Rectangle())
+            }
+            .disabled(locationManager.lastLocation == nil)
+            .frameDynamicSize(width: 40, height: 40)
+            .background(.regularMaterial)
+            .cornerRadius(10)
+            .shadow(color: .black.opacity(0.3), radius: 5)
+            
+            Spacer()
+                .frame(height: 12)
+            
+            Button {
+                mapManager.showStationDetailsSheet = false
+                mapManager.stationDetailsSheetPosition = .hidden
+                mapManager.selectedStationAnimation = nil
+                mapManager.selectedStation = nil
+                mapManager.showStationsSheet = true
+            } label: {
+                Image(systemName: "list.bullet")
+                    .fontSize(22)
+                    .foregroundStyle(Color.foreground)
+                    .contentShape(Rectangle())
+            }
+            .frameDynamicSize(width: 40, height: 40)
+            .background(.regularMaterial)
+            .cornerRadius(10)
+            .shadow(color: .black.opacity(0.3), radius: 5)
+            
+            Spacer()
+                .frame(height: 12)
+            
+            MapCompass(scope: mapScope)
+        }
+        .offset(x: -12, y: 12)
+    }
+    
+    @ViewBuilder func MapOverlayLeftButtons() -> some View {
+        if mapManager.loading == true || mapManager.error != nil {
             Group {
                 Button {
-                    withAnimation(.easeOut) {
-                        mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
-                    }
+                    mapManager.showErrorAlert.toggle()
                 } label: {
-                    Image(systemName: "location.fill.viewfinder")
-                        .fontSize(22)
-                        .foregroundStyle(locationManager.lastLocation != nil ? Color.foreground : Color.gray)
-                        .contentShape(Rectangle())
-                }
-                .disabled(locationManager.lastLocation == nil)
-                .frameDynamicSize(width: 40, height: 40)
-                .background(.regularMaterial)
-                .cornerRadius(10)
-                .shadow(color: .black.opacity(0.3), radius: 5)
-            }
-            .offset(x: geometry.size.width - (52 * fontSizeMultiplier(for: dynamicTypeSize)), y: 12 * fontSizeMultiplier(for: dynamicTypeSize))
-            Group {
-                Button {
-                    mapManager.showStationDetailsSheet = false
-                    mapManager.stationDetailsSheetPosition = .hidden
-                    mapManager.selectedStationAnimation = nil
-                    mapManager.selectedStation = nil
-                    mapManager.showStationsSheet = true
-                } label: {
-                    Image(systemName: "list.bullet")
-                        .fontSize(22)
-                        .foregroundStyle(Color.foreground)
-                        .contentShape(Rectangle())
-                }
-                .frameDynamicSize(width: 40, height: 40)
-                .background(.regularMaterial)
-                .cornerRadius(10)
-                .shadow(color: .black.opacity(0.3), radius: 5)
-            }
-            .offset(x: geometry.size.width - (52 * fontSizeMultiplier(for: dynamicTypeSize)), y: 70 * fontSizeMultiplier(for: dynamicTypeSize))
-            if mapManager.loading == true || mapManager.error != nil {
-                Group {
-                    Button {
-                        mapManager.showErrorAlert.toggle()
-                    } label: {
-                        Group {
-                            if mapManager.loading == true {
-                                ProgressView()
-                                    .fontSize(24)
-                            }
-                            else {
-                                Image(systemName: "exclamationmark.circle.fill")
-                                    .fontSize(22)
-                                    .foregroundStyle(Color.red)
-                            }
+                    Group {
+                        if mapManager.loading == true {
+                            ProgressView()
+                                .fontSize(24)
                         }
-                        .contentShape(Rectangle())
+                        else {
+                            Image(systemName: "exclamationmark.circle.fill")
+                                .fontSize(22)
+                                .foregroundStyle(Color.red)
+                        }
                     }
-                    .frameDynamicSize(width: 40, height: 40)
-                    .background(.regularMaterial)
-                    .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.3), radius: 5)
-                    .disabled(mapManager.loading)
+                    .contentShape(Rectangle())
                 }
-                .offset(x: 12 * fontSizeMultiplier(for: dynamicTypeSize), y: 50 * fontSizeMultiplier(for: dynamicTypeSize))
-                .transition(.opacity)
+                .frameDynamicSize(width: 40, height: 40)
+                .background(.regularMaterial)
+                .cornerRadius(10)
+                .shadow(color: .black.opacity(0.3), radius: 5)
+                .disabled(mapManager.loading)
             }
-        })
+            .offset(x: 12 * fontSizeMultiplier(for: dynamicTypeSize), y: 50 * fontSizeMultiplier(for: dynamicTypeSize))
+            .transition(.opacity)
+        }
     }
 }
 

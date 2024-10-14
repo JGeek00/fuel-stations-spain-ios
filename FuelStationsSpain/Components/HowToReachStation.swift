@@ -13,9 +13,13 @@ struct HowToReachStation: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.openURL) private var openURL
     
+    @AppStorage(StorageKeys.mapStyle, store: UserDefaults.shared) private var mapStyle: Enums.MapStyle = Defaults.mapStyle
+    
     @State private var startingPoint: CLLocationCoordinate2D?
     @State private var destination: MKMapItem?
     @State private var route: MKRoute?
+    
+    @Namespace private var mapScope
     
     private func getDirections() {
         guard let startingPoint = self.startingPoint else { return }
@@ -35,6 +39,7 @@ struct HowToReachStation: View {
     
     var body: some View {
         MapView()
+            .mapScope(mapScope)
             .onAppear {
                 if let latitude = locationManager.lastLocation?.coordinate.latitude, let longitude = locationManager.lastLocation?.coordinate.longitude {
                     withAnimation(.default) {
@@ -71,7 +76,14 @@ struct HowToReachStation: View {
     
     @ViewBuilder private func MapView() -> some View {
         if let startingPoint = startingPoint, let destination = destination {
-            Map {
+            let mpStyle: MapStyle = {
+                switch mapStyle {
+                case .standard: return MapStyle.standard
+                case .hybrid: return MapStyle.hybrid
+                case .satellite: return MapStyle.imagery
+                }
+            }()
+            Map(scope: mapScope) {
                 Annotation(String(describing: ""), coordinate: startingPoint) {
                     Circle()
                         .fill(.blue)
@@ -85,6 +97,10 @@ struct HowToReachStation: View {
                     MapPolyline(route)
                         .stroke(.blue, lineWidth: 5)
                 }
+            }
+            .mapStyle(mpStyle)
+            .mapControls {
+                MapScaleView()
             }
             .overlay(alignment: .topTrailing, content: {
                 if let distance = route?.distance, let time = route?.expectedTravelTime {
@@ -111,29 +127,36 @@ struct HowToReachStation: View {
                         return text.joined(separator: ", ")
                     }()
                     
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill")
+                    VStack(alignment: .trailing) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill")
+                                Spacer()
+                                    .frame(width: 8)
+                                Text(verbatim: d)
+                            }
                             Spacer()
-                                .frame(width: 8)
-                            Text(verbatim: d)
+                                .frame(height: 12)
+                            HStack {
+                                Image(systemName: "timer")
+                                Spacer()
+                                    .frame(width: 8)
+                                Text(verbatim: time)
+                            }
                         }
+                        .padding(8)
+                        .fontSize(14)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color.foreground)
+                        .background(Material.regular)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(color: .black.opacity(0.3), radius: 5)
+                        
                         Spacer()
                             .frame(height: 12)
-                        HStack {
-                            Image(systemName: "timer")
-                            Spacer()
-                                .frame(width: 8)
-                            Text(verbatim: time)
-                        }
+                        
+                        MapCompass(scope: mapScope)
                     }
-                    .padding(8)
-                    .fontSize(14)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Color.foreground)
-                    .background(Material.regular)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(color: .black.opacity(0.3), radius: 5)
                     .offset(x: -(12 * fontSizeMultiplier(for: dynamicTypeSize)), y: 12 * fontSizeMultiplier(for: dynamicTypeSize))
                 }
             })
