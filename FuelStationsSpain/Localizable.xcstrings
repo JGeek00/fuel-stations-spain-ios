@@ -397,6 +397,16 @@
         }
       }
     },
+    "compared to yesterday" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "respecto a ayer"
+          }
+        }
+      }
+    },
     "Compressed Natural Gas" : {
       "localizations" : {
         "es" : {
