@@ -1,6 +1,14 @@
 import SwiftUI
 @preconcurrency import MapKit
 
+struct NavigateHowToReachStation: Hashable {
+    let station: FuelStation
+    
+    init(station: FuelStation) {
+        self.station = station
+    }
+}
+
 struct HowToReachStation: View {
     var station: FuelStation
     

@@ -16,9 +16,11 @@ struct FavoriteDetailsView: View {
     @State private var defineStationAliasOpen = false
     @State private var stationAliasTextField: String = ""
     
+    @State private var navigationPath = NavigationPath()
+    
     var body: some View {
         let alias = favoritesProvider.favorites.first(where: { $0.id == station.id! })?.alias
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 12) {
                     if let address = station.address {
@@ -131,9 +133,11 @@ struct FavoriteDetailsView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         }
                     }
-                    StationDetailsComponents.MapView(station: station)
-                        .background(Color.listItemBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    StationDetailsComponents.MapView(station: station) {
+                        navigationPath.append(NavigateHowToReachStation(station: station))
+                    }
+                    .background(Color.listItemBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     
                     HStack {
                         NavigationLink {
@@ -178,6 +182,9 @@ struct FavoriteDetailsView: View {
                 }
             } message: {
                 Text("You can define an alias for this station. This will make it easier for you to identify it.")
+            }
+            .navigationDestination(for: NavigateHowToReachStation.self) { value in
+                HowToReachStation(station: value.station)
             }
         }
     }
