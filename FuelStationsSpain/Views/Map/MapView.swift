@@ -106,15 +106,25 @@ fileprivate struct MapComponent: View {
             }
         })
         .alert("You are moving the map too fast", isPresented: $mapManager.movingMapFastAlert, actions: {
-            Button("Close") {
+            Button("Close", role: .cancel) {
                 mapManager.movingMapFastAlert = false
+            }
+            Button("Retry") {
+                Task {
+                    await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
+                }
             }
         }, message: {
             Text("The data provider has a system to prevent overloads. Move the map slower to load the data. Restart the app and try again.")
         })
         .alert("Connection error", isPresented: $mapManager.connectionErrorAlert, actions: {
-            Button("Close") {
+            Button("Close", role: .cancel) {
                 mapManager.connectionErrorAlert = true
+            }
+            Button("Retry") {
+                Task {
+                    await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
+                }
             }
         }, message: {
             Text("Cannot establish a connection to the server. Check your Internet connection or try again later.")
