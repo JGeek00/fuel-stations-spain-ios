@@ -95,8 +95,8 @@ struct PriceWidgetEntryView : View {
     }
  
     var body: some View {
-        if let data = entry.data, let selectedFuel = entry.configuration.selectedFuel {
-            if let yesterdayData = data.first, let todayData = data.last {
+        if entry.configuration.serviceStation != nil, let selectedFuel = entry.configuration.selectedFuel {
+            if let data = entry.data, let yesterdayData = data.first, let todayData = data.last {
                 if let yesterdayPrice = getSelectedFuelValue(station: yesterdayData, fuelKey: selectedFuel.value), let todayPrice = getSelectedFuelValue(station: todayData, fuelKey: selectedFuel.value) {
                     let alias = getFavoriteAlias(favoriteId: todayData.stationId!)
                     VStack(alignment: .leading) {
