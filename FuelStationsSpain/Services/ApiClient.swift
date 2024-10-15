@@ -49,13 +49,14 @@ class ApiClient {
         return result
     }
     
-    static func fetchServiceStationHistoric(stationId: String, startDate: Date, endDate: Date) async -> StatusResponse<[FuelStationHistoric]> {
-        let result: StatusResponse<[FuelStationHistoric]> = await httpRequest(
-            url: "\(Config.apiBaseUrl)/service-stations-historic",
+    static func fetchHistoricPrices(stationId: String, startDate: Date, endDate: Date, includeCurrentPrices: Bool = false) async -> StatusResponse<[HistoricPrice]> {
+        let result: StatusResponse<[HistoricPrice]> = await httpRequest(
+            url: "\(Config.apiBaseUrl)/historic-prices",
             queryParameters: [
                 URLQueryItem(name: "id", value: stationId),
                 URLQueryItem(name: "startDate", value: getSQLDateFormat(startDate)),
                 URLQueryItem(name: "endDate", value: getSQLDateFormat(endDate)),
+                URLQueryItem(name: "includeCurrentPrices", value: includeCurrentPrices == true ? "true" : "false"),
             ]
         )
         return result

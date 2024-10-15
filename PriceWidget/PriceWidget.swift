@@ -3,15 +3,15 @@ import SwiftUI
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> StationWidget {
-        StationWidget(date: Date(), configuration: ConfigurationAppIntent(), data: mockStation, yesterdayData: nil)
+        StationWidget(date: Date(), configuration: ConfigurationAppIntent(), data: mockData)
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> StationWidget {
-        StationWidget(date: Date(), configuration: configuration, data: mockStation, yesterdayData: nil)
+        StationWidget(date: Date(), configuration: configuration, data: mockData)
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<StationWidget> {
-        let nilEntry = StationWidget(date: Date(), configuration: configuration, data: nil, yesterdayData: nil)
+        let nilEntry = StationWidget(date: Date(), configuration: configuration, data: nil)
         
         let nextUpdate = Calendar.current.date(
             byAdding: DateComponents(minute: 30),
@@ -27,22 +27,24 @@ struct Provider: AppIntentTimelineProvider {
         var calendar = Calendar.current
         let timeZone = TimeZone.current
         calendar.timeZone = timeZone
+        
         let startDate = calendar.date(byAdding: .day, value: -1, to: currentDate)!
-        var dateComponents = calendar.dateComponents([.year, .month, .day], from: startDate)
-        dateComponents.hour = 0
-        dateComponents.minute = 0
-        dateComponents.second = 0
-        let zeroedDate = calendar.date(from: dateComponents)!
-        let localDate = convertToLocalTime(date: zeroedDate)
+        var startDateComponents = calendar.dateComponents([.year, .month, .day], from: startDate)
+        startDateComponents.hour = 0
+        startDateComponents.minute = 0
+        startDateComponents.second = 0
+        let zeroedStartDate = calendar.date(from: startDateComponents)!
+        let startDateLocal = convertToLocalTime(date: zeroedStartDate)
+        
+        let nowLocal = convertToLocalTime(date: .now)
 
-        let currentData = await ApiClient.fetchServiceStationsById(stationIds: [selectedStationId])
-        let yesterdayData = await ApiClient.fetchServiceStationHistoric(stationId: selectedStationId, startDate: localDate, endDate: .now)
+        let result = await ApiClient.fetchHistoricPrices(stationId: selectedStationId, startDate: startDateLocal, endDate: nowLocal, includeCurrentPrices: true)
                 
-        guard let data = currentData.data?.results?.first else { return
+        guard let data = result.data else { return
             Timeline(entries: [nilEntry], policy: .after(nextUpdate))
         }
        
-        let entry = StationWidget(date: Date(), configuration: configuration, data: data, yesterdayData: yesterdayData.data?.first)
+        let entry = StationWidget(date: Date(), configuration: configuration, data: data)
         return Timeline(entries: [entry], policy: .after(nextUpdate))
     }
 }
@@ -50,14 +52,13 @@ struct Provider: AppIntentTimelineProvider {
 struct StationWidget: TimelineEntry {
     let date: Date
     let configuration: ConfigurationAppIntent
-    let data: FuelStation?
-    let yesterdayData: FuelStationHistoric?
+    let data: [HistoricPrice]?
 }
 
 struct PriceWidgetEntryView : View {
     var entry: Provider.Entry
     
-    func getSelectedFuelValue(station: FuelStation, fuelKey: String) -> Double? {
+    func getSelectedFuelValue(station: HistoricPrice, fuelKey: String) -> Double? {
         let fuel = Enums.FuelType(rawValue: fuelKey)
         switch fuel {
         case .gasoilA:
@@ -92,136 +93,129 @@ struct PriceWidgetEntryView : View {
             return nil
         }
     }
-    
-    func getSelectedFuelYesterdayValue(station: FuelStationHistoric, fuelKey: String) -> Double? {
-        let fuel = Enums.FuelType(rawValue: fuelKey)
-        switch fuel {
-        case .gasoilA:
-            return station.gasoil_a_price
-        case .gasoilB:
-            return station.gasoil_b_price
-        case .premiumGasoil:
-            return station.premium_gasoil_price
-        case .biodiesel:
-            return station.biodiesel_price
-        case .gasoline95E10:
-            return station.gasoline_95_e10_price
-        case .gasoline95E5:
-            return station.gasoline_95_e5_price
-        case .gasoline95E5Premium:
-            return station.gasoline_95_e5_premium_price
-        case .gasoline98E10:
-            return station.gasoline_98_e10_price
-        case .gasoline98E5:
-            return station.gasoline_98_e5_price
-        case .bioethanol:
-            return station.bioethanol_price
-        case .cng:
-            return station.cng_price
-        case .lng:
-            return station.lng_price
-        case .lpg:
-            return station.lpg_price
-        case .hydrogen:
-            return station.hydrogen_price
-        case .none:
-            return nil
-        }
-    }
-
+ 
     var body: some View {
         if let data = entry.data, let selectedFuel = entry.configuration.selectedFuel {
-            let alias = getFavoriteAlias(favoriteId: data.id!)
-            VStack(alignment: .leading) {
-                Group {
-                    if let alias = alias, !alias.isEmpty {
-                        Text(verbatim: alias)
-                    }
-                    else {
-                        Text(verbatim: data.signage!.capitalized)
-                    }
-                }
-                .fontWeight(.semibold)
-                .font(.system(size: 18))
-                .lineLimit(2)
-                .truncationMode(.tail)
-                Spacer()
-                Group {
-                    Text(verbatim: selectedFuel.label)
-                        .font(.system(size: 14))
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                    Spacer()
-                        .frame(height: 6)
-                    HStack(alignment: .bottom) {
+            if let yesterdayData = data.first, let todayData = data.last {
+                if let yesterdayPrice = getSelectedFuelValue(station: yesterdayData, fuelKey: selectedFuel.value), let todayPrice = getSelectedFuelValue(station: todayData, fuelKey: selectedFuel.value) {
+                    let alias = getFavoriteAlias(favoriteId: todayData.stationId!)
+                    VStack(alignment: .leading) {
                         Group {
-                            if let price = getSelectedFuelValue(station: data, fuelKey: selectedFuel.value) {
-                                Text(verbatim: "\(formattedNumber(value: price, digits: 3)) €")
+                            if let alias = alias, !alias.isEmpty {
+                                Text(verbatim: alias)
                             }
                             else {
-                                Text(verbatim: "N/A")
+                                Text(verbatim: todayData.stationSignage!.capitalized)
                             }
                         }
+                        .fontWeight(.semibold)
                         .font(.system(size: 18))
-                        .fontWeight(.bold)
-                        .lineLimit(1)
-                    }
-                    if let price = getSelectedFuelValue(station: data, fuelKey: selectedFuel.value), let yesterday = entry.yesterdayData, let yesterdayPrice = getSelectedFuelYesterdayValue(station: yesterday, fuelKey: selectedFuel.value) {
-                        let difference = price - yesterdayPrice
-                        let percDifference = difference / yesterdayPrice * 100
-                        let color: Color = {
-                            if difference == 0 {
-                                return Color.gray
-                            }
-                            else if difference > 0 {
-                                return Color.red
-                            }
-                            else {
-                                return Color.green
-                            }
-                        }()
-                        let triangle = {
-                            if difference == 0 {
-                                return "equal"
-                            }
-                            else if difference > 0 {
-                                return "arrowtriangle.up.fill"
-                            }
-                            else {
-                                return "arrowtriangle.down.fill"
-                            }
-                        }()
+                        .lineLimit(2)
+                        .truncationMode(.tail)
                         Spacer()
-                            .frame(height: 6)
-                        HStack() {
-                            Image(systemName: triangle)
+                        Group {
+                            Text(verbatim: selectedFuel.label)
                                 .font(.system(size: 14))
-                                .foregroundStyle(color)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                             Spacer()
-                                .frame(width: 8)
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text(verbatim: "\(formattedNumber(value: difference, digits: 3)) €")
-                                    Spacer()
-                                        .frame(width: 4)
-                                    Text(verbatim: "(\(formattedNumber(value: percDifference, digits: 1)) %)")
-                                }
-                                .font(.system(size: 10))
-                                .fontWeight(.semibold)
-                                .foregroundStyle(color)
-                                Spacer()
-                                    .frame(height: 2)
-                                Text("compared to yesterday")
-                                    .font(.system(size: 8))
-                                    .foregroundStyle(Color.gray)
+                                .frame(height: 6)
+                            HStack(alignment: .bottom) {
+                                Text(verbatim: "\(formattedNumber(value: todayPrice, digits: 3)) €")
+                                    .font(.system(size: 18))
+                                    .fontWeight(.bold)
+                                    .lineLimit(1)
                             }
+                            
+                            let difference = todayPrice - yesterdayPrice
+                            let percDifference = difference / yesterdayPrice * 100
+                            let color: Color = {
+                                if difference == 0 {
+                                    return Color.gray
+                                }
+                                else if difference > 0 {
+                                    return Color.red
+                                }
+                                else {
+                                    return Color.green
+                                }
+                            }()
+                            let triangle = {
+                                if difference == 0 {
+                                    return "equal"
+                                }
+                                else if difference > 0 {
+                                    return "arrowtriangle.up.fill"
+                                }
+                                else {
+                                    return "arrowtriangle.down.fill"
+                                }
+                            }()
                             Spacer()
+                                .frame(height: 6)
+                            HStack() {
+                                Image(systemName: triangle)
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(color)
+                                Spacer()
+                                    .frame(width: 8)
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text(verbatim: "\(formattedNumber(value: difference, digits: 3)) €")
+                                        Spacer()
+                                            .frame(width: 4)
+                                        Text(verbatim: "(\(formattedNumber(value: percDifference, digits: 1)) %)")
+                                    }
+                                    .font(.system(size: 10))
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(color)
+                                    Spacer()
+                                        .frame(height: 2)
+                                    Text("compared to yesterday")
+                                        .font(.system(size: 8))
+                                        .foregroundStyle(Color.gray)
+                                }
+                                Spacer()
+                            }
                         }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fontDesign(.rounded)
+                }
+                else {
+                    VStack(alignment: .center) {
+                        Text(verbatim: todayData.stationSignage!.capitalized)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 18))
+                            .lineLimit(2)
+                            .truncationMode(.tail)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer()
+                        Image(systemName: "fuelpump.slash.fill")
+                            .font(.system(size: 16))
+                            .fontWeight(.semibold)
+                        Spacer()
+                            .frame(height: 8)
+                        Text("There is no price information for the fuel \(selectedFuel.label).")
+                            .font(.system(size: 12))
+                            .multilineTextAlignment(.center)
                     }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .fontDesign(.rounded)
+            else {
+                VStack(alignment: .center) {
+                    Spacer()
+                    Image(systemName: "exclamationmark.circle")
+                        .font(.system(size: 20))
+                        .fontWeight(.semibold)
+                    Spacer()
+                        .frame(height: 8)
+                    Text("An error occured when loading the data for the widget.")
+                        .font(.system(size: 14))
+                        .multilineTextAlignment(.center)
+                    Spacer()
+                }
+            }
         }
         else {
             VStack {
@@ -274,8 +268,7 @@ extension ConfigurationAppIntent {
 #Preview(as: .systemSmall) {
     PriceWidget()
 } timeline: {
-    StationWidget(date: .now, configuration: .noSelection, data: mockStation, yesterdayData: mockYesterdayData)
-    StationWidget(date: .now, configuration: .aGasoil, data: mockStation, yesterdayData: mockYesterdayData)
-    StationWidget(date: .now, configuration: .gasoline95E5, data: mockStation, yesterdayData: mockYesterdayData)
-    StationWidget(date: .now, configuration: .gasoline95E5, data: mockStationLong, yesterdayData: mockYesterdayData)
+    StationWidget(date: .now, configuration: .noSelection, data: mockData)
+    StationWidget(date: .now, configuration: .aGasoil, data: mockData)
+    StationWidget(date: .now, configuration: .gasoline95E5, data: mockData)
 }

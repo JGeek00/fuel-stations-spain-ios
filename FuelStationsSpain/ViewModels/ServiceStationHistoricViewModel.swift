@@ -24,7 +24,7 @@ class ServiceStationHistoricViewModel: ObservableObject {
         }
     }
     
-    @Published var data: [FuelStationHistoric]? = nil
+    @Published var data: [HistoricPrice]? = nil
     @Published var loading = true
     @Published var error: Enums.ApiErrorReason? = nil
     
@@ -43,7 +43,7 @@ class ServiceStationHistoricViewModel: ObservableObject {
         let today = Date()
         let start = Calendar.current.date(byAdding: .year, value: -1, to: today)!
         
-        let result = await ApiClient.fetchServiceStationHistoric(stationId: station.id!, startDate: start, endDate: today)
+        let result = await ApiClient.fetchHistoricPrices(stationId: station.id!, startDate: start, endDate: today)
         
         DispatchQueue.main.async {
             withAnimation(.default) {
@@ -80,33 +80,33 @@ class ServiceStationHistoricViewModel: ObservableObject {
             let filteredFuel: [ChartPoint] = {
                 switch selectedFuel {
                 case .gasoilA:
-                    return data.filter() { $0.date != nil && $0.gasoil_a_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoil_a_price!) }
+                    return data.filter() { $0.date != nil && $0.gasoilAPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoilAPrice!) }
                 case .gasoilB:
-                    return data.filter() { $0.date != nil && $0.gasoil_b_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoil_b_price!) }
+                    return data.filter() { $0.date != nil && $0.gasoilBPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoilBPrice!) }
                 case .premiumGasoil:
-                    return data.filter() { $0.date != nil && $0.premium_gasoil_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.premium_gasoil_price!) }
+                    return data.filter() { $0.date != nil && $0.premiumGasoilPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.premiumGasoilPrice!) }
                 case .biodiesel:
-                    return data.filter() { $0.date != nil && $0.biodiesel_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.biodiesel_price!) }
+                    return data.filter() { $0.date != nil && $0.biodieselPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.biodieselPrice!) }
                 case .gasoline95E10:
-                    return data.filter() { $0.date != nil && $0.gasoline_95_e10_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline_95_e10_price!) }
+                    return data.filter() { $0.date != nil && $0.gasoline95E10Price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline95E10Price!) }
                 case .gasoline95E5:
-                    return data.filter() { $0.date != nil && $0.gasoline_95_e5_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline_95_e5_price!) }
+                    return data.filter() { $0.date != nil && $0.gasoline95E5Price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline95E5Price!) }
                 case .gasoline95E5Premium:
-                    return data.filter() { $0.date != nil && $0.gasoline_95_e5_premium_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline_95_e5_premium_price!) }
+                    return data.filter() { $0.date != nil && $0.gasoline95E5PremiumPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline95E5PremiumPrice!) }
                 case .gasoline98E10:
-                    return data.filter() { $0.date != nil && $0.gasoline_98_e10_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline_98_e10_price!) }
+                    return data.filter() { $0.date != nil && $0.gasoline98E10Price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline98E10Price!) }
                 case .gasoline98E5:
-                    return data.filter() { $0.date != nil && $0.gasoline_98_e5_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline_98_e5_price!) }
+                    return data.filter() { $0.date != nil && $0.gasoline98E5Price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.gasoline98E5Price!) }
                 case .bioethanol:
-                    return data.filter() { $0.date != nil && $0.bioethanol_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.bioethanol_price!) }
+                    return data.filter() { $0.date != nil && $0.bioethanolPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.bioethanolPrice!) }
                 case .cng:
-                    return data.filter() { $0.date != nil && $0.cng_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.cng_price!) }
+                    return data.filter() { $0.date != nil && $0.cngPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.cngPrice!) }
                 case .lng:
-                    return data.filter() { $0.date != nil && $0.lng_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.lng_price!) }
+                    return data.filter() { $0.date != nil && $0.lngPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.lngPrice!) }
                 case .lpg:
-                    return data.filter() { $0.date != nil && $0.lpg_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.lpg_price!) }
+                    return data.filter() { $0.date != nil && $0.lpgPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.lpgPrice!) }
                 case .hydrogen:
-                    return data.filter() { $0.date != nil && $0.hydrogen_price != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.hydrogen_price!) }
+                    return data.filter() { $0.date != nil && $0.hydrogenPrice != nil }.map() { ChartPoint(date: convertToLocalTime(date: dateFormatter.date(from: $0.date!)!), value: $0.hydrogenPrice!) }
                 }
             }()
             

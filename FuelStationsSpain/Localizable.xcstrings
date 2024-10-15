@@ -207,6 +207,16 @@
         }
       }
     },
+    "An error occured when loading the data for the widget." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error al cargar los datos para el widget."
+          }
+        }
+      }
+    },
     "An error occured when loading the favorites information. Try again later." : {
       "localizations" : {
         "es" : {
@@ -1713,6 +1723,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No hay datos para el combustible seleccionado."
+          }
+        }
+      }
+    },
+    "There is no price information for the fuel %@." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay información de precios para el combustible %@."
           }
         }
       }

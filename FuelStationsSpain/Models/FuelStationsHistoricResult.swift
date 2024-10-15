@@ -1,21 +1,22 @@
 import Foundation
 
-// MARK: - FuelStationHistoric
-struct FuelStationHistoric: Sendable, Codable, Hashable {
-    let station_id: String?
-    let biodiesel_price: Double?
-    let bioethanol_price: Double?
-    let cng_price: Double?
-    let lng_price: Double?
-    let lpg_price: Double?
-    let gasoil_a_price: Double?
-    let gasoil_b_price: Double?
-    let premium_gasoil_price: Double?
-    let gasoline_95_e10_price: Double?
-    let gasoline_95_e5_price: Double?
-    let gasoline_95_e5_premium_price: Double?
-    let gasoline_98_e10_price: Double?
-    let gasoline_98_e5_price: Double?
-    let hydrogen_price: Double?
+// MARK: - HistoricPrice
+struct HistoricPrice: Sendable, Codable {
+    let stationId: String?
+    let stationSignage: String?
+    let biodieselPrice: Double?
+    let bioethanolPrice: Double?
+    let cngPrice: Double?
+    let lngPrice: Double?
+    let lpgPrice: Double?
+    let gasoilAPrice: Double?
+    let gasoilBPrice: Double?
+    let premiumGasoilPrice: Double?
+    let gasoline95E10Price: Double?
+    let gasoline95E5Price: Double?
+    let gasoline95E5PremiumPrice: Double?
+    let gasoline98E10Price: Double?
+    let gasoline98E5Price: Double?
+    let hydrogenPrice: Double?
     let date: String?
 }
