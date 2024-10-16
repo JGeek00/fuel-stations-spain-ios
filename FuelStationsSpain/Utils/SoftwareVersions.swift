@@ -7,12 +7,13 @@ func compareSoftwareVersions(appVersion: String, comparisonVersion: String) -> B
     if comparisonVersionComponents[0] > appVersionComponents[0] {
         return true
     }
-    if comparisonVersionComponents[1] > appVersionComponents[1] {
+    else if comparisonVersionComponents[1] > appVersionComponents[1] && comparisonVersionComponents[0] == appVersionComponents[0] {
         return true
     }
-    if comparisonVersionComponents[2] > appVersionComponents[2] {
+    else if comparisonVersionComponents[2] > appVersionComponents[2] && comparisonVersionComponents[1] == appVersionComponents[1] {
         return true
     }
-    
-    return false
+    else {
+        return false
+    }
 }
