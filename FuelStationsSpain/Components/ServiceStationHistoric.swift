@@ -39,7 +39,7 @@ struct ServiceStationHistoric: View {
                             .transition(.opacity)
                     }
                     else {
-                        ChartContent()
+                        ChartContent(chartData: serviceStationHistoricViewModel.chartData, chartMinValue: serviceStationHistoricViewModel.chartMinValue, chartMaxValue: serviceStationHistoricViewModel.chartMaxValue, selectedTime: serviceStationHistoricViewModel.selectedTime)
                             .transition(.opacity)
                     }
                 }
@@ -126,64 +126,134 @@ struct ServiceStationHistoric: View {
         .listRowInsets(.init())
         .disabled(serviceStationHistoricViewModel.loading)
     }
-    
-    @ViewBuilder func ChartContent() -> some View {
-        VStack {
-            if let first = serviceStationHistoricViewModel.chartData.first?.date, let last = serviceStationHistoricViewModel.chartData.last?.date {
-                Group {
-                    Text(first, format: .dateTime.weekday().day().month().year()) + Text(verbatim: " - ") + Text(last, format: .dateTime.weekday().day().month().year())
-                }
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.center)
-                .padding(.vertical, 12)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .animation(.easeOut, value: serviceStationHistoricViewModel.chartData)
-            }
-            Chart {
-                ForEach(serviceStationHistoricViewModel.chartData, id: \.self) { item in
-                    LineMark(
-                        x: .value(String(localized: "Date"), item.date),
-                        y: .value(String(localized: "Price (€)"), item.value)
-                    )
-                    .interpolationMethod(.catmullRom)
-                    AreaMark(
-                        x: .value(String(localized: "Date"), item.date),
-                        y: .value(String(localized: "Price (€)"), item.value)
-                    )
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [
-                                .blue.opacity(0.5),
-                                .blue.opacity(0.2),
-                                .blue.opacity(0.05)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .interpolationMethod(.catmullRom)
-                }
+}
 
-            }
-            .chartOverlay { proxy in
-                Color.clear
-                    .onContinuousHover { phase in
-                        switch phase {
-                        case let .active(location):
-                            serviceStationHistoricViewModel.selectedChartPoint = proxy.value(atX: location.x, as: String.self)
-                        case .ended:
-                            serviceStationHistoricViewModel.selectedChartPoint = nil
+fileprivate struct ChartContent: View {
+    var chartData: [ChartPoint]
+    var chartMinValue: Double
+    var chartMaxValue: Double
+    var selectedTime: Enums.HistoricTime
+    
+    init(chartData: [ChartPoint], chartMinValue: Double, chartMaxValue: Double, selectedTime: Enums.HistoricTime) {
+        self.chartData = chartData
+        self.chartMinValue = chartMinValue
+        self.chartMaxValue = chartMaxValue
+        self.selectedTime = selectedTime
+    }
+    
+    @AppStorage(StorageKeys.chartAnnotationMode, store: UserDefaults.shared) private var chartAnnotationMode = Defaults.chartAnnotationMode
+    
+    @State private var selectedIndex: Int?
+    @State private var lastSelectedIndex: Int?
+    @State private var showChartAnnotation = false
+    
+    var body: some View {
+        VStack {
+            Group {
+                if chartAnnotationMode == .outsideChart, showChartAnnotation == true {
+                    if let lastSelectedIndex, lastSelectedIndex >= 0 && lastSelectedIndex < chartData.count {
+                        let markValue = chartData[lastSelectedIndex]
+                        HStack {
+                            Text(markValue.date, format: .dateTime.weekday().day().month().year())
+                            Spacer()
+                            Text(verbatim: "\(formattedNumber(value: markValue.value, digits: 3)) €")
                         }
+                        .fontSize(14)
+                        .fontWeight(.medium)
+                        .contentTransition(.numericText())
+                        .transition(.opacity)
                     }
+                }
+                else {
+                    if let first = chartData.first?.date, let last = chartData.last?.date {
+                        Group {
+                            Text(first, format: .dateTime.weekday().day().month().year()) + Text(verbatim: " - ") + Text(last, format: .dateTime.weekday().day().month().year())
+                        }
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .animation(.easeOut, value: chartData)
+                        .transition(.opacity)
+                    }
+                }
             }
-            .chartYScale(domain: serviceStationHistoricViewModel.chartMinValue...serviceStationHistoricViewModel.chartMaxValue)
+            .frameDynamicSize(height: 40)
+
+            let chartArray = Array(zip(chartData.indices, chartData))
+            Chart(chartArray, id: \.1) { index, item in
+                LineMark(
+                    x: .value(String(localized: "Date"), index),
+                    y: .value(String(localized: "Price (€)"), item.value)
+                )
+                .interpolationMethod(.catmullRom)
+                AreaMark(
+                    x: .value(String(localized: "Date"), index),
+                    y: .value(String(localized: "Price (€)"), item.value)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [
+                            .blue.opacity(0.5),
+                            .blue.opacity(0.2),
+                            .blue.opacity(0.05)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .interpolationMethod(.catmullRom)
+                if let selectedIndex, selectedIndex >= 0 && selectedIndex < chartData.count {
+                    let markValue = chartData[selectedIndex]
+                    if chartAnnotationMode == .tooltip {
+                        RuleMark(x: .value("Date", selectedIndex))
+                            .lineStyle(.init(dash: [2, 2]))
+                            .cornerRadius(8)
+                            .offset(x: 0, y: 12)
+                            .annotation(position: .automatic, overflowResolution: .init(x: .fit(to: .plot), y: .fit(to: .plot))) {
+                                VStack {
+                                    Text(markValue.date, format: .dateTime.weekday().day().month().year())
+                                    Spacer()
+                                        .frame(height: 4)
+                                    Text(verbatim: "\(formattedNumber(value: markValue.value, digits: 3)) €")
+                                }
+                                .fontSize(14)
+                                .fontWeight(.semibold)
+                                .padding(8)
+                                .background(Color.chartAnnotation)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                    }
+                    else {
+                        RuleMark(x: .value("Date", selectedIndex))
+                            .lineStyle(.init(dash: [2, 2]))
+                            .cornerRadius(8)
+                            .offset(x: 0, y: 12)
+                    }
+                }
+            }
+            .chartXSelection(value: $selectedIndex)
+            .chartYScale(domain: chartMinValue...chartMaxValue)
             .chartYAxisLabel(String(localized: "Price (€)"))
             .chartXAxis(Visibility.hidden)
-            .animation(.easeOut, value: serviceStationHistoricViewModel.chartData)
+            .animation(.easeOut, value: chartData)
             .frame(height: 350)
+        }
+        .onChange(of: selectedIndex) {
+            if selectedTime == .week1 || selectedTime == .month1 || selectedTime == .month3 {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    showChartAnnotation = selectedIndex != nil
+                }
+            }
+            else {
+                showChartAnnotation = selectedIndex != nil
+            }
+            if let selectedIndex = selectedIndex {
+                lastSelectedIndex = selectedIndex
+            }
         }
     }
 }
+
 
 #Preview {
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)

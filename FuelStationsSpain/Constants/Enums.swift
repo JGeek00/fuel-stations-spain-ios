@@ -110,4 +110,9 @@ class Enums {
         case lpg
         case hydrogen
     }
+    
+    public enum ChartAnnotationMode: String {
+        case outsideChart
+        case tooltip
+    }
 }

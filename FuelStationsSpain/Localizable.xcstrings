@@ -407,6 +407,16 @@
         }
       }
     },
+    "Charts" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gráficos"
+          }
+        }
+      }
+    },
     "Close" : {
       "localizations" : {
         "es" : {
@@ -643,6 +653,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Finalizar"
+          }
+        }
+      }
+    },
+    "Floating tooltip" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tooltip flotante"
           }
         }
       }
@@ -1223,6 +1243,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otros"
+          }
+        }
+      }
+    },
+    "Outside the chart" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fuera del gráfico"
           }
         }
       }
@@ -1873,6 +1903,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cuota de uso excedida. Prueba de nuevo más tarde."
+          }
+        }
+      }
+    },
+    "Using the floating tooltip can cause performance issues." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar el tooltip flotante puede causar problemas de rendimiento."
+          }
+        }
+      }
+    },
+    "Value indicator mode" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de indicador de valor"
           }
         }
       }

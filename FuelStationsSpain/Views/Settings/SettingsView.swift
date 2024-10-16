@@ -60,7 +60,7 @@ struct SettingsView: View {
                     Button {
                         appRepoSafariOpen.toggle()
                     } label: {
-                        ListRowWithIconEntry(assetIcon: colorScheme == .dark ? "github" : "github-white", iconColor: Color.gitHub, label: "App repository")
+                        ListRowWithIconEntry(assetIcon: colorScheme == .dark ? "github" : "github-white", iconColor: Color.github, label: "App repository")
                     }
                     HStack {
                         ListRowWithIconEntry(systemIcon: "info.circle.fill", iconColor: .teal, label: "App version")

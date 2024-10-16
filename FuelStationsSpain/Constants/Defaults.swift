@@ -9,4 +9,5 @@ class Defaults {
     static let showRedClockClosedStations = true
     static let defaultListSorting = Enums.StationsSortingOptions.proximity
     static let mapStyle = Enums.MapStyle.standard
+    static let chartAnnotationMode = Enums.ChartAnnotationMode.outsideChart
 }

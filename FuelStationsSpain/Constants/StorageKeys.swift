@@ -13,4 +13,5 @@ class StorageKeys {
     public static let showRedClockClosedStations = "SHOW_RED_CLOCK_CLOSED_STATIONS"
     public static let defaultListSorting = "DEFAULT_LIST_SORTING"
     public static let mapStyle = "MAP_STYLE"
+    public static let chartAnnotationMode = "CHART_ANNOTATION_MODE"
 }

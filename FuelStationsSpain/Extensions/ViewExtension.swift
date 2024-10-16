@@ -47,14 +47,17 @@ fileprivate struct FontSize: ViewModifier {
 }
 
 fileprivate struct FrameDynamicSize: ViewModifier {
-    var width: CGFloat
-    var height: CGFloat
+    var width: CGFloat?
+    var height: CGFloat?
     
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     func body(content: Content) -> some View {
         content
-            .frame(width: width * fontSizeMultiplier(for: dynamicTypeSize), height: height * fontSizeMultiplier(for: dynamicTypeSize))
+            .frame(
+                width: width != nil ? width! * fontSizeMultiplier(for: dynamicTypeSize) : nil,
+                height: height != nil ? height! * fontSizeMultiplier(for: dynamicTypeSize) : nil
+            )
     }
 }
 
@@ -67,7 +70,7 @@ extension View {
         modifier(FontSize(size: size))
     }
     
-    func frameDynamicSize(width: CGFloat, height: CGFloat) -> some View {
+    func frameDynamicSize(width: CGFloat? = nil, height: CGFloat? = nil) -> some View {
         modifier(FrameDynamicSize(width: width, height: height))
     }
     
