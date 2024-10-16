@@ -15,6 +15,9 @@
 		0DB7144B2CBC8A65008A0BAC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144A2CBC8A65008A0BAC /* WidgetKit.framework */; };
 		0DB7144D2CBC8A65008A0BAC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144C2CBC8A65008A0BAC /* SwiftUI.framework */; };
 		0DB7145A2CBC8A66008A0BAC /* PriceWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0DB714482CBC8A65008A0BAC /* PriceWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0DB71C082CC031EA008A0BAC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144A2CBC8A65008A0BAC /* WidgetKit.framework */; };
+		0DB71C092CC031EA008A0BAC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144C2CBC8A65008A0BAC /* SwiftUI.framework */; };
+		0DB71C162CC031EB008A0BAC /* PriceHistoryWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0DB71C072CC031EA008A0BAC /* PriceHistoryWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,6 +27,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0DB714472CBC8A65008A0BAC;
 			remoteInfo = PriceWidgetExtension;
+		};
+		0DB71C142CC031EB008A0BAC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D5F58692CA42B8300342D3F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0DB71C062CC031EA008A0BAC;
+			remoteInfo = PriceHistoryWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -35,6 +45,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				0DB7145A2CBC8A66008A0BAC /* PriceWidgetExtension.appex in Embed Foundation Extensions */,
+				0DB71C162CC031EB008A0BAC /* PriceHistoryWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -49,6 +60,8 @@
 		0DB7144A2CBC8A65008A0BAC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0DB7144C2CBC8A65008A0BAC /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		0DB7146C2CBC8DEE008A0BAC /* PriceWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PriceWidgetExtension.entitlements; sourceTree = "<group>"; };
+		0DB71C072CC031EA008A0BAC /* PriceHistoryWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PriceHistoryWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DB71C1B2CC031F2008A0BAC /* PriceHistoryWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PriceHistoryWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -80,6 +93,34 @@
 			);
 			target = 0DB714472CBC8A65008A0BAC /* PriceWidgetExtension */;
 		};
+		0DB71C192CC031EB008A0BAC /* Exceptions for "PriceHistoryWidget" folder in "PriceHistoryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 0DB71C062CC031EA008A0BAC /* PriceHistoryWidgetExtension */;
+		};
+		0DB71C272CC0324C008A0BAC /* Exceptions for "FuelStationsSpain" folder in "PriceHistoryWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Constants/Config.swift,
+				Constants/Enums.swift,
+				FuelStationsSpain.xcdatamodeld,
+				Localizable.xcstrings,
+				Models/AppStoreInfoResult.swift,
+				Models/FuelStationsHistoricResult.swift,
+				Models/FuelStationsResult.swift,
+				Models/MunicipalitiesResult.swift,
+				Models/StatusResponse.swift,
+				Services/ApiClient.swift,
+				Services/Persistence.swift,
+				Utils/CustomJSONEncoder.swift,
+				Utils/Dates.swift,
+				Utils/HTTPClient.swift,
+				Utils/NumberFormatter.swift,
+			);
+			target = 0DB71C062CC031EA008A0BAC /* PriceHistoryWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -87,6 +128,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				0DB714612CBC8AAA008A0BAC /* Exceptions for "FuelStationsSpain" folder in "PriceWidgetExtension" target */,
+				0DB71C272CC0324C008A0BAC /* Exceptions for "FuelStationsSpain" folder in "PriceHistoryWidgetExtension" target */,
 			);
 			path = FuelStationsSpain;
 			sourceTree = "<group>";
@@ -97,6 +139,14 @@
 				0DB7145E2CBC8A66008A0BAC /* Exceptions for "PriceWidget" folder in "PriceWidgetExtension" target */,
 			);
 			path = PriceWidget;
+			sourceTree = "<group>";
+		};
+		0DB71C0A2CC031EA008A0BAC /* PriceHistoryWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0DB71C192CC031EB008A0BAC /* Exceptions for "PriceHistoryWidget" folder in "PriceHistoryWidgetExtension" target */,
+			);
+			path = PriceHistoryWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -121,14 +171,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0DB71C042CC031EA008A0BAC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DB71C092CC031EA008A0BAC /* SwiftUI.framework in Frameworks */,
+				0DB71C082CC031EA008A0BAC /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0D5F58682CA42B8300342D3F = {
 			isa = PBXGroup;
 			children = (
+				0DB71C1B2CC031F2008A0BAC /* PriceHistoryWidgetExtension.entitlements */,
 				0D5F58732CA42B8300342D3F /* FuelStationsSpain */,
 				0DB7144E2CBC8A65008A0BAC /* PriceWidget */,
+				0DB71C0A2CC031EA008A0BAC /* PriceHistoryWidget */,
 				0DB714492CBC8A65008A0BAC /* Frameworks */,
 				0D5F58722CA42B8300342D3F /* Products */,
 				0DB7146C2CBC8DEE008A0BAC /* PriceWidgetExtension.entitlements */,
@@ -142,6 +203,7 @@
 			children = (
 				0D5F58712CA42B8300342D3F /* FuelStationsSpain.app */,
 				0DB714482CBC8A65008A0BAC /* PriceWidgetExtension.appex */,
+				0DB71C072CC031EA008A0BAC /* PriceHistoryWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,6 +233,7 @@
 			);
 			dependencies = (
 				0DB714592CBC8A66008A0BAC /* PBXTargetDependency */,
+				0DB71C152CC031EB008A0BAC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				0D5F58732CA42B8300342D3F /* FuelStationsSpain */,
@@ -207,6 +270,28 @@
 			productReference = 0DB714482CBC8A65008A0BAC /* PriceWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		0DB71C062CC031EA008A0BAC /* PriceHistoryWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0DB71C1A2CC031EB008A0BAC /* Build configuration list for PBXNativeTarget "PriceHistoryWidgetExtension" */;
+			buildPhases = (
+				0DB71C032CC031EA008A0BAC /* Sources */,
+				0DB71C042CC031EA008A0BAC /* Frameworks */,
+				0DB71C052CC031EA008A0BAC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0DB71C0A2CC031EA008A0BAC /* PriceHistoryWidget */,
+			);
+			name = PriceHistoryWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = PriceHistoryWidgetExtension;
+			productReference = 0DB71C072CC031EA008A0BAC /* PriceHistoryWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -221,6 +306,9 @@
 						CreatedOnToolsVersion = 16.0;
 					};
 					0DB714472CBC8A65008A0BAC = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					0DB71C062CC031EA008A0BAC = {
 						CreatedOnToolsVersion = 16.0;
 					};
 				};
@@ -247,6 +335,7 @@
 			targets = (
 				0D5F58702CA42B8300342D3F /* FuelStationsSpain */,
 				0DB714472CBC8A65008A0BAC /* PriceWidgetExtension */,
+				0DB71C062CC031EA008A0BAC /* PriceHistoryWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -261,6 +350,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0DB714462CBC8A65008A0BAC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0DB71C052CC031EA008A0BAC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -285,6 +381,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0DB71C032CC031EA008A0BAC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -292,6 +395,11 @@
 			isa = PBXTargetDependency;
 			target = 0DB714472CBC8A65008A0BAC /* PriceWidgetExtension */;
 			targetProxy = 0DB714582CBC8A66008A0BAC /* PBXContainerItemProxy */;
+		};
+		0DB71C152CC031EB008A0BAC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0DB71C062CC031EA008A0BAC /* PriceHistoryWidgetExtension */;
+			targetProxy = 0DB71C142CC031EB008A0BAC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -544,6 +652,62 @@
 			};
 			name = Release;
 		};
+		0DB71C172CC031EB008A0BAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PriceHistoryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 38Z3B9TJTR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PriceHistoryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PriceHistoryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jgeek00.FuelStationsSpain.PriceHistoryWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0DB71C182CC031EB008A0BAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PriceHistoryWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 38Z3B9TJTR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PriceHistoryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PriceHistoryWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jgeek00.FuelStationsSpain.PriceHistoryWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -570,6 +734,15 @@
 			buildConfigurations = (
 				0DB7145C2CBC8A66008A0BAC /* Debug */,
 				0DB7145D2CBC8A66008A0BAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0DB71C1A2CC031EB008A0BAC /* Build configuration list for PBXNativeTarget "PriceHistoryWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0DB71C172CC031EB008A0BAC /* Debug */,
+				0DB71C182CC031EB008A0BAC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

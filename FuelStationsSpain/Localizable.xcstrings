@@ -447,6 +447,16 @@
         }
       }
     },
+    "compared to last week" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "respecto a la semana pasada"
+          }
+        }
+      }
+    },
     "compared to yesterday" : {
       "localizations" : {
         "es" : {
