@@ -210,7 +210,7 @@ struct StationDetailsSheetContent: View {
             .transition(.opacity)
             .sheet(isPresented: $showHistoricPricesSheet) {
                 NavigationStack {
-                    ServiceStationHistoric(station: station)
+                    ServiceStationHistoric(station: station, showingInSheet: true)
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 Button {

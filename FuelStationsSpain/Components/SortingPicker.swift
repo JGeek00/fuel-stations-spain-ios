@@ -17,8 +17,8 @@ struct SortingPicker: View {
                         MenuItem(label: String(localized: "Biodiesel"), selectedOption: $selectedSorting, value: .biodiesel)
                     }
                     Section("Gasoline") {
-                        MenuItem(label: String("Gasoline 95 E10"), selectedOption: $selectedSorting, value: .gasoline95E10)
                         MenuItem(label: String(localized: "Gasoline 95 E5"), selectedOption: $selectedSorting, value: .gasoline95E5)
+                        MenuItem(label: String(localized: "Gasoline 95 E10"), selectedOption: $selectedSorting, value: .gasoline95E10)
                         MenuItem(label: String(localized: "Gasoline 95 E5 Premium"), selectedOption: $selectedSorting, value: .gasoline95E5Premium)
                         MenuItem(label: String(localized: "Gasoline 98 E10"), selectedOption: $selectedSorting, value: .gasoline98E10)
                         MenuItem(label: String(localized: "Gasoline 98 E5"), selectedOption: $selectedSorting, value: .gasoline98E5)

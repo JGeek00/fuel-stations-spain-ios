@@ -42,7 +42,7 @@ struct FavoriteDetailsView: View {
                     LastUpdated()
                     HStack {
                         NavigationLink {
-                            ServiceStationHistoric(station: station)
+                            ServiceStationHistoric(station: station, showingInSheet: false)
                         } label: {
                             Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
                         }
