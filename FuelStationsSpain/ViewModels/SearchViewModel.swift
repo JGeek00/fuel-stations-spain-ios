@@ -2,29 +2,28 @@ import CoreLocation
 import SwiftUI
 
 @MainActor
-@Observable
-class SearchViewModel {
-    var municipalitiesData: [Municipality]? = nil
-    var municipalitiesError: Bool = false
-    var municipalitiesLoading: Bool = true
+class SearchViewModel: ObservableObject {
+    @Published var municipalitiesData: [Municipality]? = nil
+    @Published var municipalitiesError: Bool = false
+    @Published var municipalitiesLoading: Bool = true
     
-    var municipalitiesSearchText = ""
-    var municipalitiesListHasContent = true    // To make transition
-    var municipalitiesSorting: Enums.SearchSortingOptions = .groupedProvince
+    @Published var municipalitiesSearchText = ""
+    @Published var municipalitiesListHasContent = true    // To make transition
+    @Published var municipalitiesSorting: Enums.SearchSortingOptions = .groupedProvince
     
-    var selectedMunicipality: Municipality? = nil
+    @Published var selectedMunicipality: Municipality? = nil
     
-    var stationsData: FuelStationsResult? = nil
-    var stationsError: Bool = false
-    var stationsLoading: Bool = true
+    @Published var stationsData: FuelStationsResult? = nil
+    @Published var stationsError: Bool = false
+    @Published var stationsLoading: Bool = true
     
-    var stationsSearchText = ""
-    var stationsListHasContent = true    // To make transition
-    var stationsSelectedSorting: Enums.StationsSortingOptions = .proximity
+    @Published var stationsSearchText = ""
+    @Published var stationsListHasContent = true    // To make transition
+    @Published var stationsSelectedSorting: Enums.StationsSortingOptions = .proximity
     
-    var selectedStation: FuelStation? = nil
+    @Published var selectedStation: FuelStation? = nil
     
-    var location: CLLocation? = nil
+    @Published var location: CLLocation? = nil
     
     init() {
         Task {

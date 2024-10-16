@@ -4,13 +4,11 @@ import CoreLocation
 struct SearchStationsList: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
-    @Environment(SearchViewModel.self) private var searchViewModel
+
     @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var searchViewModel: SearchViewModel
         
-    var body: some View {
-        @Bindable var searchViewModel = searchViewModel
-        
+    var body: some View {        
         NavigationStack {
             if let selectedMunicipality = searchViewModel.selectedMunicipality {
                 Group {
@@ -36,9 +34,7 @@ struct SearchStationsList: View {
         }
     }
     
-    @ViewBuilder private func Content() -> some View {
-        @Bindable var searchViewModel = searchViewModel
-        
+    @ViewBuilder private func Content() -> some View {        
         if let data = searchViewModel.stationsData?.results {
             if data.isEmpty {
                 ContentUnavailableView("No stations", systemImage: "fuelpump.slash.fill", description: Text("This municipality has no service stations."))

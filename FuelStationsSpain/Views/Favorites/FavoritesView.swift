@@ -4,27 +4,15 @@ import CoreLocation
 struct FavoritesView: View {
 
     @Environment(FavoritesProvider.self) private var favoritesProvider
-    @Environment(FavoritesListViewModel.self) private var favoritesListViewModel
     @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
-    @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
-    
-    @State private var selectedStation: FuelStation? = nil
-    @State private var searchText = ""
-    @State private var listHasContent = true    // To make transition
-    
-    // Keep the same location when the view is being presented
-    @State private var location: CLLocation? = nil
-    
-    @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
     
     @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var width = 0.0
     
     var body: some View {
-        let _ = location
         GeometryReader { proxy in
             NavigationSplitView(columnVisibility: $columnVisibility) {
                 Group {
@@ -49,7 +37,7 @@ struct FavoritesView: View {
                 .navigationTitle("Favorites")
                 .navigationSplitViewColumnWidth(min: width*0.3, ideal: width*0.4, max: width*0.5)
             } detail: {
-                if let selectedStation = selectedStation {
+                if let selectedStation = favoritesListViewModel.selectedStation {
                     FavoriteDetailsView(station: selectedStation)
                 }
                 else {
@@ -63,8 +51,7 @@ struct FavoritesView: View {
                 }
             }
             .onAppear {
-                location = locationManager.lastLocation
-                selectedSorting = defaultListSorting
+                favoritesListViewModel.location = locationManager.lastLocation
             }
             .onChange(of: proxy.size.width) {
                 width = proxy.size.width
@@ -79,26 +66,26 @@ struct FavoritesView: View {
                     .transition(.opacity)
             }
             else {
-                let dataWithDistance = addDistancesToStations(stations: data, lastLocation: location)
-                let sorted = sortStations(stations: dataWithDistance, sortingMethod: selectedSorting)
-                let filtered = searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : sorted
+                let dataWithDistance = addDistancesToStations(stations: data, lastLocation: favoritesListViewModel.location)
+                let sorted = sortStations(stations: dataWithDistance, sortingMethod: favoritesListViewModel.selectedSorting)
+                let filtered = favoritesListViewModel.searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(favoritesListViewModel.searchText.lowercased()) } : sorted
                 Group {
-                    if listHasContent == false {
+                    if favoritesListViewModel.listHasContent == false {
                         ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
                             .transition(.opacity)
                     }
                     else {
-                        List(selection: $selectedStation) {
+                        List(selection: $favoritesListViewModel.selectedStation) {
                             Section {
                                 ForEach(filtered, id: \.self) { item in
-                                    StationListEntry(station: item, sortingMethod: selectedSorting)
+                                    StationListEntry(station: item, sortingMethod: favoritesListViewModel.selectedSorting)
                                 }
                             } header: {
                                 HStack {
                                     if horizontalSizeClass == .regular {
                                         Spacer()
                                     }
-                                    Text(sortingText(sortingMethod: selectedSorting))
+                                    Text(sortingText(sortingMethod: favoritesListViewModel.selectedSorting))
                                         .fontWeight(.semibold)
                                         .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
                                         .padding(.bottom, 12)
@@ -118,17 +105,17 @@ struct FavoritesView: View {
                 .onChange(of: filtered) {
                     withAnimation(.default) {
                         if filtered.isEmpty {
-                            listHasContent = false
+                            favoritesListViewModel.listHasContent = false
                         }
                         else {
-                            listHasContent = true
+                            favoritesListViewModel.listHasContent = true
                         }
                     }
                 }
-                .searchable(text: $searchText, prompt: "Search service station by name")
+                .searchable(text: $favoritesListViewModel.searchText, prompt: "Search service station by name")
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        SortingPicker(selectedSorting: $selectedSorting)
+                        SortingPicker(selectedSorting: $favoritesListViewModel.selectedSorting)
                     }
                 }
             }

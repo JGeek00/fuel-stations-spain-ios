@@ -12,7 +12,7 @@ struct StationDetailsSheetHeader: View {
    @Environment(MapManager.self) private var mapManager
     @Environment(LocationManager.self) private var locationManager
     @Environment(FavoritesProvider.self) private var favoritesProvider
-    @EnvironmentObject private var toastProvider: ToastProvider
+    @Environment(ToastProvider.self) private var toastProvider
     
     var body: some View {
         if let station = mapManager.selectedStation {
@@ -72,7 +72,7 @@ struct StationDetailsSheetContent: View {
    @Environment(MapManager.self) private var mapManager
     @Environment(LocationManager.self) private var locationManager
     @Environment(FavoritesProvider.self) private var favoritesProvider
-    @EnvironmentObject private var toastProvider: ToastProvider
+    @Environment(ToastProvider.self) private var toastProvider
     
     @State private var showHistoricPricesSheet = false
     @State private var showHowToReachSheet = false

@@ -1,13 +1,26 @@
 import SwiftUI
+import CoreLocation
 
 @MainActor
-@Observable
-class FavoritesListViewModel {
-    var data: FuelStationsResult? = nil
-    var loading = true
-    var error: Enums.ApiErrorReason? = nil
+class FavoritesListViewModel: ObservableObject {
+    @Published var data: FuelStationsResult? = nil
+    @Published var loading = true
+    @Published var error: Enums.ApiErrorReason? = nil
     
-    init() {}
+    @Published var selectedStation: FuelStation? = nil
+    @Published var searchText = ""
+    @Published var listHasContent = true    // To make transition
+    
+    // Keep the same location when the view is being presented
+    @Published var location: CLLocation? = nil
+    
+    @Published var selectedSorting: Enums.StationsSortingOptions = .proximity
+    
+    init() {
+        if let sortingKey = UserDefaults.shared.string(forKey: StorageKeys.defaultListSorting), let sorting = Enums.StationsSortingOptions(rawValue: sortingKey) {
+            selectedSorting = sorting
+        }
+    }
     
     func fetchData() async {
         let favorites = FavoritesProvider.shared.favorites.map() { $0.id! } as [String]
