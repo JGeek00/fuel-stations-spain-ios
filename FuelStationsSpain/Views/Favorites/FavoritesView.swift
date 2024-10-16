@@ -3,9 +3,9 @@ import CoreLocation
 
 struct FavoritesView: View {
 
-    @EnvironmentObject private var favoritesProvider: FavoritesProvider
-    @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
-    @EnvironmentObject private var locationManager: LocationManager
+    @Environment(FavoritesProvider.self) private var favoritesProvider
+    @Environment(FavoritesListViewModel.self) private var favoritesListViewModel
+    @Environment(LocationManager.self) private var locationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
@@ -24,6 +24,7 @@ struct FavoritesView: View {
     @State private var width = 0.0
     
     var body: some View {
+        let _ = location
         GeometryReader { proxy in
             NavigationSplitView(columnVisibility: $columnVisibility) {
                 Group {

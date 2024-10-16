@@ -11,7 +11,7 @@ class StationDetailsComponents {
             self.backgroundCircle = backgroundCircle
         }
         
-        @EnvironmentObject private var favoritesProvider: FavoritesProvider
+        @Environment(FavoritesProvider.self) private var favoritesProvider
         
         var body: some View {
             let isFavorite = favoritesProvider.isFavorite(stationId: stationId)
@@ -42,7 +42,7 @@ class StationDetailsComponents {
             self.station = station
         }
         
-        @EnvironmentObject private var locationManager: LocationManager
+        @Environment(LocationManager.self) private var locationManager
             
         @State private var showFullSchedule = false
         @State private var chevronAngle: Double = 0
@@ -310,7 +310,7 @@ class StationDetailsComponents {
             self.station = station
         }
         
-        @EnvironmentObject private var mapManager: MapManager
+       @Environment(MapManager.self) private var mapManager
         
         @State private var expandedContent = false
         @State private var chevronAngle: Double = 0
@@ -611,9 +611,9 @@ class StationDetailsComponents {
             self.onShowHowToGetThere = onShowHowToGetThere
         }
         
-        @EnvironmentObject private var mapManager: MapManager
-        @EnvironmentObject private var tabViewManager: TabViewManager
-        @EnvironmentObject private var locationManager: LocationManager
+       @Environment(MapManager.self) private var mapManager
+        @Environment(TabViewManager.self) private var tabViewManager
+        @Environment(LocationManager.self) private var locationManager
         
         @Environment(\.openURL) private var openURL
         
@@ -656,21 +656,20 @@ class StationDetailsComponents {
 }
 
 #Preview("FavoriteButton") {
+    @Previewable @State var favoritesProvider = FavoritesProvider.shared
+    
     StationDetailsComponents.FavoriteButton(stationId: "5272")
-        .environmentObject(FavoritesProvider.shared)
+        .environment(favoritesProvider)
 }
 
 #Preview("ScheduleItem") {
+    @Previewable @State var locationManager = LocationManager(mockData: true)
+    
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
-    let locationManager: LocationManager = {
-        let manager =  LocationManager()
-        manager.setMockData()
-        return manager
-    }()
     
     ScrollView {
         StationDetailsComponents.ScheduleItem(station: station)
-            .environmentObject(locationManager)
+            .environment(locationManager)
     }
 }
 
@@ -683,10 +682,14 @@ class StationDetailsComponents {
 }
 
 #Preview("MapView") {
+    @Previewable @State var locationManager = LocationManager(mockData: true)
+    @Previewable @State var mapManager = MapManager.shared
+    
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     
     ScrollView {
         StationDetailsComponents.MapView(station: station) {}
-            .environmentObject(MapManager.shared)
+            .environment(mapManager)
+            .environment(locationManager)
     }
 }

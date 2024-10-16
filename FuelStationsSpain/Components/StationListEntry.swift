@@ -17,13 +17,13 @@ struct StationListEntry: View {
         self.hideFavoriteSymbol = hideFavoriteSymbol
     }
     
-    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+    @Environment(FavoritesProvider.self) private var favoritesProvider
     
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     
     @State private var showHowToGetThere: Bool = false
     
-    private func getValue() -> String? {
+    private func getValue(_ station: FuelStation) -> String? {
         func format(_ value: Double?) -> String? {
             if let value = value {
                 return String("\(formattedNumber(value: value, digits: 3)) €")
@@ -32,7 +32,7 @@ struct StationListEntry: View {
                 return nil
             }
         }
-        
+
         switch sortingMethod {
         case .proximity:
             if let distance = station.distanceToUserLocation {
@@ -177,7 +177,7 @@ struct StationListEntry: View {
                             .transition(.opacity)
                     }
                 }
-                if let value = getValue() {
+                if let value = getValue(station) {
                     Spacer()
                     Text(value)
                         .fontSize(16)
@@ -253,9 +253,12 @@ struct StationListEntry: View {
 }
 
 #Preview {
+    @Previewable @State var favoritesProvider = FavoritesProvider.shared
+    
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
+    
     List {
         StationListEntry(station: station, sortingMethod: .aGasoil)
     }
-    .environmentObject(FavoritesProvider.shared)
+    .environment(favoritesProvider)
 }

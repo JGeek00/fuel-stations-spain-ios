@@ -6,10 +6,10 @@ struct ServiceStationHistoric: View {
     
     init(station: FuelStation) {
         self.station = station
-        _serviceStationHistoricViewModel = StateObject(wrappedValue: ServiceStationHistoricViewModel(station: station))
+        _serviceStationHistoricViewModel = State(wrappedValue: ServiceStationHistoricViewModel(station: station))
     }
     
-    @StateObject private var serviceStationHistoricViewModel: ServiceStationHistoricViewModel
+    @State private var serviceStationHistoricViewModel: ServiceStationHistoricViewModel
     
     private func formatDate(_ dateString: String) -> Date? {
         let dateFormatter = DateFormatter()
@@ -239,12 +239,7 @@ fileprivate struct ChartContent: View {
             .frame(height: 350)
         }
         .onChange(of: selectedIndex) {
-            if selectedTime == .week1 || selectedTime == .month1 || selectedTime == .month3 {
-                withAnimation(.easeOut(duration: 0.2)) {
-                    showChartAnnotation = selectedIndex != nil
-                }
-            }
-            else {
+            withAnimation(.easeOut(duration: 0.2)) {
                 showChartAnnotation = selectedIndex != nil
             }
             if let selectedIndex = selectedIndex {

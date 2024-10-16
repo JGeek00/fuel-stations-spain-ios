@@ -8,9 +8,11 @@ fileprivate struct Province: Hashable {
 
 struct SearchMunicipalitiesList: View {
     
-    @EnvironmentObject private var searchViewModel: SearchViewModel
+    @Environment(SearchViewModel.self) private var searchViewModel
     
     var body: some View {
+        @Bindable var searchViewModel = searchViewModel
+        
         Group {
             if searchViewModel.municipalitiesLoading == true {
                 ProgressView()
@@ -95,6 +97,8 @@ struct SearchMunicipalitiesList: View {
     
     @ViewBuilder
     private func DataList(data: [Municipality]) -> some View {
+        @Bindable var searchViewModel = searchViewModel
+        
         switch searchViewModel.municipalitiesSorting {
         case .groupedProvince:
             let groupedByProvince: [Province] = {

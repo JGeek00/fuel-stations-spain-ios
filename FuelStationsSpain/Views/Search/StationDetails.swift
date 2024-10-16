@@ -2,10 +2,10 @@ import SwiftUI
 
 struct SearchStationDetails: View {
     
-    @EnvironmentObject private var searchViewModel: SearchViewModel
-    @EnvironmentObject private var locationManager: LocationManager
-    @EnvironmentObject private var favoritesProvider: FavoritesProvider
-    @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
+    @Environment(SearchViewModel.self) private var searchViewModel
+    @Environment(LocationManager.self) private var locationManager
+    @Environment(FavoritesProvider.self) private var favoritesProvider
+    @Environment(FavoritesListViewModel.self) private var favoritesListViewModel
     @EnvironmentObject private var toastProvider: ToastProvider
     
     @State private var navigationPath = NavigationPath()

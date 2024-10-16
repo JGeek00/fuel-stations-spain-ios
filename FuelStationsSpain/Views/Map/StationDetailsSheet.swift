@@ -9,9 +9,9 @@ struct StationDetailsSheetHeader: View {
         self.isSideSheet = isSideSheet
     }
     
-    @EnvironmentObject private var mapManager: MapManager
-    @EnvironmentObject private var locationManager: LocationManager
-    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+   @Environment(MapManager.self) private var mapManager
+    @Environment(LocationManager.self) private var locationManager
+    @Environment(FavoritesProvider.self) private var favoritesProvider
     @EnvironmentObject private var toastProvider: ToastProvider
     
     var body: some View {
@@ -69,9 +69,9 @@ struct StationDetailsSheetHeader: View {
 
 struct StationDetailsSheetContent: View {
 
-    @EnvironmentObject private var mapManager: MapManager
-    @EnvironmentObject private var locationManager: LocationManager
-    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+   @Environment(MapManager.self) private var mapManager
+    @Environment(LocationManager.self) private var locationManager
+    @Environment(FavoritesProvider.self) private var favoritesProvider
     @EnvironmentObject private var toastProvider: ToastProvider
     
     @State private var showHistoricPricesSheet = false

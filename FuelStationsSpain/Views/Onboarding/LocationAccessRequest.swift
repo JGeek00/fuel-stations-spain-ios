@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct LocationAccessRequest: View {
-    @EnvironmentObject private var onboardingViewModel: OnboardingViewModel
-    @EnvironmentObject private var locationManager: LocationManager
+    
+    @Environment(OnboardingViewModel.self) private var onboardingViewModel
+    @Environment(LocationManager.self) private var locationManager
     
     var body: some View {
         VStack(alignment: .leading) {

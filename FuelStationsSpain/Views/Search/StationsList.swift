@@ -5,10 +5,12 @@ struct SearchStationsList: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
-    @EnvironmentObject private var searchViewModel: SearchViewModel
-    @EnvironmentObject private var locationManager: LocationManager
+    @Environment(SearchViewModel.self) private var searchViewModel
+    @Environment(LocationManager.self) private var locationManager
         
     var body: some View {
+        @Bindable var searchViewModel = searchViewModel
+        
         NavigationStack {
             if let selectedMunicipality = searchViewModel.selectedMunicipality {
                 Group {

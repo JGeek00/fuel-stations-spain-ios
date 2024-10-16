@@ -1,20 +1,29 @@
 import Foundation
 import CoreLocation
-import Combine
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+@Observable
+class LocationManager: NSObject, CLLocationManagerDelegate {
 
     private let locationManager = CLLocationManager()
-    @Published var authorizationStatus: CLAuthorizationStatus?
-    @Published var firstLocation: CLLocation?
+    
+    var authorizationStatus: CLAuthorizationStatus?
+    var firstLocation: CLLocation?
     
     // Last location is not published because it causes unwanted rerenders
-    var lastLocation: CLLocation?
+    @ObservationIgnored var lastLocation: CLLocation?
 
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    init(mockData: Bool) {
+        if mockData == true {
+            authorizationStatus = .authorizedWhenInUse
+            firstLocation = .init(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude)
+            lastLocation = .init(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude)
+        }
     }
     
     func requestLocationAccess() {
@@ -32,11 +41,5 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.firstLocation = location
         }
         self.lastLocation = location
-    }
-    
-    func setMockData() {
-        authorizationStatus = .authorizedWhenInUse
-        firstLocation = .init(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude)
-        lastLocation = .init(latitude: Config.defaultCoordinates.latitude, longitude: Config.defaultCoordinates.longitude)
     }
 }

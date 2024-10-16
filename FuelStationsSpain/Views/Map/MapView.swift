@@ -4,7 +4,7 @@ import BottomSheet
 
 struct MapView: View {
     
-    @EnvironmentObject private var locationManager: LocationManager
+    @Environment(LocationManager.self) private var locationManager
     
     var body: some View {
         if locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted {
@@ -18,8 +18,8 @@ struct MapView: View {
 
 fileprivate struct MapComponent: View {
     
-    @EnvironmentObject private var mapManager: MapManager
-    @EnvironmentObject private var locationManager: LocationManager
+    @Environment(MapManager.self) private var mapManager
+    @Environment(LocationManager.self) private var locationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
@@ -33,6 +33,118 @@ fileprivate struct MapComponent: View {
     @Namespace private var mapScope
     
     var body: some View {
+        @Bindable var bindableMapManager = mapManager
+        
+        MapComponent()
+            .alert("Success", isPresented: $bindableMapManager.showSuccessAlert, actions: {
+                Button("Close") {
+                    mapManager.showSuccessAlert.toggle()
+                }
+            }, message: {
+                Text("Data loaded successfully.")
+            })
+            .alert("Error", isPresented: $bindableMapManager.showErrorAlert, actions: {
+                Button("Close") {
+                    mapManager.showErrorAlert.toggle()
+                }
+                Button("Retry") {
+                    Task {
+                        await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
+                    }
+                }
+            }, message: {
+                switch mapManager.error {
+                    case .connection:
+                        Text("Cannot establish a connection with the server. Check your Internet connection.")
+                    case .usage:
+                        Text("Usage quota exceded. Try again later.")
+                    default:
+                        Text("Unknown error.")
+                }
+            })
+            .alert("You are moving the map too fast", isPresented: $bindableMapManager.movingMapFastAlert, actions: {
+                Button("Close", role: .cancel) {
+                    mapManager.movingMapFastAlert = false
+                }
+                Button("Retry") {
+                    Task {
+                        await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
+                    }
+                }
+            }, message: {
+                Text("The data provider has a system to prevent overloads. Move the map slower to load the data. Restart the app and try again.")
+            })
+            .alert("Connection error", isPresented: $bindableMapManager.connectionErrorAlert, actions: {
+                Button("Close", role: .cancel) {
+                    mapManager.connectionErrorAlert = true
+                }
+                Button("Retry") {
+                    Task {
+                        await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
+                    }
+                }
+            }, message: {
+                Text("Cannot establish a connection to the server. Check your Internet connection or try again later.")
+            })
+            .sheet(isPresented: $bindableMapManager.showStationsSheet, content: {
+                StationsSheet()
+            })
+            .if(UIDevice.current.userInterfaceIdiom == .pad) { view in
+                Group {
+                    view
+                        .bottomSheet(
+                            bottomSheetPosition: $bindableMapManager.stationDetailsSheetPosition,
+                            switchablePositions: [.absoluteBottom(70), .dynamicTop],
+                            headerContent: {
+                                StationDetailsSheetHeader(isSideSheet: true)
+                            }
+                        ) {
+                            StationDetailsSheetContent()
+                                .padding(.top)
+                        }
+                        .sheetWidth(.relative(0.4))
+                        .enableAccountingForKeyboardHeight()
+                        .enableAppleScrollBehavior()
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
+                }
+            }
+            .if(UIDevice.current.userInterfaceIdiom != .pad) { view in
+                view
+                    .sheet(isPresented: $bindableMapManager.showStationDetailsSheet, onDismiss: {
+                        mapManager.selectedStationAnimation = nil
+                        mapManager.isOpeningOrClosingSheet = true
+                    }, content: {
+                        Group {
+                            if mapManager.selectedStation != nil {
+                                ScrollView {
+                                    StationDetailsSheetHeader(isSideSheet: false)
+                                    StationDetailsSheetContent()
+                                }
+                                .transition(.opacity)
+                            }
+                            else {
+                                ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
+                                    .transition(.opacity)
+                            }
+                        }
+                        .presentationBackground(Material.regular)
+                        .presentationDetents([.fraction(0.5), .fraction(0.99)])
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .fraction(0.99))
+                        )
+                        .onDisappear {
+                            mapManager.selectedStation = nil
+                            mapManager.isOpeningOrClosingSheet = false
+                        }
+                    })
+            }
+            .mapScope(mapScope)
+    }
+    
+    @ViewBuilder
+    private func MapComponent() -> some View {
+        @Bindable var bindableMapManager = mapManager
+        
         let mpStyle: MapStyle = {
             switch mapStyle {
             case .standard: return MapStyle.standard
@@ -40,7 +152,8 @@ fileprivate struct MapComponent: View {
             case .satellite: return MapStyle.imagery
             }
         }()
-        Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000), scope: mapScope) {
+        
+        Map(position: $bindableMapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000), scope: mapScope) {
             if let stations = mapManager.data?.results {
                 let markers = {
                     var m = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
@@ -61,7 +174,7 @@ fileprivate struct MapComponent: View {
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
                         MapMarkerItem(value)
-                            .environmentObject(MapManager.shared)
+                            .environment(mapManager)
                     }
                 }
             }
@@ -79,109 +192,6 @@ fileprivate struct MapComponent: View {
         .overlay(alignment: .topLeading, content: {
             MapOverlayLeftButtons()
         })
-        .alert("Success", isPresented: $mapManager.showSuccessAlert, actions: {
-            Button("Close") {
-                mapManager.showSuccessAlert.toggle()
-            }
-        }, message: {
-            Text("Data loaded successfully.")
-        })
-        .alert("Error", isPresented: $mapManager.showErrorAlert, actions: {
-            Button("Close") {
-                mapManager.showErrorAlert.toggle()
-            }
-            Button("Retry") {
-                Task {
-                    await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
-                }
-            }
-        }, message: {
-            switch mapManager.error {
-                case .connection:
-                    Text("Cannot establish a connection with the server. Check your Internet connection.")
-                case .usage:
-                    Text("Usage quota exceded. Try again later.")
-                default:
-                    Text("Unknown error.")
-            }
-        })
-        .alert("You are moving the map too fast", isPresented: $mapManager.movingMapFastAlert, actions: {
-            Button("Close", role: .cancel) {
-                mapManager.movingMapFastAlert = false
-            }
-            Button("Retry") {
-                Task {
-                    await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
-                }
-            }
-        }, message: {
-            Text("The data provider has a system to prevent overloads. Move the map slower to load the data. Restart the app and try again.")
-        })
-        .alert("Connection error", isPresented: $mapManager.connectionErrorAlert, actions: {
-            Button("Close", role: .cancel) {
-                mapManager.connectionErrorAlert = true
-            }
-            Button("Retry") {
-                Task {
-                    await mapManager.fetchData(latitude: mapManager.latitude, longitude: mapManager.longitude)
-                }
-            }
-        }, message: {
-            Text("Cannot establish a connection to the server. Check your Internet connection or try again later.")
-        })
-        .sheet(isPresented: $mapManager.showStationsSheet, content: {
-            StationsSheet()
-        })
-        .if(UIDevice.current.userInterfaceIdiom == .pad) { view in
-            Group {
-                view
-                    .bottomSheet(
-                        bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
-                        switchablePositions: [.absoluteBottom(70), .dynamicTop],
-                        headerContent: {
-                            StationDetailsSheetHeader(isSideSheet: true)
-                        }
-                    ) {
-                        StationDetailsSheetContent()
-                            .padding(.top)
-                    }
-                    .sheetWidth(.relative(0.4))
-                    .enableAccountingForKeyboardHeight()
-                    .enableAppleScrollBehavior()
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
-            }
-        }
-        .if(UIDevice.current.userInterfaceIdiom != .pad) { view in
-            view
-                .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
-                    mapManager.selectedStationAnimation = nil
-                    mapManager.isOpeningOrClosingSheet = true
-                }, content: {
-                    Group {
-                        if mapManager.selectedStation != nil {
-                            ScrollView {
-                                StationDetailsSheetHeader(isSideSheet: false)
-                                StationDetailsSheetContent()
-                            }
-                            .transition(.opacity)
-                        }
-                        else {
-                            ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
-                                .transition(.opacity)
-                        }
-                    }
-                    .presentationBackground(Material.regular)
-                    .presentationDetents([.fraction(0.5), .fraction(0.99)])
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .fraction(0.99))
-                    )
-                    .onDisappear {
-                        mapManager.selectedStation = nil
-                        mapManager.isOpeningOrClosingSheet = false
-                    }
-                })
-        }
-        .mapScope(mapScope)
     }
     
     @ViewBuilder
@@ -269,7 +279,7 @@ fileprivate struct MapMarkerItem: View {
         self.value = value
     }
     
-    @EnvironmentObject private var mapManager: MapManager
+   @Environment(MapManager.self) private var mapManager
     
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     

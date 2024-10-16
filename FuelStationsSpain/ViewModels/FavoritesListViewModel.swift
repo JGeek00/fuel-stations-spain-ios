@@ -1,11 +1,11 @@
-import Foundation
 import SwiftUI
 
 @MainActor
-class FavoritesListViewModel: ObservableObject {
-    @Published var data: FuelStationsResult? = nil
-    @Published var loading = true
-    @Published var error: Enums.ApiErrorReason? = nil
+@Observable
+class FavoritesListViewModel {
+    var data: FuelStationsResult? = nil
+    var loading = true
+    var error: Enums.ApiErrorReason? = nil
     
     init() {}
     

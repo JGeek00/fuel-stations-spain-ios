@@ -1,10 +1,11 @@
-import Foundation
+import SwiftUI
 
 @MainActor
-class AppUpdatesProvider: ObservableObject {
+@Observable
+class AppUpdatesProvider {
     static let shared = AppUpdatesProvider()
     
-    @Published var updateAvailable = false
+    var updateAvailable = false
     
     init() {}
     

@@ -16,20 +16,31 @@ struct FuelStationsSpainApp: App {
         }
         #endif
     }
+    
+    @State private var onboardingViewModel = OnboardingViewModel()
+    @State private var locationManager = LocationManager()
+    @State private var favoritesListViewModel = FavoritesListViewModel()
+    @State private var favoritesProvider = FavoritesProvider.shared
+    @State private var appUpdatesProvider = AppUpdatesProvider()
+    @State private var tabViewManager = TabViewManager.shared
+    @State private var toastProvider = ToastProvider.shared
+    @State private var searchViewModel = SearchViewModel()
+    @State private var iapManager = IAPManager()
+    @State private var mapManager = MapManager.shared
 
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environmentObject(LocationManager())
-                .environmentObject(MapManager.shared)
-                .environmentObject(FavoritesProvider.shared)
-                .environmentObject(TabViewManager.shared)
-                .environmentObject(OnboardingViewModel.shared)
-                .environmentObject(ToastProvider.shared)
-                .environmentObject(FavoritesListViewModel())
-                .environmentObject(SearchViewModel())
-                .environmentObject(IAPManager())
-                .environmentObject(AppUpdatesProvider.shared)
+                .environment(locationManager)
+                .environment(mapManager)
+                .environment(favoritesProvider)
+                .environment(tabViewManager)
+                .environment(toastProvider)
+                .environment(favoritesListViewModel)
+                .environment(searchViewModel)
+                .environment(iapManager)
+                .environment(appUpdatesProvider)
+                .environment(onboardingViewModel)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

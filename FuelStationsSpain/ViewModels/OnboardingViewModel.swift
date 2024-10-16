@@ -1,11 +1,10 @@
-import Foundation
+import SwiftUI
 
 @MainActor
-class OnboardingViewModel: ObservableObject {
-    static let shared = OnboardingViewModel()
-    
-    @Published var showOnboarding = false
-    @Published var selectedTab = 0
+@Observable
+class OnboardingViewModel {    
+    var showOnboarding = false
+    var selectedTab = 0
     
     func finishOnboarding() {
         UserDefaults.shared.set(true, forKey: StorageKeys.onboardingCompleted)

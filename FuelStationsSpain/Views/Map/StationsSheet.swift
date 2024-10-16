@@ -3,8 +3,8 @@ import CoreLocation
 
 struct StationsSheet: View {
     
-    @EnvironmentObject private var mapManager: MapManager
-    @EnvironmentObject private var locationManager: LocationManager
+   @Environment(MapManager.self) private var mapManager
+    @Environment(LocationManager.self) private var locationManager
     
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
     @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
