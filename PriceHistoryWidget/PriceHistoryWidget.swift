@@ -2,6 +2,16 @@ import WidgetKit
 import Charts
 import SwiftUI
 
+private struct ChartValue: Hashable {
+    let value: Double
+    let date: String
+    
+    init(value: Double, date: String) {
+        self.value = value
+        self.date = date
+    }
+}
+
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> PriceHistoryWidgetEntry {
         PriceHistoryWidgetEntry(date: Date(), configuration: ConfigurationAppIntent(), data: mockData)
@@ -192,17 +202,18 @@ struct PriceHistoryWidgetEntryView : View {
                                 Spacer()
                                     .frame(width: 12)
 
-                                let chartArray = Array(zip(values.indices, values))
-                                let visible = (maxValue + 0.05) - (minValue - 0.05)
-                                Chart(chartArray, id: \.1) { index, item in
+                                let mapValueToDate = values.indices.map() { index in
+                                    ChartValue(value: values[index], date: data[index].date!)
+                                }
+                                Chart(mapValueToDate, id: \.self) { item in
                                     LineMark(
-                                        x: .value(String(localized: "Date"), index),
-                                        y: .value(String(localized: "Price (€)"), item)
+                                        x: .value(String(localized: "Date"), item.date),
+                                        y: .value(String(localized: "Price (€)"), item.value)
                                     )
                                     .interpolationMethod(.catmullRom)
                                     AreaMark(
-                                        x: .value(String(localized: "Date"), index),
-                                        y: .value(String(localized: "Price (€)"), item)
+                                        x: .value(String(localized: "Date"), item.date),
+                                        y: .value(String(localized: "Price (€)"), item.value)
                                     )
                                     .foregroundStyle(
                                         LinearGradient(

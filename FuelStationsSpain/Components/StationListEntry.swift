@@ -206,18 +206,18 @@ struct StationListEntry: View {
         }
         .foregroundStyle(Color.foreground)
         .contextMenu {
-            if let stationId = station.id {
+            if let id = station.id {
                 Button {
                     withAnimation(.default) {
-                        if favoritesProvider.isFavorite(stationId: stationId) {
-                            favoritesProvider.removeFavorite(stationId: stationId)
+                        if favoritesProvider.isFavorite(stationId: id) {
+                            favoritesProvider.removeFavorite(stationId: id)
                         }
                         else {
-                            favoritesProvider.addFavorite(stationId: stationId)
+                            favoritesProvider.addFavorite(station: station)
                         }
                     }
                 } label: {
-                    if favoritesProvider.isFavorite(stationId: stationId) {
+                    if favoritesProvider.isFavorite(stationId: id) {
                         Label("Remove from favorites", systemImage: "star.slash.fill")
                     }
                     else {

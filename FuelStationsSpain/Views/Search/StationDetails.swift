@@ -50,9 +50,7 @@ struct SearchStationDetails: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .background(Color.listBackground)
                     .toolbar {
-                        if let stationId = station.id {
-                            StationDetailsComponents.FavoriteButton(stationId: stationId)
-                        }
+                        StationDetailsComponents.FavoriteButton(station: station)
                     }
                 }
                 else {

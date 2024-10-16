@@ -84,7 +84,7 @@ class MapManager {
         if result.successful == true {
             DispatchQueue.main.async {
                 withAnimation(.default) {
-                    self.data = result.data!
+                    self.data = FuelStationsResult.filterStations(result.data!)
                     self.loading = false
                     self.error = nil
                 }

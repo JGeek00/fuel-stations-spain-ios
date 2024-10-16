@@ -17,16 +17,16 @@ func getFavoriteAlias(favoriteId: String) -> String? {
     }
 }
 
-func generateLabel(_ station: FuelStation) -> String {
-    if let alias = getFavoriteAlias(favoriteId: station.id!), !alias.isEmpty {
+func generateLabel(id: String, name: String, address: String, locality: String?) -> String {
+    if let alias = getFavoriteAlias(favoriteId: id), !alias.isEmpty {
         return alias
     }
     else {
-        if let locality = station.locality {
-            return "\(station.signage!.capitalized): \(station.address!.capitalized) (\(locality.capitalized))"
+        if let locality = locality {
+            return "\(name.capitalized): \(address.capitalized) (\(locality.capitalized))"
         }
         else {
-            return "\(station.signage!.capitalized): \(station.address!.capitalized)"
+            return "\(name.capitalized): \(address.capitalized)"
         }
     }
 }
@@ -40,18 +40,5 @@ func fetchFavorites() -> [FavoriteStation]? {
     } catch {
         print("Failed to fetch items: \(error)")
         return nil
-    }
-}
-
-func getStations() async -> [FuelStation] {
-    let favorites = fetchFavorites()
-    if let favorites = favorites, favorites.isEmpty { return [] }
-    guard let favorites = favorites else { return [] }
-    let result = await ApiClient.fetchServiceStationsById(stationIds: favorites.map() { $0.id! })
-    if let data = result.data?.results {
-        return data
-    }
-    else {
-        return []
     }
 }

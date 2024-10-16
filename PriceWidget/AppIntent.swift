@@ -59,7 +59,6 @@ struct FuelTypeQuery: EntityQuery {
 
 struct ServiceStation: AppEntity {
     let id: String
-    let value: FuelStation
     let label: String
     
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Service stations"
@@ -72,13 +71,19 @@ struct ServiceStation: AppEntity {
 
 struct ServiceStationsQuery: EntityQuery {    
     func entities(for identifiers: [ServiceStation.ID]) async throws -> [ServiceStation] {
-        let data = await getStations().map() { ServiceStation(id: $0.id!, value: $0, label: generateLabel($0)) }.filter { identifiers.contains($0.id) }
-        return data
+        if let favorites = fetchFavorites() {
+            let data = favorites.map() { ServiceStation(id: $0.id!, label: generateLabel(id: $0.id!, name: $0.name!, address: $0.address!, locality: $0.locality)) }.filter { identifiers.contains($0.id) }
+            return data
+        }
+        return []
     }
     
     func suggestedEntities() async throws -> [ServiceStation] {
-        let data = await getStations().map() { ServiceStation(id: $0.id!, value: $0, label: generateLabel($0)) }
-        return data
+        if let favorites = fetchFavorites() {
+            let data = favorites.map() { ServiceStation(id: $0.id!, label: generateLabel(id: $0.id!, name: $0.name!, address: $0.address!, locality: $0.locality)) }
+            return data
+        }
+        return []
     }
     
     func defaultResult() async -> ServiceStation? {

@@ -1,34 +1,59 @@
 import CoreData
+import Sentry
 
 struct PersistenceController {
     static let shared = PersistenceController()
     
     let container: NSPersistentContainer
-
+    private let storeURL: URL
+    private let groupId = Config.groupId
+    
+    // Maximum number of retries to prevent infinite loops
+    private let maxRetries = 1
+    
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "FuelStationsSpain")
-        let sharedStoreURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Config.groupId)!.appending(path: "FuelStationsSpain.sqlite")
+        
+        guard let sharedStoreURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupId)?.appendingPathComponent("FuelStationsSpain.sqlite") else {
+            fatalError("Unable to get shared store URL.")
+        }
+        self.storeURL = sharedStoreURL
+        
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         } else {
-            container.persistentStoreDescriptions.first!.url = sharedStoreURL
+            container.persistentStoreDescriptions.first!.url = storeURL
         }
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-
-                /*
-                 Typical reasons for an error here include:
-                 * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                 * The device is out of space.
-                 * The store could not be migrated to the current model version.
-                 Check the error message to determine what the actual problem was.
-                 */
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
+        
+        loadPersistentStores(retryCount: maxRetries)
+        
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    private func loadPersistentStores(retryCount: Int) {
+        container.loadPersistentStores { (storeDescription, error) in
+            if let error = error {
+                print("Failed to load persistent store: \(error.localizedDescription)")
+                
+                if retryCount > 0 {
+                    // Attempt to delete the corrupted store
+                    let fileManager = FileManager.default
+                    do {
+                        if fileManager.fileExists(atPath: self.storeURL.path) {
+                            try fileManager.removeItem(at: self.storeURL)
+                            
+                            // Retry loading the persistent store after deletion
+                            self.loadPersistentStores(retryCount: retryCount - 1)
+                            return
+                        }
+                    } catch {
+                        SentrySDK.capture(error: error)
+                    }
+                }
+                
+                // If all retries fail, handle the error appropriately
+                fatalError("Unresolved error loading persistent stores: \(error)")
+            }
+        }
     }
 }

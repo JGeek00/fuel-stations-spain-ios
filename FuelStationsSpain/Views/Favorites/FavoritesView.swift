@@ -78,7 +78,7 @@ struct FavoritesView: View {
                         List(selection: $favoritesListViewModel.selectedStation) {
                             Section {
                                 ForEach(filtered, id: \.self) { item in
-                                    StationListEntry(station: item, sortingMethod: favoritesListViewModel.selectedSorting)
+                                    StationListEntry(station: item, sortingMethod: favoritesListViewModel.selectedSorting, hideFavoriteSymbol: true)
                                 }
                             } header: {
                                 HStack {

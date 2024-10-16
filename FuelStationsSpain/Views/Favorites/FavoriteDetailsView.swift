@@ -58,9 +58,7 @@ struct FavoriteDetailsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.listBackground)
             .toolbar {
-                if let stationId = station.id {
-                    StationDetailsComponents.FavoriteButton(stationId: stationId, backgroundCircle: false)
-                }
+                StationDetailsComponents.FavoriteButton(station: station, backgroundCircle: false)
                 Menu {
                     Button {
                         stationAliasTextField = alias ?? ""

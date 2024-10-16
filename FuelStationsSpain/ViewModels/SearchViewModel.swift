@@ -63,7 +63,7 @@ class SearchViewModel: ObservableObject {
             if result.successful == true {
                 DispatchQueue.main.async {
                     withAnimation(.default) {
-                        self.stationsData = result.data!
+                        self.stationsData = FuelStationsResult.filterStations(result.data!)
                         self.stationsLoading = false
                         self.stationsError = false
                     }

@@ -26,7 +26,7 @@ struct StationDetailsSheetHeader: View {
                 }
                 Spacer()
                 if let stationId = station.id {
-                    StationDetailsComponents.FavoriteButton(stationId: stationId)
+                    StationDetailsComponents.FavoriteButton(station: station)
                 }
                 if isSideSheet == false {
                     Button {
