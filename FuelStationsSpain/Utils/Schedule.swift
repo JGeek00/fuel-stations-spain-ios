@@ -11,9 +11,6 @@ class OpeningSchedule {
 }
 
 func parseSchedule(schedule: String) -> [[Date?]?] {
-    // Define a calendar to work with DateComponents
-    _ = Calendar.current
-    
     // Date formatter to convert string time (e.g., "07:00") to Date
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "HH:mm"
