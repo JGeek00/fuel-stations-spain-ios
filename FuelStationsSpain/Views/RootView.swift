@@ -9,7 +9,7 @@ struct RootView: View {
     @Environment(\.openURL) private var openURL
     
     @Environment(LocationManager.self) private var locationManager
-    @Environment(MapManager.self) private var mapManager
+    @EnvironmentObject private var mapManager: MapManager
     @Environment(TabViewManager.self) private var tabViewManager
     @Environment(AppUpdatesProvider.self) private var appUpdatesProvider
     @Environment(OnboardingViewModel.self) private var onboardingViewModel

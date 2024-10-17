@@ -18,7 +18,7 @@ struct MapView: View {
 
 fileprivate struct MapComponent: View {
     
-    @Environment(MapManager.self) private var mapManager
+    @EnvironmentObject private var mapManager: MapManager
     @Environment(LocationManager.self) private var locationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -33,17 +33,15 @@ fileprivate struct MapComponent: View {
     @Namespace private var mapScope
     
     var body: some View {
-        @Bindable var bindableMapManager = mapManager
-        
         MapComponent()
-            .alert("Success", isPresented: $bindableMapManager.showSuccessAlert, actions: {
+            .alert("Success", isPresented: $mapManager.showSuccessAlert, actions: {
                 Button("Close") {
                     mapManager.showSuccessAlert.toggle()
                 }
             }, message: {
                 Text("Data loaded successfully.")
             })
-            .alert("Error", isPresented: $bindableMapManager.showErrorAlert, actions: {
+            .alert("Error", isPresented: $mapManager.showErrorAlert, actions: {
                 Button("Close") {
                     mapManager.showErrorAlert.toggle()
                 }
@@ -62,7 +60,7 @@ fileprivate struct MapComponent: View {
                         Text("Unknown error.")
                 }
             })
-            .alert("You are moving the map too fast", isPresented: $bindableMapManager.movingMapFastAlert, actions: {
+            .alert("You are moving the map too fast", isPresented: $mapManager.movingMapFastAlert, actions: {
                 Button("Close", role: .cancel) {
                     mapManager.movingMapFastAlert = false
                 }
@@ -74,7 +72,7 @@ fileprivate struct MapComponent: View {
             }, message: {
                 Text("The data provider has a system to prevent overloads. Move the map slower to load the data. Restart the app and try again.")
             })
-            .alert("Connection error", isPresented: $bindableMapManager.connectionErrorAlert, actions: {
+            .alert("Connection error", isPresented: $mapManager.connectionErrorAlert, actions: {
                 Button("Close", role: .cancel) {
                     mapManager.connectionErrorAlert = true
                 }
@@ -86,14 +84,14 @@ fileprivate struct MapComponent: View {
             }, message: {
                 Text("Cannot establish a connection to the server. Check your Internet connection or try again later.")
             })
-            .sheet(isPresented: $bindableMapManager.showStationsSheet, content: {
+            .sheet(isPresented: $mapManager.showStationsSheet, content: {
                 StationsSheet()
             })
             .if(UIDevice.current.userInterfaceIdiom == .pad) { view in
                 Group {
                     view
                         .bottomSheet(
-                            bottomSheetPosition: $bindableMapManager.stationDetailsSheetPosition,
+                            bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
                             switchablePositions: [.absoluteBottom(70), .dynamicTop],
                             headerContent: {
                                 StationDetailsSheetHeader(isSideSheet: true)
@@ -110,7 +108,7 @@ fileprivate struct MapComponent: View {
             }
             .if(UIDevice.current.userInterfaceIdiom != .pad) { view in
                 view
-                    .sheet(isPresented: $bindableMapManager.showStationDetailsSheet, onDismiss: {
+                    .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
                         mapManager.selectedStationAnimation = nil
                         mapManager.isOpeningOrClosingSheet = true
                     }, content: {
@@ -142,9 +140,7 @@ fileprivate struct MapComponent: View {
     }
     
     @ViewBuilder
-    private func MapComponent() -> some View {
-        @Bindable var bindableMapManager = mapManager
-        
+    private func MapComponent() -> some View {        
         let mpStyle: MapStyle = {
             switch mapStyle {
             case .standard: return MapStyle.standard
@@ -153,7 +149,7 @@ fileprivate struct MapComponent: View {
             }
         }()
         
-        Map(position: $bindableMapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000), scope: mapScope) {
+        Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000), scope: mapScope) {
             if let stations = mapManager.data?.results {
                 let markers = {
                     var m = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
@@ -174,7 +170,7 @@ fileprivate struct MapComponent: View {
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
                         MapMarkerItem(value)
-                            .environment(mapManager)
+                            .environmentObject(MapManager.shared)
                     }
                 }
             }
@@ -279,7 +275,7 @@ fileprivate struct MapMarkerItem: View {
         self.value = value
     }
     
-   @Environment(MapManager.self) private var mapManager
+    @EnvironmentObject private var mapManager: MapManager
     
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     

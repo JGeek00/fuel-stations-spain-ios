@@ -3,40 +3,39 @@ import SwiftUI
 import BottomSheet
 
 @MainActor
-@Observable
-class MapManager {
+class MapManager: ObservableObject {
     static let shared = MapManager()
     
-    var data: FuelStationsResult? = nil
-    var loading = true
-    var error: Enums.ApiErrorReason? = nil
+    @Published var data: FuelStationsResult? = nil
+    @Published var loading = true
+    @Published var error: Enums.ApiErrorReason? = nil
     
-    var position: MapCameraPosition = MapCameraPosition.region(
+    @Published var position: MapCameraPosition = MapCameraPosition.region(
         MKCoordinateRegion(
             center: Config.defaultCoordinates,
             span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
         )
     )
     
-    var showSuccessAlert = false
-    var showErrorAlert = false
+    @Published var showSuccessAlert = false
+    @Published var showErrorAlert = false
     
-    var showStationsSheet = false
+    @Published var showStationsSheet = false
     
-    var showStationDetailsSheet = false
-    var stationDetailsSheetPosition: BottomSheetPosition = .hidden
-    var selectedStation: FuelStation? = nil
-    var selectedStationAnimation: FuelStation? = nil   // Used just for the map marker animation
-    @ObservationIgnored var isOpeningOrClosingSheet = false
+    @Published var showStationDetailsSheet = false
+    @Published var stationDetailsSheetPosition: BottomSheetPosition = .hidden
+    @Published var selectedStation: FuelStation? = nil
+    @Published var selectedStationAnimation: FuelStation? = nil   // Used just for the map marker animation
+    var isOpeningOrClosingSheet = false
         
-    @ObservationIgnored private var previousLoadCoordinates: Coordinate? = nil
-    @ObservationIgnored private var firstLoadCompleted = false
+    private var previousLoadCoordinates: Coordinate? = nil
+    private var firstLoadCompleted = false
     
-    var movingMapFastAlert = false
-    var connectionErrorAlert = false
+    @Published var movingMapFastAlert = false
+    @Published var connectionErrorAlert = false
     
-    @ObservationIgnored var latitude = 0.0
-    @ObservationIgnored var longitude = 0.0
+    var latitude = 0.0
+    var longitude = 0.0
     
     init() {}
     

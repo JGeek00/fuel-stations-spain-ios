@@ -3,7 +3,7 @@ import CoreLocation
 
 struct StationsSheet: View {
     
-   @Environment(MapManager.self) private var mapManager
+    @EnvironmentObject private var mapManager: MapManager
     @Environment(LocationManager.self) private var locationManager
     
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic

@@ -9,7 +9,7 @@ struct StationDetailsSheetHeader: View {
         self.isSideSheet = isSideSheet
     }
     
-   @Environment(MapManager.self) private var mapManager
+    @EnvironmentObject private var mapManager: MapManager
     @Environment(LocationManager.self) private var locationManager
     @Environment(FavoritesProvider.self) private var favoritesProvider
     @Environment(ToastProvider.self) private var toastProvider
@@ -69,7 +69,7 @@ struct StationDetailsSheetHeader: View {
 
 struct StationDetailsSheetContent: View {
 
-   @Environment(MapManager.self) private var mapManager
+    @EnvironmentObject private var mapManager: MapManager
     @Environment(LocationManager.self) private var locationManager
     @Environment(FavoritesProvider.self) private var favoritesProvider
     @Environment(ToastProvider.self) private var toastProvider

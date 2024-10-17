@@ -24,19 +24,18 @@ struct FuelStationsSpainApp: App {
     @State private var tabViewManager = TabViewManager.shared
     @State private var toastProvider = ToastProvider.shared
     @State private var iapManager = IAPManager()
-    @State private var mapManager = MapManager.shared
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(locationManager)
-                .environment(mapManager)
                 .environment(favoritesProvider)
                 .environment(tabViewManager)
                 .environment(toastProvider)
                 .environment(iapManager)
                 .environment(appUpdatesProvider)
                 .environment(onboardingViewModel)
+                .environmentObject(MapManager.shared)
                 .environmentObject(FavoritesListViewModel())
                 .environmentObject(SearchViewModel())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
