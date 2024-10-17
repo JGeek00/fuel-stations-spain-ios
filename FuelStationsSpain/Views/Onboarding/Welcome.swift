@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct Welcome: View {
-    @Environment(OnboardingViewModel.self) private var onboardingViewModel
+    
+    @EnvironmentObject private var onboardingViewModel: OnboardingViewModel
     
     @Environment(\.verticalSizeClass) private var verticalSizeClass
 

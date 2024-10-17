@@ -1,16 +1,14 @@
-import Foundation
 import CoreLocation
 
-@Observable
-class LocationManager: NSObject, CLLocationManagerDelegate {
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     private let locationManager = CLLocationManager()
     
-    var authorizationStatus: CLAuthorizationStatus?
-    var firstLocation: CLLocation?
+    @Published var authorizationStatus: CLAuthorizationStatus?
+    @Published var firstLocation: CLLocation?
     
     // Last location is not published because it causes unwanted rerenders
-    @ObservationIgnored var lastLocation: CLLocation?
+    var lastLocation: CLLocation?
 
     override init() {
         super.init()

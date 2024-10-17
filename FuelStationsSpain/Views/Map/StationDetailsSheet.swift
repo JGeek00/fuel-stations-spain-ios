@@ -10,9 +10,9 @@ struct StationDetailsSheetHeader: View {
     }
     
     @EnvironmentObject private var mapManager: MapManager
-    @Environment(LocationManager.self) private var locationManager
-    @Environment(FavoritesProvider.self) private var favoritesProvider
-    @Environment(ToastProvider.self) private var toastProvider
+    @EnvironmentObject private var locationManager: LocationManager
+    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+    @EnvironmentObject private var toastProvier: ToastProvider
     
     var body: some View {
         if let station = mapManager.selectedStation {
@@ -25,9 +25,7 @@ struct StationDetailsSheetHeader: View {
                         .lineLimit(1)
                 }
                 Spacer()
-                if let stationId = station.id {
-                    StationDetailsComponents.FavoriteButton(station: station)
-                }
+                StationDetailsComponents.FavoriteButton(station: station)
                 if isSideSheet == false {
                     Button {
                         mapManager.showStationDetailsSheet = false
@@ -70,9 +68,9 @@ struct StationDetailsSheetHeader: View {
 struct StationDetailsSheetContent: View {
 
     @EnvironmentObject private var mapManager: MapManager
-    @Environment(LocationManager.self) private var locationManager
-    @Environment(FavoritesProvider.self) private var favoritesProvider
-    @Environment(ToastProvider.self) private var toastProvider
+    @EnvironmentObject private var locationManager: LocationManager
+    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+    @EnvironmentObject private var toastProvider: ToastProvider
     
     @State private var showHistoricPricesSheet = false
     @State private var showHowToReachSheet = false

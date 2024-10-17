@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SearchView: View {
     
-    @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var searchViewModel: SearchViewModel
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass

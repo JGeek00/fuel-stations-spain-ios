@@ -3,8 +3,8 @@ import CoreLocation
 
 struct FavoritesView: View {
 
-    @Environment(FavoritesProvider.self) private var favoritesProvider
-    @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+    @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass

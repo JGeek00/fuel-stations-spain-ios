@@ -4,7 +4,7 @@ import BottomSheet
 
 struct MapView: View {
     
-    @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var locationManager: LocationManager
     
     var body: some View {
         if locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted {
@@ -19,7 +19,7 @@ struct MapView: View {
 fileprivate struct MapComponent: View {
     
     @EnvironmentObject private var mapManager: MapManager
-    @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var locationManager: LocationManager
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     

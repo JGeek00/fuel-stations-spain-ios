@@ -24,14 +24,12 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
     }
 
     func setupSecondaryOverlayWindow(in scene: UIWindowScene) {
-        @State var toastProvider = ToastProvider.shared
-        
         let secondaryViewController = UIHostingController(
             rootView:
                 EmptyView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .modifier(InAppNotificationViewModifier())
-                    .environment(toastProvider)
+                    .environmentObject(ToastProvider.shared)
         )
         secondaryViewController.view.backgroundColor = .clear
         let secondaryWindow = PassThroughWindow(windowScene: scene)
@@ -52,11 +50,9 @@ class PassThroughWindow: UIWindow {
 
 struct InAppNotificationViewModifier: ViewModifier {
     
-    @Environment(ToastProvider.self) private var toastProvider
+    @EnvironmentObject private var toastProvider: ToastProvider
     
-    func body(content: Content) -> some View {
-        @Bindable var toastProvider = toastProvider
-        
+    func body(content: Content) -> some View {        
         content
             .toast(isPresenting: $toastProvider.presenting, duration: 2, tapToDismiss: true) {
                 toastProvider.toast ?? AlertToast(type: .regular)

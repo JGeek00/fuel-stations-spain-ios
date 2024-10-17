@@ -2,11 +2,10 @@ import SwiftUI
 import StoreKit
 
 struct TipsView: View {
-    @Environment(IAPManager.self) private var iapManager
     
-    var body: some View {
-        @Bindable var iapManager = iapManager
-        
+    @EnvironmentObject private var iapManager: IAPManager
+    
+    var body: some View {        
         Group {
             if iapManager.products.isEmpty {
                 ContentUnavailableView("Currently there are no options available", systemImage: "nosign")
@@ -49,7 +48,7 @@ fileprivate struct Item: View {
     let product: SKProduct
     let action: () -> Void
     
-    @Environment(IAPManager.self) private var iapManager
+    @EnvironmentObject private var iapManager: IAPManager
     
     var body: some View {
         Button {

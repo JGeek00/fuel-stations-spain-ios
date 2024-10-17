@@ -1,9 +1,8 @@
-import SwiftUI
+import Foundation
 
 @MainActor
-@Observable
-class TabViewManager {
+class TabViewManager: ObservableObject {
     static let shared = TabViewManager()
     
-    var selectedTab: Enums.Tabs = .map
+    @Published var selectedTab: Enums.Tabs = .map
 }

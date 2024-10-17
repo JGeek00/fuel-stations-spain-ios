@@ -11,8 +11,7 @@ struct ChartPoint: Hashable {
 }
 
 @MainActor
-@Observable
-class ServiceStationHistoricViewModel {
+class ServiceStationHistoricViewModel: ObservableObject {
     var station: FuelStation
     
     init(station: FuelStation) {
@@ -24,18 +23,18 @@ class ServiceStationHistoricViewModel {
         }
     }
     
-    var data: [HistoricPrice]? = nil
-    var loading = true
-    var error: Enums.ApiErrorReason? = nil
+    @Published var data: [HistoricPrice]? = nil
+    @Published var loading = true
+    @Published var error: Enums.ApiErrorReason? = nil
     
-    var selectedFuel: Enums.FuelType = .gasoilA
-    var selectedTime: Enums.HistoricTime = .week1
+    @Published var selectedFuel: Enums.FuelType = .gasoilA
+    @Published var selectedTime: Enums.HistoricTime = .week1
     
-    var chartData: [ChartPoint] = []
-    var chartMinValue: Double = 0.0
-    var chartMaxValue: Double = 0.0
-    var chartHasData = false
-    var selectedChartPoint: String?
+    @Published var chartData: [ChartPoint] = []
+    @Published var chartMinValue: Double = 0.0
+    @Published var chartMaxValue: Double = 0.0
+    @Published var chartHasData = false
+    @Published var selectedChartPoint: String?
     
     func loadData() async {
         self.loading = true

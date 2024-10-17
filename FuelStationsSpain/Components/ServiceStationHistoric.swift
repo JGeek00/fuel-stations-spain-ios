@@ -7,11 +7,11 @@ struct ServiceStationHistoric: View {
     
     init(station: FuelStation, showingInSheet: Bool) {
         self.station = station
-        _serviceStationHistoricViewModel = State(wrappedValue: ServiceStationHistoricViewModel(station: station))
+        _serviceStationHistoricViewModel = StateObject(wrappedValue: ServiceStationHistoricViewModel(station: station))
         self.showingInSheet = showingInSheet
     }
     
-    @State private var serviceStationHistoricViewModel: ServiceStationHistoricViewModel
+    @StateObject private var serviceStationHistoricViewModel: ServiceStationHistoricViewModel
     
     private func formatDate(_ dateString: String) -> Date? {
         let dateFormatter = DateFormatter()

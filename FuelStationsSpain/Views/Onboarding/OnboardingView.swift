@@ -2,13 +2,12 @@ import SwiftUI
 
 struct OnboardingView: View {
     
-    @Environment(OnboardingViewModel.self) private var onboardingViewModel
+    @EnvironmentObject private var onboardingViewModel: OnboardingViewModel
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
-        @Bindable var onboardingViewModel = onboardingViewModel
         if horizontalSizeClass == .compact {
             TabView(selection: $onboardingViewModel.selectedTab) {
                 Welcome()

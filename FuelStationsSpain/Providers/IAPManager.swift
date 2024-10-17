@@ -1,15 +1,13 @@
 import StoreKit
-import SwiftUI
 
-@Observable
-final class IAPManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver, @unchecked Sendable {
-    var products = [SKProduct]()
-    var purchaseState: PurchaseState = .idle
+final class IAPManager: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver, @unchecked Sendable {
+    @Published var products = [SKProduct]()
+    @Published var purchaseState: PurchaseState = .idle
     
     // Alerts
-    var successfulPurchase = false
-    var purchaseInProgress = false
-    var failedPurchase = false
+    @Published var successfulPurchase = false
+    @Published var purchaseInProgress = false
+    @Published var failedPurchase = false
     
     private var productRequest: SKProductsRequest?
 

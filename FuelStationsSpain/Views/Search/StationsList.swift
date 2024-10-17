@@ -5,7 +5,7 @@ struct SearchStationsList: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
-    @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var searchViewModel: SearchViewModel
         
     var body: some View {        

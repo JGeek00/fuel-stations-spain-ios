@@ -8,11 +8,11 @@ struct RootView: View {
     @Environment(\.horizontalSizeClass) private var defaultHorizontalSizeClass
     @Environment(\.openURL) private var openURL
     
-    @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var mapManager: MapManager
-    @Environment(TabViewManager.self) private var tabViewManager
-    @Environment(AppUpdatesProvider.self) private var appUpdatesProvider
-    @Environment(OnboardingViewModel.self) private var onboardingViewModel
+    @EnvironmentObject private var tabViewManager: TabViewManager
+    @EnvironmentObject private var appUpdatesProvider: AppUpdatesProvider
+    @EnvironmentObject private var onboardingViewModel: OnboardingViewModel
 
     func getColorScheme(theme: Enums.Theme) -> ColorScheme? {
         switch theme {
@@ -25,11 +25,7 @@ struct RootView: View {
         }
     }
     
-    var body: some View {
-        @Bindable var onboardingViewModel = onboardingViewModel
-        @Bindable var appUpdatesProvider = appUpdatesProvider
-        @Bindable var tabViewManager = tabViewManager
-        
+    var body: some View {        
         TabView(selection: $tabViewManager.selectedTab) {
             MapView()
                 .tabItem {

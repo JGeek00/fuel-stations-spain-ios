@@ -4,7 +4,7 @@ import CoreLocation
 struct StationsSheet: View {
     
     @EnvironmentObject private var mapManager: MapManager
-    @Environment(LocationManager.self) private var locationManager
+    @EnvironmentObject private var locationManager: LocationManager
     
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
     @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting

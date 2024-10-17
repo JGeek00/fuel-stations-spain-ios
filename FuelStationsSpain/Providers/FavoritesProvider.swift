@@ -1,12 +1,10 @@
-import SwiftUI
 import CoreData
 
 @MainActor
-@Observable
-class FavoritesProvider {
+class FavoritesProvider: ObservableObject {
     static let shared = FavoritesProvider()
     
-    var favorites: [FavoriteStation] = []
+    @Published var favorites: [FavoriteStation] = []
     
     private let coredataContext = PersistenceController.shared.container.viewContext
     

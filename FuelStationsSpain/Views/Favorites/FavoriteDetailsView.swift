@@ -8,10 +8,11 @@ struct FavoriteDetailsView: View {
         self.station = station
     }
     
-    @Environment(LocationManager.self) private var locationManager
-    @Environment(FavoritesProvider.self) private var favoritesProvider
-    @Environment(ToastProvider.self) private var toastProvider
+    @EnvironmentObject private var locationManager: LocationManager
+    @EnvironmentObject private var favoritesProvider: FavoritesProvider
+    @EnvironmentObject private var tabViewManager: TabViewManager
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
+    @EnvironmentObject private var toastProvider: ToastProvider
     
     @State private var defineStationAliasOpen = false
     @State private var stationAliasTextField: String = ""

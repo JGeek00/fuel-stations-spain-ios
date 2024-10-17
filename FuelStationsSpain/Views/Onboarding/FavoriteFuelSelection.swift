@@ -2,7 +2,7 @@ import SwiftUI
 
 struct FavoriteFuelSelection: View {
     
-    @Environment(OnboardingViewModel.self) private var onboardingViewModel
+    @EnvironmentObject private var onboardingViewModel: OnboardingViewModel
     
     @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
     

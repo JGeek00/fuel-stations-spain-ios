@@ -11,7 +11,7 @@ class StationDetailsComponents {
             self.backgroundCircle = backgroundCircle
         }
         
-        @Environment(FavoritesProvider.self) private var favoritesProvider
+        @EnvironmentObject private var favoritesProvider: FavoritesProvider
         
         var body: some View {
             let isFavorite = favoritesProvider.isFavorite(stationId: station.id!)
@@ -42,7 +42,7 @@ class StationDetailsComponents {
             self.station = station
         }
         
-        @Environment(LocationManager.self) private var locationManager
+        @EnvironmentObject private var locationManager: LocationManager
             
         @State private var showFullSchedule = false
         @State private var chevronAngle: Double = 0
@@ -612,8 +612,8 @@ class StationDetailsComponents {
         }
         
         @EnvironmentObject private var mapManager: MapManager
-        @Environment(TabViewManager.self) private var tabViewManager
-        @Environment(LocationManager.self) private var locationManager
+        @EnvironmentObject private var tabViewManager: TabViewManager
+        @EnvironmentObject private var locationManager: LocationManager
         
         @Environment(\.openURL) private var openURL
         
@@ -655,23 +655,19 @@ class StationDetailsComponents {
     }
 }
 
-#Preview("FavoriteButton") {
-    @Previewable @State var favoritesProvider = FavoritesProvider.shared
-    
+#Preview("FavoriteButton") {    
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     
     StationDetailsComponents.FavoriteButton(station: station)
-        .environment(favoritesProvider)
+        .environmentObject(FavoritesProvider.shared)
 }
 
 #Preview("ScheduleItem") {
-    @Previewable @State var locationManager = LocationManager(mockData: true)
-    
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     
     ScrollView {
         StationDetailsComponents.ScheduleItem(station: station)
-            .environment(locationManager)
+            .environmentObject(LocationManager(mockData: true))
     }
 }
 
@@ -684,13 +680,11 @@ class StationDetailsComponents {
 }
 
 #Preview("MapView") {
-    @Previewable @State var locationManager = LocationManager(mockData: true)
-    
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     
     ScrollView {
         StationDetailsComponents.MapView(station: station) {}
             .environmentObject(MapManager.shared)
-            .environment(locationManager)
+            .environmentObject(LocationManager(mockData: true))
     }
 }
