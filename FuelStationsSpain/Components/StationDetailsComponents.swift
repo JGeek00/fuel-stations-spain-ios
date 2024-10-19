@@ -402,6 +402,15 @@ class StationDetailsComponents {
         }
     }
     
+    struct PriceScaleItem: Sendable {
+        let fuel: Enums.FuelType
+        let avgPercentage: Double
+        
+        init(fuel: Enums.FuelType, avgPercentage: Double) {
+            self.fuel = fuel
+            self.avgPercentage = avgPercentage
+        }
+    }
     struct PriceScale: View {
         var station: FuelStation
         var alwaysExpanded: Bool
@@ -419,6 +428,87 @@ class StationDetailsComponents {
         @State private var expandedContent = false
         @State private var chevronAngle: Double = 0
         @State private var howIsCalculatedSheet = false
+        @State private var priceScaleItems: [PriceScaleItem]? = nil
+        
+        func calculateScale() {
+            @Sendable func calculateAvgPercentage(nearbyStations: [FuelStation], station: FuelStation, fuel: Enums.FuelType) -> PriceScaleItem? {
+                if let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price") {
+                    let prices = nearbyStations.map { station in
+                        let value: Double? = FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price")
+                        return value
+                    }.filter() { $0 != nil } as! [Double]
+                    let percentage: Double? = {
+                        if prices.count <= 1 {
+                            return nil
+                        }
+                        
+                        let maxPrice = prices.max()
+                        let minPrice = prices.min()
+                        if let maxPrice = maxPrice, let minPrice = minPrice {
+                            let percentage = ((fuelPrice - minPrice) / (maxPrice - minPrice)) * 100
+                            return percentage
+                        }
+                        return nil
+                    }()
+                    if let percentage = percentage {
+                        return PriceScaleItem(fuel: fuel, avgPercentage: percentage)
+                    }
+                    return nil
+                }
+                return nil
+            }
+            
+            if let nearbyStations = mapManager.data?.results {
+                DispatchQueue.global(qos: .background).async {
+                    var items: [PriceScaleItem] = []
+                    if let aGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilA) {
+                        items.append(aGasoil)
+                    }
+                    if let bGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilB) {
+                        items.append(bGasoil)
+                    }
+                    if let premiumGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilA) {
+                        items.append(premiumGasoil)
+                    }
+                    if let biodiesel = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .biodiesel) {
+                        items.append(biodiesel)
+                    }
+                    if let gasoline95E5 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E5) {
+                        items.append(gasoline95E5)
+                    }
+                    if let gasoline95E10 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E10) {
+                        items.append(gasoline95E10)
+                    }
+                    if let gasoline95E5Premium = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E5Premium) {
+                        items.append(gasoline95E5Premium)
+                    }
+                    if let gasoline98E5 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline98E5) {
+                        items.append(gasoline98E5)
+                    }
+                    if let gasoline98E10 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline98E10) {
+                        items.append(gasoline98E10)
+                    }
+                    if let bioethanol = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .bioethanol) {
+                        items.append(bioethanol)
+                    }
+                    if let cng = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .cng) {
+                        items.append(cng)
+                    }
+                    if let lng = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .lng) {
+                        items.append(lng)
+                    }
+                    if let lpg = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .lpg) {
+                        items.append(lpg)
+                    }
+                    if let hydrogen = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .hydrogen) {
+                        items.append(hydrogen)
+                    }
+                    DispatchQueue.main.async {
+                        priceScaleItems = items
+                    }
+                }
+            }
+        }
         
         var body: some View {
             if let nearbyStations = mapManager.data?.results, nearbyStations.count > 1 {
@@ -463,20 +553,20 @@ class StationDetailsComponents {
                                     Spacer()
                                         .frame(height: 8)
                                     VStack(alignment: .leading, spacing: 6) {
-                                        FuelPriceRange(fuelName: String(localized: "A Gasoil"), fuelParameter: "gasoilAPrice")
-                                        FuelPriceRange(fuelName: String(localized: "B Gasoil"), fuelParameter: "gasoilBPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Premium Gasoil"), fuelParameter: "premiumGasoilPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Biodiesel"), fuelParameter: "biodieselPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5"), fuelParameter: "gasoline95E5Price")
-                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5 Premium"), fuelParameter: "gasoline95E5PremiumPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E10"), fuelParameter: "gasoline95E10Price")
-                                        FuelPriceRange(fuelName: String(localized: "Gasoline 98 E5"), fuelParameter: "gasoline98E5Price")
-                                        FuelPriceRange(fuelName: String(localized: "Gasoline 98 E10"), fuelParameter: "gasoline98E10Price")
-                                        FuelPriceRange(fuelName: String(localized: "Bioethanol"), fuelParameter: "bioethanolPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Compressed Natural Gas"), fuelParameter: "cngPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Liquefied Natural Gas"), fuelParameter: "lngPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Liquefied petroleum gases"), fuelParameter: "lpgPrice")
-                                        FuelPriceRange(fuelName: String(localized: "Hydrogen"), fuelParameter: "hydrogenPrice")
+                                        FuelPriceRange(fuelName: String(localized: "A Gasoil"), fuel: .gasoilA)
+                                        FuelPriceRange(fuelName: String(localized: "B Gasoil"), fuel: .gasoilB)
+                                        FuelPriceRange(fuelName: String(localized: "Premium Gasoil"), fuel: .premiumGasoil)
+                                        FuelPriceRange(fuelName: String(localized: "Biodiesel"), fuel: .biodiesel)
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5"), fuel: .gasoline95E5)
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5 Premium"), fuel: .gasoline95E10)
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 95 E10"), fuel: .gasoline95E5Premium)
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 98 E5"), fuel: .gasoline98E5)
+                                        FuelPriceRange(fuelName: String(localized: "Gasoline 98 E10"), fuel: .gasoline98E10)
+                                        FuelPriceRange(fuelName: String(localized: "Bioethanol"), fuel: .bioethanol)
+                                        FuelPriceRange(fuelName: String(localized: "Compressed Natural Gas"), fuel: .cng)
+                                        FuelPriceRange(fuelName: String(localized: "Liquefied Natural Gas"), fuel: .lng)
+                                        FuelPriceRange(fuelName: String(localized: "Liquefied petroleum gases"), fuel: .lpg)
+                                        FuelPriceRange(fuelName: String(localized: "Hydrogen"), fuel: .hydrogen)
                                     }
                                     Spacer()
                                         .frame(height: 12)
@@ -493,6 +583,13 @@ class StationDetailsComponents {
                 }
                 .sheet(isPresented: $howIsCalculatedSheet) {
                     HowIsCalculatedSheet()
+                }
+                .onAppear {
+                    calculateScale()
+                }
+                .onChange(of: station) {
+                    priceScaleItems = nil
+                    calculateScale()
                 }
             }
         }
@@ -582,26 +679,36 @@ class StationDetailsComponents {
                                 .fontWeight(.medium)
                                 .rotationEffect(.degrees(chevronAngle))
                                 .animation(.default, value: chevronAngle)
+                                .disabled(priceScaleItems == nil)
                         }
                     }
                     if expandedContent == true {
                         Spacer()
                             .frame(height: 12)
-                        VStack(alignment: .leading, spacing: 6) {
-                            FuelPriceRange(fuelName: String(localized: "A Gasoil"), fuelParameter: "gasoilAPrice")
-                            FuelPriceRange(fuelName: String(localized: "B Gasoil"), fuelParameter: "gasoilBPrice")
-                            FuelPriceRange(fuelName: String(localized: "Premium Gasoil"), fuelParameter: "premiumGasoilPrice")
-                            FuelPriceRange(fuelName: String(localized: "Biodiesel"), fuelParameter: "biodieselPrice")
-                            FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5"), fuelParameter: "gasoline95E5Price")
-                            FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5 Premium"), fuelParameter: "gasoline95E5PremiumPrice")
-                            FuelPriceRange(fuelName: String(localized: "Gasoline 95 E10"), fuelParameter: "gasoline95E10Price")
-                            FuelPriceRange(fuelName: String(localized: "Gasoline 98 E5"), fuelParameter: "gasoline98E5Price")
-                            FuelPriceRange(fuelName: String(localized: "Gasoline 98 E10"), fuelParameter: "gasoline98E10Price")
-                            FuelPriceRange(fuelName: String(localized: "Bioethanol"), fuelParameter: "bioethanolPrice")
-                            FuelPriceRange(fuelName: String(localized: "Compressed Natural Gas"), fuelParameter: "cngPrice")
-                            FuelPriceRange(fuelName: String(localized: "Liquefied Natural Gas"), fuelParameter: "lngPrice")
-                            FuelPriceRange(fuelName: String(localized: "Liquefied petroleum gases"), fuelParameter: "lpgPrice")
-                            FuelPriceRange(fuelName: String(localized: "Hydrogen"), fuelParameter: "hydrogenPrice")
+                        if priceScaleItems == nil {
+                            Group {
+                                ProgressView()
+                                    .padding()
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        else {
+                            VStack(alignment: .leading, spacing: 6) {
+                                FuelPriceRange(fuelName: String(localized: "A Gasoil"), fuel: .gasoilA)
+                                FuelPriceRange(fuelName: String(localized: "B Gasoil"), fuel: .gasoilB)
+                                FuelPriceRange(fuelName: String(localized: "Premium Gasoil"), fuel: .premiumGasoil)
+                                FuelPriceRange(fuelName: String(localized: "Biodiesel"), fuel: .biodiesel)
+                                FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5"), fuel: .gasoline95E5)
+                                FuelPriceRange(fuelName: String(localized: "Gasoline 95 E5 Premium"), fuel: .gasoline95E10)
+                                FuelPriceRange(fuelName: String(localized: "Gasoline 95 E10"), fuel: .gasoline95E5Premium)
+                                FuelPriceRange(fuelName: String(localized: "Gasoline 98 E5"), fuel: .gasoline98E5)
+                                FuelPriceRange(fuelName: String(localized: "Gasoline 98 E10"), fuel: .gasoline98E10)
+                                FuelPriceRange(fuelName: String(localized: "Bioethanol"), fuel: .bioethanol)
+                                FuelPriceRange(fuelName: String(localized: "Compressed Natural Gas"), fuel: .cng)
+                                FuelPriceRange(fuelName: String(localized: "Liquefied Natural Gas"), fuel: .lng)
+                                FuelPriceRange(fuelName: String(localized: "Liquefied petroleum gases"), fuel: .lpg)
+                                FuelPriceRange(fuelName: String(localized: "Hydrogen"), fuel: .hydrogen)
+                            }
                         }
                         Spacer()
                             .frame(height: 12)
@@ -616,56 +723,28 @@ class StationDetailsComponents {
         }
         
         @ViewBuilder
-        func FuelPriceRange(fuelName: String, fuelParameter: String) -> some View {
-            if let nearbyStations = mapManager.data?.results, let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: fuelParameter) {
-                let prices = nearbyStations.map { station in
-                    let value: Double? = FuelStation.getObjectProperty(station: station, propertyName: fuelParameter)
-                    return value
-                }.filter() { $0 != nil } as! [Double]
-                let percentage: Double? = {
-                    if prices.count <= 1 {
-                        return nil
+        func FuelPriceRange(fuelName: String, fuel: Enums.FuelType) -> some View {
+            if let scaleItems = priceScaleItems, let thisItem = scaleItems.first(where: { $0.fuel == fuel }) {
+                let color: Color = {
+                    if thisItem.avgPercentage < 35.0 {
+                        return Color.green
                     }
-                    
-                    let maxPrice = prices.max()
-                    let minPrice = prices.min()
-                    if let maxPrice = maxPrice, let minPrice = minPrice {
-                        let percentage = ((fuelPrice - minPrice) / (maxPrice - minPrice)) * 100
-                        return percentage
+                    else if thisItem.avgPercentage < 65.0 {
+                        return Color.orange
                     }
-                    return nil
+                    else {
+                        return Color.red
+                    }
                 }()
-                if let percentage = percentage {
-                    let color: Color = {
-                        if percentage < 35.0 {
-                            return Color.green
-                        }
-                        else if percentage < 65.0 {
-                            return Color.orange
-                        }
-                        else {
-                            return Color.red
-                        }
-                    }()
-                    
-                    HStack {
-                        Text(fuelName)
-                        Spacer()
-                        Text(verbatim: "\(Int(percentage.rounded()))%")
-                            .fontWeight(.medium)
-                            .foregroundStyle(color)
-                    }
-                    .fontSize(14)
+                
+                HStack {
+                    Text(fuelName)
+                    Spacer()
+                    Text(verbatim: "\(Int(thisItem.avgPercentage.rounded()))%")
+                        .fontWeight(.medium)
+                        .foregroundStyle(color)
                 }
-                else {
-                    HStack {
-                        Text(fuelName)
-                        Spacer()
-                        Text(verbatim: "N/A")
-                            .fontWeight(.medium)
-                    }
-                    .fontSize(14)
-                }
+                .fontSize(14)
             }
         }
         

@@ -181,7 +181,7 @@ struct StationDetailsSheetContent: View {
                 StationDetailsComponents.PricesItem(station: station)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsComponents.PriceScale(station: station, alwaysExpanded: false) // <- causes bad performance when always expanded
+                StationDetailsComponents.PriceScale(station: station, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 StationDetailsComponents.MapView(station: station, onShowHowToGetThere: {}, showOnlyLookAround: true)
