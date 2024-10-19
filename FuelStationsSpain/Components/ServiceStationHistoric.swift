@@ -187,7 +187,7 @@ fileprivate struct ChartContent: View {
                     x: .value(String(localized: "Date"), index),
                     y: .value(String(localized: "Price (€)"), item.value)
                 )
-                .interpolationMethod(.catmullRom)
+                .interpolationMethod(.linear)
                 AreaMark(
                     x: .value(String(localized: "Date"), index),
                     y: .value(String(localized: "Price (€)"), item.value)
@@ -203,7 +203,7 @@ fileprivate struct ChartContent: View {
                         endPoint: .bottom
                     )
                 )
-                .interpolationMethod(.catmullRom)
+                .interpolationMethod(.linear)
                 if let selectedIndex, selectedIndex >= 0 && selectedIndex < chartData.count {
                     let markValue = chartData[selectedIndex]
                     if chartAnnotationMode == .tooltip {

@@ -1257,6 +1257,16 @@
         }
       }
     },
+    "Open in..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir en…"
+          }
+        }
+      }
+    },
     "Open until %@" : {
       "localizations" : {
         "es" : {

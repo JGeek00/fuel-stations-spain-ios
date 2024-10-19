@@ -75,7 +75,7 @@ struct HowToReachStation: View {
                                 openURL(URL(string: "https://www.google.com/maps/search/?api=1&query=\(station.latitude!)%2C\(station.longitude!)")!)
                             }
                         } label: {
-                            Image(systemName: "location")
+                            Text("Open in...")
                         }
                     }
                 }
