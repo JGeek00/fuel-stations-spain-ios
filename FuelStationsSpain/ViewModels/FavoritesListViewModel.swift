@@ -20,6 +20,9 @@ class FavoritesListViewModel: ObservableObject {
         if let sortingKey = UserDefaults.shared.string(forKey: StorageKeys.defaultListSorting), let sorting = Enums.StationsSortingOptions(rawValue: sortingKey) {
             selectedSorting = sorting
         }
+        Task {
+            await fetchData()
+        }
     }
     
     func fetchData() async {

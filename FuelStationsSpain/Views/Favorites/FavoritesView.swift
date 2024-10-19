@@ -45,7 +45,7 @@ struct FavoritesView: View {
                 }
             }
             .navigationSplitViewStyle(.balanced)
-            .onChange(of: favoritesProvider.favorites, initial: true) {
+            .onChange(of: favoritesProvider.favorites, initial: false) {
                 Task {
                     await favoritesListViewModel.fetchData()
                 }
