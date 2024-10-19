@@ -10,6 +10,8 @@ struct SearchMunicipalitiesList: View {
     
     @EnvironmentObject private var searchViewModel: SearchViewModel
     
+    @AppStorage(StorageKeys.showSectionIndexList, store: UserDefaults.shared) private var showSectionIndexList = Defaults.showSectionIndexList
+    
     var body: some View {
         Group {
             if searchViewModel.municipalitiesLoading == true {
@@ -173,28 +175,41 @@ struct SearchMunicipalitiesList: View {
                 }
             }()
             
-            ScrollViewReader { proxy in
-                List(grouped, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
-                    // Simulates a section header. Not using Section because it causes "List failed to visit cell content, returning an empty cell" error
-                    Text(section.sectionName.uppercased())
-                        .listRowBackground(Color.listBackground)
-                        .listRowSeparator(.hidden)
-                        .fontSize(14)
-                        .foregroundStyle(Color.gray)
-                        .padding(.top, section == grouped.first ? 12 : 24)
-                        .disabled(true)
-                    ForEach(section.municipalities, id: \.self) { item in
-                        Text(item.Municipio!)
-                            .listRowSeparator(item == section.municipalities.last ? .hidden : .visible)
+            if showSectionIndexList {
+                ScrollViewReader { proxy in
+                    List(grouped, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
+                        // Simulates a section header. Not using Section because it causes "List failed to visit cell content, returning an empty cell" error
+                        Text(section.sectionName.uppercased())
+                            .listRowBackground(Color.listBackground)
+                            .listRowSeparator(.hidden)
+                            .fontSize(14)
+                            .foregroundStyle(Color.gray)
+                            .padding(.top, section == grouped.first ? 12 : 24)
+                            .disabled(true)
+                        ForEach(section.municipalities, id: \.self) { item in
+                            Text(item.Municipio!)
+                                .listRowSeparator(item == section.municipalities.last ? .hidden : .visible)
+                        }
+                        .id(section.sectionId)
                     }
-                    .id(section.sectionId)
+                    .overlay(content: {
+                        if !searchViewModel.municipalitiesSearchPresented {
+                            SectionIndexTitles(proxy: proxy, titles: grouped.map() { $0.sectionName })
+                                .transition(.opacity)
+                        }
+                    })
+                    .animation(.default, value: data)
+                    .transition(.opacity)
                 }
-                .overlay(content: {
-                    if !searchViewModel.municipalitiesSearchPresented {
-                        SectionIndexTitles(proxy: proxy, titles: grouped.map() { $0.sectionName })
-                            .transition(.opacity)
+            }
+            else {
+                List(grouped, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
+                    Section(section.sectionName.uppercased()) {
+                        ForEach(section.municipalities, id: \.self) { item in
+                            Text(item.Municipio!)
+                        }
                     }
-                })
+                }
                 .animation(.default, value: data)
                 .transition(.opacity)
             }

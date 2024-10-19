@@ -1607,6 +1607,26 @@
         }
       }
     },
+    "Show section index list" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar lista de índices de sección"
+          }
+        }
+      }
+    },
+    "Shows a list of letters at the right of the municipalities list on the search tab that you can use to scroll the list quickly to a specific letter." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra una lista de letras a la derecha de la lista de municipios en la pestaña de búsqueda, para que puedas hacer scroll rápidamente hacia una letra."
+          }
+        }
+      }
+    },
     "Sorted by %@ price" : {
       "localizations" : {
         "es" : {
