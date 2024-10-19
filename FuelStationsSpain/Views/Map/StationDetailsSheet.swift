@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 import AlertToast
 import BottomSheet
 
@@ -76,6 +77,7 @@ struct StationDetailsSheetContent: View {
     
     @State private var showHistoricPricesSheet = false
     @State private var showHowToReachSheet = false
+    @State private var lookAroundScene: MKLookAroundScene? = nil
     
     var body: some View {
         if let station = mapManager.selectedStation {
@@ -184,7 +186,7 @@ struct StationDetailsSheetContent: View {
                 StationDetailsPriceScale(station: station, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsMapItem(station: station, onShowHowToGetThere: {}, showOnlyLookAround: true)
+                StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 if let update = mapManager.data?.lastUpdated {
@@ -232,6 +234,16 @@ struct StationDetailsSheetContent: View {
             .padding(.horizontal)
             .animation(.easeOut, value: mapManager.selectedStation)
             .transition(.opacity)
+            .onChange(of: station, initial: true) {
+                DispatchQueue.global(qos: .background).async {
+                    Task {
+                        let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                        DispatchQueue.main.async {
+                            lookAroundScene = result
+                        }
+                    }
+                }
+            }
             .sheet(isPresented: $showHistoricPricesSheet) {
                 NavigationStack {
                     HistoricPricesView(station: station, showingInSheet: true)

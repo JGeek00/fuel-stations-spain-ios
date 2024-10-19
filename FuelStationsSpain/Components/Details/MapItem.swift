@@ -4,15 +4,30 @@ import Sentry
 
 fileprivate let delta = 0.003
 
+func getLookAroundScene(latitude: Double, longitude: Double) async -> MKLookAroundScene? {
+    let request = MKLookAroundSceneRequest(coordinate: .init(latitude: latitude, longitude: longitude))
+    do {
+        let result = try await request.scene
+        return result
+    } catch let error {
+        DispatchQueue.main.async {
+            SentrySDK.capture(error: error)
+        }
+        return nil
+    }
+}
+
 struct StationDetailsMapItem: View {
     var station: FuelStation
     var onShowHowToGetThere: () -> Void
     var showOnlyLookAround: Bool
+    var lookAroundScene: MKLookAroundScene?
     
-    init(station: FuelStation, onShowHowToGetThere: @escaping () -> Void, showOnlyLookAround: Bool = false) {
+    init(station: FuelStation, showOnlyLookAround: Bool = false, lookAroundScene: MKLookAroundScene?, onShowHowToGetThere: @escaping () -> Void) {
         self.station = station
         self.onShowHowToGetThere = onShowHowToGetThere
         self.showOnlyLookAround = showOnlyLookAround
+        self.lookAroundScene = lookAroundScene
     }
     
     @EnvironmentObject private var mapManager: MapManager
@@ -24,35 +39,6 @@ struct StationDetailsMapItem: View {
     @State private var camera = MapCameraPosition.region(.init(center: Config.defaultCoordinates, span: .init(latitudeDelta: delta, longitudeDelta: delta)))
     @State private var mapMode = Enums.LocationPreviewMode.map
     @State private var showLookAround = false // Just for the transition
-    @State private var loadingLookAround = true
-    @State private var lookAroundScene: MKLookAroundScene?
-    
-    private func getLookAroundScene() {
-        loadingLookAround = true
-        lookAroundScene = nil
-        
-        DispatchQueue.global(qos: .background).async {
-            Task {
-                let request = MKLookAroundSceneRequest(coordinate: .init(latitude: station.latitude!, longitude: station.longitude!))
-                do {
-                    let result = try await request.scene
-                    DispatchQueue.main.async {
-                        withAnimation(.default) {
-                            loadingLookAround = false
-                            lookAroundScene = result
-                        }
-                    }
-                } catch let error {
-                    DispatchQueue.main.async{
-                        withAnimation(.default) {
-                            loadingLookAround = false
-                            SentrySDK.capture(error: error)
-                        }
-                    }
-                }
-            }
-        }
-    }
     
     var body: some View {
         VStack {
@@ -109,7 +95,6 @@ struct StationDetailsMapItem: View {
             }
         }
         .onChange(of: station, initial: true) {
-            getLookAroundScene()
             if let latitude = station.latitude, let longitude = station.longitude {
                 camera = MapCameraPosition.region(.init(center: .init(latitude: latitude, longitude: longitude), span: .init(latitudeDelta: delta, longitudeDelta: delta)))
             }
@@ -117,30 +102,35 @@ struct StationDetailsMapItem: View {
     }
     
     @ViewBuilder func LookAround() -> some View {
-        if loadingLookAround == true {
-            ProgressView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        if lookAroundScene != nil {
+            LookAroundPreview(initialScene: lookAroundScene)
                 .transition(.opacity)
         }
         else {
-            if lookAroundScene != nil {
-                LookAroundPreview(initialScene: lookAroundScene)
-                    .transition(.opacity)
-            }
-            else {
-                ContentUnavailableView("Look around not available", systemImage: "binoculars.fill", description: Text("The look around feature is not available on this area."))
-                    .transition(.opacity)
-            }
+            ContentUnavailableView("Look around not available", systemImage: "binoculars.fill", description: Text("The look around feature is not available on this area."))
+                .transition(.opacity)
         }
     }
 }
 
 #Preview("MapItem") {
+    @Previewable @State var lookAroundScene: MKLookAroundScene? = nil
+    
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     
     ScrollView {
-        StationDetailsMapItem(station: station) {}
+        StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {}
             .environmentObject(MapManager.shared)
             .environmentObject(LocationManager(mockData: true))
+            .onAppear {
+                DispatchQueue.global(qos: .background).async {
+                    Task {
+                        let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                        DispatchQueue.main.async {
+                            lookAroundScene = result
+                        }
+                    }
+                }
+            }
     }
 }

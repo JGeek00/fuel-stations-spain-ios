@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 
 struct SearchStationDetails: View {
     
@@ -11,6 +12,7 @@ struct SearchStationDetails: View {
     @AppStorage(StorageKeys.showStationSummary, store: UserDefaults.shared) private var showStationSummary = Defaults.showStationSummary
     
     @State private var navigationPath = NavigationPath()
+    @State private var lookAroundScene: MKLookAroundScene? = nil
         
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -53,7 +55,7 @@ struct SearchStationDetails: View {
                                 .background(Color.listItemBackground)
                                 .clipShape(RoundedRectangle(cornerRadius: 8.0))
                             
-                            StationDetailsMapItem(station: station) {
+                            StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
                                 navigationPath.append(NavigateHowToReachStation(station: station))
                             }
                             .background(Color.listItemBackground)
@@ -78,6 +80,16 @@ struct SearchStationDetails: View {
                     .background(Color.listBackground)
                     .toolbar {
                         StationDetailsFavoriteButton(station: station)
+                    }
+                    .onAppear {
+                        DispatchQueue.global(qos: .background).async {
+                            Task {
+                                let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                                DispatchQueue.main.async {
+                                    lookAroundScene = result
+                                }
+                            }
+                        }
                     }
                 }
                 else {

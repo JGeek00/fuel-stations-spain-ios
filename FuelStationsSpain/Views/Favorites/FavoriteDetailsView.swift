@@ -20,6 +20,7 @@ struct FavoriteDetailsView: View {
     @State private var stationAliasTextField: String = ""
     
     @State private var navigationPath = NavigationPath()
+    @State private var lookAroundScene: MKLookAroundScene? = nil
     
     var body: some View {
         let alias = favoritesProvider.favorites.first(where: { $0.id == station.id! })?.alias
@@ -63,7 +64,7 @@ struct FavoriteDetailsView: View {
                         .background(Color.listItemBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     
-                    StationDetailsMapItem(station: station) {
+                    StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
                         navigationPath.append(NavigateHowToReachStation(station: station))
                     }
                     .background(Color.listItemBackground)
@@ -113,6 +114,16 @@ struct FavoriteDetailsView: View {
             }
             .navigationDestination(for: NavigateHowToReachStation.self) { value in
                 HowToReachStation(station: value.station)
+            }
+            .onAppear {
+                DispatchQueue.global(qos: .background).async {
+                    Task {
+                        let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                        DispatchQueue.main.async {
+                            lookAroundScene = result
+                        }
+                    }
+                }
             }
         }
     }
