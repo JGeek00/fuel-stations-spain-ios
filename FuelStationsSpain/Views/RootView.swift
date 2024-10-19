@@ -58,8 +58,8 @@ struct RootView: View {
         .fullScreenCover(isPresented: $onboardingViewModel.showOnboarding, content: {
             OnboardingView()
         })
-        .onChange(of: locationManager.firstLocation, initial: true) {
-            guard let latitude = locationManager.firstLocation?.coordinate.latitude, let longitude = locationManager.firstLocation?.coordinate.longitude else { return }
+        .onChange(of: locationManager.firstLocation, initial: true) { old, new in
+            guard old == nil, let latitude = new?.coordinate.latitude, let longitude = new?.coordinate.longitude else { return }
             Task {
                 await mapManager.setInitialLocation(latitude: latitude, longitude: longitude)
             }
