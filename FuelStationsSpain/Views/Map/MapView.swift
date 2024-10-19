@@ -110,6 +110,7 @@ fileprivate struct MapComponent: View {
                 view
                     .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
                         mapManager.selectedStationAnimation = nil
+                        mapManager.selectedStation = nil
                         mapManager.isOpeningOrClosingSheet = true
                     }, content: {
                         Group {
@@ -131,7 +132,6 @@ fileprivate struct MapComponent: View {
                             .enabled(upThrough: .fraction(0.99))
                         )
                         .onDisappear {
-                            mapManager.selectedStation = nil
                             mapManager.isOpeningOrClosingSheet = false
                         }
                     })

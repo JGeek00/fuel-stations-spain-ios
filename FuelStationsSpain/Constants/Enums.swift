@@ -115,4 +115,9 @@ class Enums {
         case outsideChart
         case tooltip
     }
+    
+    public enum LocationPreviewMode: String {
+        case map
+        case lookAround
+    }
 }

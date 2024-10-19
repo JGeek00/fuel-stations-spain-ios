@@ -161,6 +161,9 @@ struct StationDetailsSheetContent: View {
                 StationDetailsComponents.PriceScale(station: station)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                StationDetailsComponents.MapView(station: station, onShowHowToGetThere: {}, showOnlyLookAround: true)
+                    .customBackgroundWithMaterial()
+                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 if let update = mapManager.data?.lastUpdated {
                     if let date = formatDate(update) {
                         StationDetailsComponents.ListItem(

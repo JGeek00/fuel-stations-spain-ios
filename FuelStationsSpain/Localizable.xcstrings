@@ -1047,6 +1047,16 @@
         }
       }
     },
+    "Look around view" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista de alrededores"
+          }
+        }
+      }
+    },
     "Map" : {
       "localizations" : {
         "es" : {
@@ -1057,12 +1067,32 @@
         }
       }
     },
+    "Map mode" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de mapa"
+          }
+        }
+      }
+    },
     "Map style" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estilo de mapa"
+          }
+        }
+      }
+    },
+    "Map view" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista de mapa"
           }
         }
       }
