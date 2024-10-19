@@ -28,7 +28,7 @@ struct StationDetailsPriceScale: View {
     @State private var howIsCalculatedSheet = false
     @State private var priceScaleItems: [PriceScaleItem]? = nil
     
-    func calculateScale() {
+    private func calculateScale() {
         @Sendable func calculateAvgPercentage(nearbyStations: [FuelStation], station: FuelStation, fuel: Enums.FuelType) -> PriceScaleItem? {
             if let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price") {
                 let prices = nearbyStations.map { station in
@@ -226,49 +226,48 @@ struct StationDetailsPriceScale: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    VStack {
-                        Image(systemName: "gauge.with.needle.fill")
-                            .foregroundStyle(Color.white)
-                            .frameDynamicSize(width: 28, height: 28)
-                            .background(.green)
-                            .cornerRadius(6)
-                        Spacer()
-                    }
+                    Image(systemName: "gauge.with.needle.fill")
+                        .foregroundStyle(Color.white)
+                        .frameDynamicSize(width: 28, height: 28)
+                        .background(.green)
+                        .cornerRadius(6)
                     Spacer()
                         .frame(width: 12)
-                    VStack(alignment: .leading) {
-                        Text("Price range")
-                            .fontSize(16)
-                            .fontWeight(.semibold)
+                    Text("Price range")
+                        .fontSize(16)
+                        .fontWeight(.semibold)
+                }
+                HStack {
+                    if !alwaysExpanded {
                         Spacer()
-                            .frame(height: 8)
-                        
-                        VStack {
-                            Gauge(
-                                value: "\(Int(avgPercentage.rounded()))%",
-                                percentage: avgPercentage.rounded(),
-                                color: color,
-                                size: 60
-                            )
-                            Spacer()
-                                .frame(height: 4)
-                            Group {
-                                if avgPercentage.rounded() == 0 {
-                                    Text("This service station is, in general terms, ") + Text("the cheapest ").foregroundStyle(Color.green) + Text("service station in the area.")
-                                }
-                                else if avgPercentage.rounded() == 100 {
-                                    Text("This service station is, in general terms, ") + Text("the most expensive ").foregroundStyle(Color.red) + Text("service station in the area.")
-                                }
-                                else {
-                                    Text("This service station is, in general terms, ") + Text("a \(Int(avgPercentage.rounded()))% more expensive ").foregroundStyle(color) + Text("than the cheapest service station in the area.")
-                                }
-                            }
-                            .fontSize(14)
-                            .fontWeight(.medium)
-                            .multilineTextAlignment(.center)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
+                            .frame(width: 18)
+                        Spacer()
                     }
+                    VStack {
+                        Gauge(
+                            value: "\(Int(avgPercentage.rounded()))%",
+                            percentage: avgPercentage.rounded(),
+                            color: color,
+                            size: 60
+                        )
+                        Spacer()
+                            .frame(height: 4)
+                        Group {
+                            if avgPercentage.rounded() == 0 {
+                                Text("This service station is, in general terms, ") + Text("the cheapest ").foregroundStyle(Color.green) + Text("service station in the area.")
+                            }
+                            else if avgPercentage.rounded() == 100 {
+                                Text("This service station is, in general terms, ") + Text("the most expensive ").foregroundStyle(Color.red) + Text("service station in the area.")
+                            }
+                            else {
+                                Text("This service station is, in general terms, ") + Text("a \(Int(avgPercentage.rounded()))% more expensive ").foregroundStyle(color) + Text("than the cheapest service station in the area.")
+                            }
+                        }
+                        .fontSize(14)
+                        .fontWeight(.medium)
+                        .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
                     if !alwaysExpanded {
                         Spacer()
                         Image(systemName: "chevron.down")
@@ -280,6 +279,7 @@ struct StationDetailsPriceScale: View {
                             .disabled(priceScaleItems == nil)
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
                 if expandedContent == true {
                     Spacer()
                         .frame(height: 12)

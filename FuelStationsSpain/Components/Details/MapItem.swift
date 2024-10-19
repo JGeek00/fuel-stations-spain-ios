@@ -24,20 +24,31 @@ struct StationDetailsMapItem: View {
     @State private var camera = MapCameraPosition.region(.init(center: Config.defaultCoordinates, span: .init(latitudeDelta: delta, longitudeDelta: delta)))
     @State private var mapMode = Enums.LocationPreviewMode.map
     @State private var showLookAround = false // Just for the transition
+    @State private var loadingLookAround = true
     @State private var lookAroundScene: MKLookAroundScene?
     
     private func getLookAroundScene() {
+        loadingLookAround = true
         lookAroundScene = nil
+        
         DispatchQueue.global(qos: .background).async {
             Task {
                 let request = MKLookAroundSceneRequest(coordinate: .init(latitude: station.latitude!, longitude: station.longitude!))
                 do {
                     let result = try await request.scene
                     DispatchQueue.main.async {
-                        lookAroundScene = result
+                        withAnimation(.default) {
+                            loadingLookAround = false
+                            lookAroundScene = result
+                        }
                     }
                 } catch let error {
-                    SentrySDK.capture(error: error)
+                    DispatchQueue.main.async{
+                        withAnimation(.default) {
+                            loadingLookAround = false
+                            SentrySDK.capture(error: error)
+                        }
+                    }
                 }
             }
         }
@@ -47,16 +58,8 @@ struct StationDetailsMapItem: View {
         VStack {
             if let signage = station.signage, let latitude = station.latitude, let longitude = station.longitude {
                 if showOnlyLookAround {
-                    if lookAroundScene != nil {
-                        LookAroundPreview(initialScene: lookAroundScene)
-                            .onAppear {
-                                getLookAroundScene()
-                            }
-                            .frame(height: 300)
-                    }
-                    else {
-                        ContentUnavailableView("Look around not available", systemImage: "binoculars.fill", description: Text("The look around feature is not available on this area."))
-                    }
+                    LookAround()
+                        .frame(height: 300)
                 }
                 else {
                     Picker("Map mode", selection: $mapMode) {
@@ -69,16 +72,7 @@ struct StationDetailsMapItem: View {
                     .padding()
                     Group {
                         if showLookAround {
-                            if lookAroundScene != nil {
-                                LookAroundPreview(initialScene: lookAroundScene)
-                                    .onAppear {
-                                        getLookAroundScene()
-                                    }
-                                    .transition(.opacity)
-                            }
-                            else {
-                                ContentUnavailableView("Look around not available", systemImage: "binoculars.fill", description: Text("The look around feature is not available on this area."))
-                            }
+                            LookAround()
                         }
                         else {
                             Map(position: $camera, interactionModes: []) {
@@ -118,6 +112,24 @@ struct StationDetailsMapItem: View {
             getLookAroundScene()
             if let latitude = station.latitude, let longitude = station.longitude {
                 camera = MapCameraPosition.region(.init(center: .init(latitude: latitude, longitude: longitude), span: .init(latitudeDelta: delta, longitudeDelta: delta)))
+            }
+        }
+    }
+    
+    @ViewBuilder func LookAround() -> some View {
+        if loadingLookAround == true {
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .transition(.opacity)
+        }
+        else {
+            if lookAroundScene != nil {
+                LookAroundPreview(initialScene: lookAroundScene)
+                    .transition(.opacity)
+            }
+            else {
+                ContentUnavailableView("Look around not available", systemImage: "binoculars.fill", description: Text("The look around feature is not available on this area."))
+                    .transition(.opacity)
             }
         }
     }
