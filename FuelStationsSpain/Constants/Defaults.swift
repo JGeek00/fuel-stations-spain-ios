@@ -11,4 +11,5 @@ class Defaults {
     static let mapStyle = Enums.MapStyle.standard
     static let chartAnnotationMode = Enums.ChartAnnotationMode.outsideChart
     static let showSectionIndexList = true
+    static let showStationSummary = true
 }

@@ -39,6 +39,11 @@ struct GeneralSettings: View {
                     ChartsSettings()
                 }
             }
+            Section {
+                NavigationLink("Details view") {
+                    DetailsViewSettings()
+                }
+            }
         }
         .navigationTitle("General settings")
         .navigationBarTitleDisplayMode(.inline)

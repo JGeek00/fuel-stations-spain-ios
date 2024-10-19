@@ -15,4 +15,5 @@ class StorageKeys {
     public static let mapStyle = "MAP_STYLE"
     public static let chartAnnotationMode = "CHART_ANNOTATION_MODE"
     public static let showSectionIndexList = "SHOW_SECTION_INDEX_LIST"
+    public static let showStationSummary = "SHOW_STATION_SUMMARY"
 }

@@ -14,6 +14,8 @@ struct FavoriteDetailsView: View {
     @EnvironmentObject private var favoritesListViewModel: FavoritesListViewModel
     @EnvironmentObject private var toastProvider: ToastProvider
     
+    @AppStorage(StorageKeys.showStationSummary, store: UserDefaults.shared) private var showStationSummary = Defaults.showStationSummary
+    
     @State private var defineStationAliasOpen = false
     @State private var stationAliasTextField: String = ""
     
@@ -24,10 +26,26 @@ struct FavoriteDetailsView: View {
         NavigationStack(path: $navigationPath) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 12) {
+                    if showStationSummary {
+                        Text("Summary")
+                            .fontSize(22)
+                            .fontWeight(.bold)
+                        StationDetailsComponents.Summary(station: station)
+                            .customBackgroundWithMaterial()
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        
+                        Divider()
+                            .padding(.top, 12)
+                            .padding(.bottom, 8)
+                        
+                        Text("Details")
+                            .fontSize(22)
+                            .fontWeight(.bold)
+                    }
                     Alias(alias: alias)
                     Address()
                     Locality()
-                    StationDetailsComponents.ScheduleItem(station: station)
+                    StationDetailsComponents.ScheduleItem(station: station, alwaysExpanded: showStationSummary)
                         .background(Color.listItemBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     SaleType()

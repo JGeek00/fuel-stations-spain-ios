@@ -627,6 +627,46 @@
         }
       }
     },
+    "Details" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles"
+          }
+        }
+      }
+    },
+    "Details view" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista de detalle"
+          }
+        }
+      }
+    },
+    "Displays a summary with the favorite fuel price, if the service station is currently open, and the distance to the user location." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra un resumen con el precio del combustible favorito, si la estación de servicio está abierta en este momento, y la distancia con respecto a la localización del usuario."
+          }
+        }
+      }
+    },
+    "Distance" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distancia"
+          }
+        }
+      }
+    },
     "Error" : {
       "localizations" : {
         "es" : {
@@ -1227,6 +1267,16 @@
         }
       }
     },
+    "Open" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto"
+          }
+        }
+      }
+    },
     "Open 24 hours" : {
       "localizations" : {
         "es" : {
@@ -1487,6 +1537,16 @@
         }
       }
     },
+    "Schedule" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horario"
+          }
+        }
+      }
+    },
     "Search" : {
       "localizations" : {
         "es" : {
@@ -1657,6 +1717,16 @@
         }
       }
     },
+    "Show service station summary" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar resumen de estación de servicio"
+          }
+        }
+      }
+    },
     "Shows a list of letters at the right of the municipalities list on the search tab that you can use to scroll the list quickly to a specific letter." : {
       "localizations" : {
         "es" : {
@@ -1723,6 +1793,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Satisfactorio"
+          }
+        }
+      }
+    },
+    "Summary" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resumen"
           }
         }
       }

@@ -19,7 +19,7 @@ struct StationDetailsSheetHeader: View {
             HStack {
                 if let name = station.signage {
                     Text(verbatim: name.capitalized)
-                        .fontSize(30)
+                        .fontSize(32)
                         .fontWeight(.bold)
                         .truncationMode(.tail)
                         .lineLimit(1)
@@ -72,6 +72,8 @@ struct StationDetailsSheetContent: View {
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     @EnvironmentObject private var toastProvider: ToastProvider
     
+    @AppStorage(StorageKeys.showStationSummary, store: UserDefaults.shared) private var showStationSummary = Defaults.showStationSummary
+    
     @State private var showHistoricPricesSheet = false
     @State private var showHowToReachSheet = false
     
@@ -90,6 +92,22 @@ struct StationDetailsSheetContent: View {
                         }
                         return nil
                     }()
+                    
+                    if showStationSummary {
+                        Spacer()
+                            .frame(height: 12)
+                                        
+                        StationDetailsComponents.Summary(station: station)
+                            .customBackgroundWithMaterial()
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        
+                        Divider()
+                            .padding(.vertical)
+                        
+                        Text("Details")
+                            .fontSize(22)
+                            .fontWeight(.semibold)
+                    }
                     
                     Button {
                         UIPasteboard.general.string = address.capitalized
@@ -116,7 +134,7 @@ struct StationDetailsSheetContent: View {
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 }
-                StationDetailsComponents.ScheduleItem(station: station)
+                StationDetailsComponents.ScheduleItem(station: station, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 if let saleType = station.saleType {
@@ -158,7 +176,7 @@ struct StationDetailsSheetContent: View {
                 StationDetailsComponents.PricesItem(station: station)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsComponents.PriceScale(station: station)
+                StationDetailsComponents.PriceScale(station: station, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 StationDetailsComponents.MapView(station: station, onShowHowToGetThere: {}, showOnlyLookAround: true)
