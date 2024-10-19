@@ -40,7 +40,7 @@ struct FavoriteDetailsView: View {
                         Text("Summary")
                             .fontSize(22)
                             .fontWeight(.bold)
-                        StationDetailsComponents.Summary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                        StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                             .customBackgroundWithMaterial()
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         
@@ -55,15 +55,15 @@ struct FavoriteDetailsView: View {
                     Alias(alias: alias)
                     Address()
                     Locality()
-                    StationDetailsComponents.ScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
+                    StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                         .background(Color.listItemBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     SaleType()
-                    StationDetailsComponents.PricesItem(station: station)
+                    StationDetailsPricesItem(station: station)
                         .background(Color.listItemBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     
-                    StationDetailsComponents.MapView(station: station) {
+                    StationDetailsMapItem(station: station) {
                         navigationPath.append(NavigateHowToReachStation(station: station))
                     }
                     .background(Color.listItemBackground)
@@ -71,7 +71,7 @@ struct FavoriteDetailsView: View {
                     LastUpdated()
                     HStack {
                         NavigationLink {
-                            ServiceStationHistoric(station: station, showingInSheet: false)
+                            HistoricPricesView(station: station, showingInSheet: false)
                         } label: {
                             Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
                         }
@@ -87,7 +87,7 @@ struct FavoriteDetailsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.listBackground)
             .toolbar {
-                StationDetailsComponents.FavoriteButton(station: station, backgroundCircle: false)
+                StationDetailsFavoriteButton(station: station, backgroundCircle: false)
                 Menu {
                     Button {
                         stationAliasTextField = alias ?? ""
@@ -119,7 +119,7 @@ struct FavoriteDetailsView: View {
     
     @ViewBuilder private func Alias(alias: String?) -> some View {
         if let stationAlias = alias, !stationAlias.isEmpty {
-            StationDetailsComponents.ListItem(
+            StationDetailsListItem(
                 icon: "pencil",
                 iconColor: .gray,
                 title: String(localized: "Station alias"),
@@ -149,7 +149,7 @@ struct FavoriteDetailsView: View {
                 UIPasteboard.general.string = address.capitalized
                 toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
             } label: {
-                StationDetailsComponents.ListItem(
+                StationDetailsListItem(
                     icon: "mappin",
                     iconColor: .red,
                     title: address.capitalized,
@@ -164,7 +164,7 @@ struct FavoriteDetailsView: View {
     
     @ViewBuilder private func Locality() -> some View {
         if let locality = station.locality {
-            StationDetailsComponents.ListItem(
+            StationDetailsListItem(
                 icon: "building.2.fill",
                 iconColor: .green,
                 title: String(localized: "Locality"),
@@ -177,7 +177,7 @@ struct FavoriteDetailsView: View {
     
     @ViewBuilder private func SaleType() -> some View {
         if let saleType = station.saleType {
-            StationDetailsComponents.ListItem(
+            StationDetailsListItem(
                 icon: "person.fill",
                 iconColor: .purple,
                 title: String(localized: "Sales to the general public")
@@ -217,7 +217,7 @@ struct FavoriteDetailsView: View {
     @ViewBuilder private func LastUpdated() -> some View {
         if let update = favoritesListViewModel.data?.lastUpdated {
             if let date = formatDate(update) {
-                StationDetailsComponents.ListItem(
+                StationDetailsListItem(
                     icon: "arrow.down.circle.fill",
                     iconColor: .brown,
                     title: String(localized: "Latest information")

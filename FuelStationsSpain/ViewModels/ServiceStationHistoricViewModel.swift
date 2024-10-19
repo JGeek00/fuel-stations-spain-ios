@@ -11,7 +11,7 @@ struct ChartPoint: Hashable {
 }
 
 @MainActor
-class ServiceStationHistoricViewModel: ObservableObject {
+class HistoricPricesViewModel: ObservableObject {
     var station: FuelStation
     
     init(station: FuelStation) {

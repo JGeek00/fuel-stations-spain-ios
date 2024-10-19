@@ -1,17 +1,17 @@
 import SwiftUI
 import Charts
 
-struct ServiceStationHistoric: View {
+struct HistoricPricesView: View {
     var station: FuelStation
     var showingInSheet: Bool
     
     init(station: FuelStation, showingInSheet: Bool) {
         self.station = station
-        _serviceStationHistoricViewModel = StateObject(wrappedValue: ServiceStationHistoricViewModel(station: station))
+        _historicPricesViewModel = StateObject(wrappedValue: HistoricPricesViewModel(station: station))
         self.showingInSheet = showingInSheet
     }
     
-    @StateObject private var serviceStationHistoricViewModel: ServiceStationHistoricViewModel
+    @StateObject private var historicPricesViewModel: HistoricPricesViewModel
     
     private func formatDate(_ dateString: String) -> Date? {
         let dateFormatter = DateFormatter()
@@ -28,20 +28,20 @@ struct ServiceStationHistoric: View {
             Filters()
             
             Section {
-                if serviceStationHistoricViewModel.loading == true {
+                if historicPricesViewModel.loading == true {
                     HStack {
                         ProgressView()
                     }
                     .transition(.opacity)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
-                else if serviceStationHistoricViewModel.data != nil {
-                    if !serviceStationHistoricViewModel.chartHasData {
+                else if historicPricesViewModel.data != nil {
+                    if !historicPricesViewModel.chartHasData {
                         ContentUnavailableView("No data available", systemImage: "fuelpump.slash.fill", description: Text("There is no data for the selected fuel."))
                             .transition(.opacity)
                     }
                     else {
-                        ChartContent(chartData: serviceStationHistoricViewModel.chartData, chartMinValue: serviceStationHistoricViewModel.chartMinValue, chartMaxValue: serviceStationHistoricViewModel.chartMaxValue, selectedTime: serviceStationHistoricViewModel.selectedTime)
+                        ChartContent(chartData: historicPricesViewModel.chartData, chartMinValue: historicPricesViewModel.chartMinValue, chartMaxValue: historicPricesViewModel.chartMaxValue, selectedTime: historicPricesViewModel.selectedTime)
                             .transition(.opacity)
                     }
                 }
@@ -55,20 +55,20 @@ struct ServiceStationHistoric: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             Task {
-                await serviceStationHistoricViewModel.loadData()
+                await historicPricesViewModel.loadData()
             }
         }
-        .onChange(of: serviceStationHistoricViewModel.selectedFuel) {
-            serviceStationHistoricViewModel.generateChartData()
+        .onChange(of: historicPricesViewModel.selectedFuel) {
+            historicPricesViewModel.generateChartData()
         }
-        .onChange(of: serviceStationHistoricViewModel.selectedTime) {
-            serviceStationHistoricViewModel.generateChartData()
+        .onChange(of: historicPricesViewModel.selectedTime) {
+            historicPricesViewModel.generateChartData()
         }
     }
     
     @ViewBuilder private func Filters() -> some View {
         Section {
-            Picker("Fuel", selection: $serviceStationHistoricViewModel.selectedFuel) {
+            Picker("Fuel", selection: $historicPricesViewModel.selectedFuel) {
                 Section("Gasoil") {
                     Text("A Gasoil")
                         .tag(Enums.FuelType.gasoilA)
@@ -107,10 +107,10 @@ struct ServiceStationHistoric: View {
                 }
             }
         }
-        .disabled(serviceStationHistoricViewModel.loading)
+        .disabled(historicPricesViewModel.loading)
         
         Section {
-            Picker("Time", selection: $serviceStationHistoricViewModel.selectedTime) {
+            Picker("Time", selection: $historicPricesViewModel.selectedTime) {
                 Text("1 week")
                     .tag(Enums.HistoricTime.week1)
                 Text("1 month")
@@ -126,7 +126,7 @@ struct ServiceStationHistoric: View {
         }
         .listRowBackground(showingInSheet ? Color.sheetListBackground : Color.listBackground)
         .listRowInsets(.init())
-        .disabled(serviceStationHistoricViewModel.loading)
+        .disabled(historicPricesViewModel.loading)
     }
 }
 
@@ -255,6 +255,6 @@ fileprivate struct ChartContent: View {
 #Preview {
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     NavigationStack {
-        ServiceStationHistoric(station: station, showingInSheet: false)
+        HistoricPricesView(station: station, showingInSheet: false)
     }
 }

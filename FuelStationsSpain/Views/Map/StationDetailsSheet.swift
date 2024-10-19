@@ -25,7 +25,7 @@ struct StationDetailsSheetHeader: View {
                         .lineLimit(1)
                 }
                 Spacer()
-                StationDetailsComponents.FavoriteButton(station: station)
+                StationDetailsFavoriteButton(station: station)
                 if isSideSheet == false {
                     Button {
                         mapManager.showStationDetailsSheet = false
@@ -102,7 +102,7 @@ struct StationDetailsSheetContent: View {
                     }()
                     
                     if showStationSummary {                                        
-                        StationDetailsComponents.Summary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                        StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                             .customBackgroundWithMaterial()
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         
@@ -118,7 +118,7 @@ struct StationDetailsSheetContent: View {
                         UIPasteboard.general.string = address.capitalized
                         toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
                     } label: {
-                        StationDetailsComponents.ListItem(
+                        StationDetailsListItem(
                             icon: "mappin",
                             iconColor: .red,
                             title: address.capitalized,
@@ -130,7 +130,7 @@ struct StationDetailsSheetContent: View {
                     .buttonStyle(.plain)
                 }
                 if let locality = station.locality {
-                    StationDetailsComponents.ListItem(
+                    StationDetailsListItem(
                         icon: "building.2.fill",
                         iconColor: .green,
                         title: String(localized: "Locality"),
@@ -139,11 +139,11 @@ struct StationDetailsSheetContent: View {
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 }
-                StationDetailsComponents.ScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
+                StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 if let saleType = station.saleType {
-                    StationDetailsComponents.ListItem(
+                    StationDetailsListItem(
                         icon: "person.fill",
                         iconColor: .purple,
                         title: String(localized: "Sales to the general public")
@@ -178,18 +178,18 @@ struct StationDetailsSheetContent: View {
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 }
-                StationDetailsComponents.PricesItem(station: station)
+                StationDetailsPricesItem(station: station)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsComponents.PriceScale(station: station, alwaysExpanded: showStationSummary)
+                StationDetailsPriceScale(station: station, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsComponents.MapView(station: station, onShowHowToGetThere: {}, showOnlyLookAround: true)
+                StationDetailsMapItem(station: station, onShowHowToGetThere: {}, showOnlyLookAround: true)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 if let update = mapManager.data?.lastUpdated {
                     if let date = formatDate(update) {
-                        StationDetailsComponents.ListItem(
+                        StationDetailsListItem(
                             icon: "arrow.down.circle.fill",
                             iconColor: .brown,
                             title: String(localized: "Latest information")
@@ -234,7 +234,7 @@ struct StationDetailsSheetContent: View {
             .transition(.opacity)
             .sheet(isPresented: $showHistoricPricesSheet) {
                 NavigationStack {
-                    ServiceStationHistoric(station: station, showingInSheet: true)
+                    HistoricPricesView(station: station, showingInSheet: true)
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 Button {
