@@ -8,6 +8,7 @@ class SearchViewModel: ObservableObject {
     @Published var municipalitiesLoading: Bool = true
     
     @Published var municipalitiesSearchText = ""
+    @Published var municipalitiesSearchPresented = false
     @Published var municipalitiesListHasContent = true    // To make transition
     @Published var municipalitiesSorting: Enums.SearchSortingOptions = .groupedProvince
     
