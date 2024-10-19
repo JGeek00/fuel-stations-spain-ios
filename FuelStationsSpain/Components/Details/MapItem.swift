@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import Sentry
 
 fileprivate let delta = 0.003
 
@@ -25,17 +26,19 @@ struct StationDetailsMapItem: View {
     @State private var showLookAround = false // Just for the transition
     @State private var lookAroundScene: MKLookAroundScene?
     
-    func getLookAroundScene() {
+    private func getLookAroundScene() {
         lookAroundScene = nil
-        Task {
-            let request = MKLookAroundSceneRequest(coordinate: .init(latitude: station.latitude!, longitude: station.longitude!))
-            do {
-                lookAroundScene = try await request.scene
-                if lookAroundScene == nil {
-                    print("Look Around Preview not available for the given coordinate.")
+        DispatchQueue.global(qos: .background).async {
+            Task {
+                let request = MKLookAroundSceneRequest(coordinate: .init(latitude: station.latitude!, longitude: station.longitude!))
+                do {
+                    let result = try await request.scene
+                    DispatchQueue.main.async {
+                        lookAroundScene = result
+                    }
+                } catch let error {
+                    SentrySDK.capture(error: error)
                 }
-            } catch (let error) {
-                print(error)
             }
         }
     }
@@ -44,11 +47,16 @@ struct StationDetailsMapItem: View {
         VStack {
             if let signage = station.signage, let latitude = station.latitude, let longitude = station.longitude {
                 if showOnlyLookAround {
-                    LookAroundPreview(initialScene: lookAroundScene)
-                        .onAppear {
-                            getLookAroundScene()
-                        }
-                        .frame(height: 300)
+                    if lookAroundScene != nil {
+                        LookAroundPreview(initialScene: lookAroundScene)
+                            .onAppear {
+                                getLookAroundScene()
+                            }
+                            .frame(height: 300)
+                    }
+                    else {
+                        ContentUnavailableView("Look around not available", systemImage: "binoculars.fill", description: Text("The look around feature is not available on this area."))
+                    }
                 }
                 else {
                     Picker("Map mode", selection: $mapMode) {
@@ -61,11 +69,16 @@ struct StationDetailsMapItem: View {
                     .padding()
                     Group {
                         if showLookAround {
-                            LookAroundPreview(initialScene: lookAroundScene)
-                                .onAppear {
-                                    getLookAroundScene()
-                                }
-                                .transition(.opacity)
+                            if lookAroundScene != nil {
+                                LookAroundPreview(initialScene: lookAroundScene)
+                                    .onAppear {
+                                        getLookAroundScene()
+                                    }
+                                    .transition(.opacity)
+                            }
+                            else {
+                                ContentUnavailableView("Look around not available", systemImage: "binoculars.fill", description: Text("The look around feature is not available on this area."))
+                            }
                         }
                         else {
                             Map(position: $camera, interactionModes: []) {
@@ -102,6 +115,7 @@ struct StationDetailsMapItem: View {
             }
         }
         .onChange(of: station, initial: true) {
+            getLookAroundScene()
             if let latitude = station.latitude, let longitude = station.longitude {
                 camera = MapCameraPosition.region(.init(center: .init(latitude: latitude, longitude: longitude), span: .init(latitudeDelta: delta, longitudeDelta: delta)))
             }

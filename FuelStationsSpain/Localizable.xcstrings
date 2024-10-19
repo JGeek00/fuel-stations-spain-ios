@@ -1087,6 +1087,16 @@
         }
       }
     },
+    "Look around not available" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mirar alrededor no disponible"
+          }
+        }
+      }
+    },
     "Look around view" : {
       "localizations" : {
         "es" : {
@@ -1843,6 +1853,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El proveedor de datos tiene un sistema para prevenir sobrecargas. Mueve el mapa más despacio para cargar los datos. Reinicia la app y prueba de nuevo."
+          }
+        }
+      }
+    },
+    "The look around feature is not available on this area." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La función de mirar alrededor no está disponible en este área."
           }
         }
       }
