@@ -1,6 +1,80 @@
 import SwiftUI
 
-fileprivate struct PriceScaleItem: Sendable {
+func calculatePriceScale(nearbyStations: [FuelStation], station: FuelStation) -> [PriceScaleItem] {
+    @Sendable func calculateAvgPercentage(nearbyStations: [FuelStation], station: FuelStation, fuel: Enums.FuelType) -> PriceScaleItem? {
+        if let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price") {
+            let prices = nearbyStations.map { station in
+                let value: Double? = FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price")
+                return value
+            }.filter() { $0 != nil } as! [Double]
+            let percentage: Double? = {
+                if prices.count <= 1 {
+                    return nil
+                }
+                
+                let maxPrice = prices.max()
+                let minPrice = prices.min()
+                if let maxPrice = maxPrice, let minPrice = minPrice {
+                    let percentage = ((fuelPrice - minPrice) / (maxPrice - minPrice)) * 100
+                    return percentage
+                }
+                return nil
+            }()
+            if let percentage = percentage {
+                return PriceScaleItem(fuel: fuel, avgPercentage: percentage)
+            }
+            return nil
+        }
+        return nil
+    }
+    
+    var items: [PriceScaleItem] = []
+    if let aGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilA) {
+        items.append(aGasoil)
+    }
+    if let bGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilB) {
+        items.append(bGasoil)
+    }
+    if let premiumGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilA) {
+        items.append(premiumGasoil)
+    }
+    if let biodiesel = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .biodiesel) {
+        items.append(biodiesel)
+    }
+    if let gasoline95E5 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E5) {
+        items.append(gasoline95E5)
+    }
+    if let gasoline95E10 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E10) {
+        items.append(gasoline95E10)
+    }
+    if let gasoline95E5Premium = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E5Premium) {
+        items.append(gasoline95E5Premium)
+    }
+    if let gasoline98E5 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline98E5) {
+        items.append(gasoline98E5)
+    }
+    if let gasoline98E10 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline98E10) {
+        items.append(gasoline98E10)
+    }
+    if let bioethanol = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .bioethanol) {
+        items.append(bioethanol)
+    }
+    if let cng = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .cng) {
+        items.append(cng)
+    }
+    if let lng = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .lng) {
+        items.append(lng)
+    }
+    if let lpg = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .lpg) {
+        items.append(lpg)
+    }
+    if let hydrogen = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .hydrogen) {
+        items.append(hydrogen)
+    }
+    return items
+}
+
+struct PriceScaleItem: Sendable {
     let fuel: Enums.FuelType
     let avgPercentage: Double
     
@@ -11,10 +85,12 @@ fileprivate struct PriceScaleItem: Sendable {
 }
 struct StationDetailsPriceScale: View {
     var station: FuelStation
+    var priceScaleItems: [PriceScaleItem]?
     var alwaysExpanded: Bool
     
-    init(station: FuelStation, alwaysExpanded: Bool = false) {
+    init(station: FuelStation, priceScaleItems: [PriceScaleItem]?, alwaysExpanded: Bool = false) {
         self.station = station
+        self.priceScaleItems = priceScaleItems
         self.alwaysExpanded = alwaysExpanded
         if alwaysExpanded {
             _expandedContent = State(wrappedValue: true)
@@ -26,87 +102,6 @@ struct StationDetailsPriceScale: View {
     @State private var expandedContent = false
     @State private var chevronAngle: Double = 0
     @State private var howIsCalculatedSheet = false
-    @State private var priceScaleItems: [PriceScaleItem]? = nil
-    
-    private func calculateScale() {
-        @Sendable func calculateAvgPercentage(nearbyStations: [FuelStation], station: FuelStation, fuel: Enums.FuelType) -> PriceScaleItem? {
-            if let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price") {
-                let prices = nearbyStations.map { station in
-                    let value: Double? = FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price")
-                    return value
-                }.filter() { $0 != nil } as! [Double]
-                let percentage: Double? = {
-                    if prices.count <= 1 {
-                        return nil
-                    }
-                    
-                    let maxPrice = prices.max()
-                    let minPrice = prices.min()
-                    if let maxPrice = maxPrice, let minPrice = minPrice {
-                        let percentage = ((fuelPrice - minPrice) / (maxPrice - minPrice)) * 100
-                        return percentage
-                    }
-                    return nil
-                }()
-                if let percentage = percentage {
-                    return PriceScaleItem(fuel: fuel, avgPercentage: percentage)
-                }
-                return nil
-            }
-            return nil
-        }
-        
-        if let nearbyStations = mapManager.data?.results {
-            DispatchQueue.global(qos: .background).async {
-                var items: [PriceScaleItem] = []
-                if let aGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilA) {
-                    items.append(aGasoil)
-                }
-                if let bGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilB) {
-                    items.append(bGasoil)
-                }
-                if let premiumGasoil = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoilA) {
-                    items.append(premiumGasoil)
-                }
-                if let biodiesel = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .biodiesel) {
-                    items.append(biodiesel)
-                }
-                if let gasoline95E5 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E5) {
-                    items.append(gasoline95E5)
-                }
-                if let gasoline95E10 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E10) {
-                    items.append(gasoline95E10)
-                }
-                if let gasoline95E5Premium = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline95E5Premium) {
-                    items.append(gasoline95E5Premium)
-                }
-                if let gasoline98E5 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline98E5) {
-                    items.append(gasoline98E5)
-                }
-                if let gasoline98E10 = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .gasoline98E10) {
-                    items.append(gasoline98E10)
-                }
-                if let bioethanol = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .bioethanol) {
-                    items.append(bioethanol)
-                }
-                if let cng = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .cng) {
-                    items.append(cng)
-                }
-                if let lng = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .lng) {
-                    items.append(lng)
-                }
-                if let lpg = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .lpg) {
-                    items.append(lpg)
-                }
-                if let hydrogen = calculateAvgPercentage(nearbyStations: nearbyStations, station: station, fuel: .hydrogen) {
-                    items.append(hydrogen)
-                }
-                DispatchQueue.main.async {
-                    priceScaleItems = items
-                }
-            }
-        }
-    }
     
     var body: some View {
         if let nearbyStations = mapManager.data?.results, nearbyStations.count > 1 {
@@ -181,13 +176,6 @@ struct StationDetailsPriceScale: View {
             }
             .sheet(isPresented: $howIsCalculatedSheet) {
                 HowIsCalculatedSheet()
-            }
-            .onAppear {
-                calculateScale()
-            }
-            .onChange(of: station) {
-                priceScaleItems = nil
-                calculateScale()
             }
         }
     }

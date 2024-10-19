@@ -78,6 +78,7 @@ struct StationDetailsSheetContent: View {
     @State private var showHistoricPricesSheet = false
     @State private var showHowToReachSheet = false
     @State private var lookAroundScene: MKLookAroundScene? = nil
+    @State private var pricesScaleItems: [PriceScaleItem]? = nil
     
     var body: some View {
         if let station = mapManager.selectedStation {
@@ -183,7 +184,7 @@ struct StationDetailsSheetContent: View {
                 StationDetailsPricesItem(station: station)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsPriceScale(station: station, alwaysExpanded: showStationSummary)
+                StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
@@ -240,6 +241,14 @@ struct StationDetailsSheetContent: View {
                         let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
                         DispatchQueue.main.async {
                             lookAroundScene = result
+                        }
+                    }
+                }
+                if let nearbyStations = mapManager.data?.results {
+                    DispatchQueue.global(qos: .background).async {
+                        let pricesScale = calculatePriceScale(nearbyStations: nearbyStations, station: station)
+                        DispatchQueue.main.async {
+                            pricesScaleItems = pricesScale
                         }
                     }
                 }
