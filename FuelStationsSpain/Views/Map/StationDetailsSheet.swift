@@ -88,7 +88,7 @@ struct StationDetailsSheetContent: View {
                 return nil
             }()
             
-            VStack(alignment: .leading, spacing: 12) {
+            LazyVStack(alignment: .leading, spacing: 12) {
                 if let address = station.address {
                     let distanceText: String? = {
                         if let distance = distanceToUserLocation {
@@ -101,10 +101,7 @@ struct StationDetailsSheetContent: View {
                         return nil
                     }()
                     
-                    if showStationSummary {
-                        Spacer()
-                            .frame(height: 12)
-                                        
+                    if showStationSummary {                                        
                         StationDetailsComponents.Summary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                             .customBackgroundWithMaterial()
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
@@ -184,7 +181,7 @@ struct StationDetailsSheetContent: View {
                 StationDetailsComponents.PricesItem(station: station)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsComponents.PriceScale(station: station, alwaysExpanded: showStationSummary)
+                StationDetailsComponents.PriceScale(station: station, alwaysExpanded: false) // <- causes bad performance when always expanded
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 StationDetailsComponents.MapView(station: station, onShowHowToGetThere: {}, showOnlyLookAround: true)
