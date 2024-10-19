@@ -59,8 +59,7 @@ struct StationDetailsSheetHeader: View {
                     .clipShape(Circle())
                 }
             }
-            .padding(.top)
-            .padding(.horizontal)
+            .padding()
         }
     }
     
@@ -91,145 +90,146 @@ struct StationDetailsSheetContent: View {
                 return nil
             }()
             
-            LazyVStack(alignment: .leading, spacing: 12) {
-                if let address = station.address {
-                    let distanceText: String? = {
-                        if let distance = distanceToUserLocation {
-                            if distance < 1 {
-                                return String(localized: "\(Int(distance*1000)) m from your current location")
-                            } else {
-                                return String(localized: "\(formattedNumber(value: distance)) Km from your current location")
-                            }
-                        }
-                        return nil
-                    }()
+            VStack(alignment: .leading) {
+                if showStationSummary {
+                    StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                        .customBackgroundWithMaterial()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     
-                    if showStationSummary {                                        
-                        StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                    Divider()
+                        .padding(.vertical)
+                    
+                    Text("Details")
+                        .fontSize(22)
+                        .fontWeight(.semibold)
+                }
+                LazyVStack(alignment: .leading, spacing: 12) {
+                    if let address = station.address {
+                        let distanceText: String? = {
+                            if let distance = distanceToUserLocation {
+                                if distance < 1 {
+                                    return String(localized: "\(Int(distance*1000)) m from your current location")
+                                } else {
+                                    return String(localized: "\(formattedNumber(value: distance)) Km from your current location")
+                                }
+                            }
+                            return nil
+                        }()
+                        
+                        Button {
+                            UIPasteboard.general.string = address.capitalized
+                            toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
+                        } label: {
+                            StationDetailsListItem(
+                                icon: "mappin",
+                                iconColor: .red,
+                                title: address.capitalized,
+                                subtitle: distanceText
+                            )
                             .customBackgroundWithMaterial()
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                        
-                        Divider()
-                            .padding(.vertical)
-                        
-                        Text("Details")
-                            .fontSize(22)
-                            .fontWeight(.semibold)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    
-                    Button {
-                        UIPasteboard.general.string = address.capitalized
-                        toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
-                    } label: {
+                    if let locality = station.locality {
                         StationDetailsListItem(
-                            icon: "mappin",
-                            iconColor: .red,
-                            title: address.capitalized,
-                            subtitle: distanceText
+                            icon: "building.2.fill",
+                            iconColor: .green,
+                            title: String(localized: "Locality"),
+                            subtitle: String(locality.capitalized)
                         )
                         .customBackgroundWithMaterial()
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     }
-                    .buttonStyle(.plain)
-                }
-                if let locality = station.locality {
-                    StationDetailsListItem(
-                        icon: "building.2.fill",
-                        iconColor: .green,
-                        title: String(localized: "Locality"),
-                        subtitle: String(locality.capitalized)
-                    )
-                    .customBackgroundWithMaterial()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                }
-                StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
-                    .customBackgroundWithMaterial()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                if let saleType = station.saleType {
-                    StationDetailsListItem(
-                        icon: "person.fill",
-                        iconColor: .purple,
-                        title: String(localized: "Sales to the general public")
-                    ) {
-                        switch saleType {
-                        case .p:
-                            AnyView(
-                                HStack {
-                                    Image(systemName: "checkmark.circle.fill")
-                                    Spacer()
-                                        .frame(width: 4)
-                                    Text("Yes")
-                                }
-                                .foregroundStyle(Color.green)
-                                .fontSize(14)
-                                .fontWeight(.medium)
-                            )
-                        case .r:
-                            AnyView(
-                                HStack {
-                                    Image(systemName: "xmark.circle.fill")
-                                    Spacer()
-                                        .frame(width: 4)
-                                    Text("No")
-                                }
-                                .foregroundStyle(Color.red)
-                                .fontSize(14)
-                                .fontWeight(.medium)
-                            )
-                        }
-                    }
-                    .customBackgroundWithMaterial()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                }
-                StationDetailsPricesItem(station: station)
-                    .customBackgroundWithMaterial()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: showStationSummary)
-                    .customBackgroundWithMaterial()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
-                    .customBackgroundWithMaterial()
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                if let update = mapManager.data?.lastUpdated {
-                    if let date = formatDate(update) {
+                    StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
+                        .customBackgroundWithMaterial()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    if let saleType = station.saleType {
                         StationDetailsListItem(
-                            icon: "arrow.down.circle.fill",
-                            iconColor: .brown,
-                            title: String(localized: "Latest information")
+                            icon: "person.fill",
+                            iconColor: .purple,
+                            title: String(localized: "Sales to the general public")
                         ) {
-                            AnyView(
-                                Text(date, format: .dateTime.weekday().day().hour().minute())
+                            switch saleType {
+                            case .p:
+                                AnyView(
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill")
+                                        Spacer()
+                                            .frame(width: 4)
+                                        Text("Yes")
+                                    }
+                                    .foregroundStyle(Color.green)
                                     .fontSize(14)
-                                    .foregroundStyle(Color.gray)
                                     .fontWeight(.medium)
-                            )
+                                )
+                            case .r:
+                                AnyView(
+                                    HStack {
+                                        Image(systemName: "xmark.circle.fill")
+                                        Spacer()
+                                            .frame(width: 4)
+                                        Text("No")
+                                    }
+                                    .foregroundStyle(Color.red)
+                                    .fontSize(14)
+                                    .fontWeight(.medium)
+                                )
+                            }
                         }
                         .customBackgroundWithMaterial()
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     }
-                }
-                HStack {
-                    Spacer()
-                    Button {
-                        showHowToReachSheet = true
-                    } label: {
-                        Label("How to get there", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
+                    StationDetailsPricesItem(station: station)
+                        .customBackgroundWithMaterial()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: showStationSummary)
+                        .customBackgroundWithMaterial()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
+                        .customBackgroundWithMaterial()
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                    if let update = mapManager.data?.lastUpdated {
+                        if let date = formatDate(update) {
+                            StationDetailsListItem(
+                                icon: "arrow.down.circle.fill",
+                                iconColor: .brown,
+                                title: String(localized: "Latest information")
+                            ) {
+                                AnyView(
+                                    Text(date, format: .dateTime.weekday().day().hour().minute())
+                                        .fontSize(14)
+                                        .foregroundStyle(Color.gray)
+                                        .fontWeight(.medium)
+                                )
+                            }
+                            .customBackgroundWithMaterial()
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        }
                     }
-                    .buttonStyle(.borderedProminent)
-                    .clipShape(.rect(cornerRadius: 30))
-                    Spacer()
-                    Button {
-                        showHistoricPricesSheet = true
-                    } label: {
-                        Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
-                            .lineLimit(1)
-                            .truncationMode(.tail)
+                    HStack {
+                        Spacer()
+                        Button {
+                            showHowToReachSheet = true
+                        } label: {
+                            Label("How to get there", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .clipShape(.rect(cornerRadius: 30))
+                        Spacer()
+                        Button {
+                            showHistoricPricesSheet = true
+                        } label: {
+                            Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                        Spacer()
                     }
-                    .buttonStyle(.borderedProminent)
-                    .clipShape(RoundedRectangle(cornerRadius: 30))
-                    Spacer()
+                    .padding(.top, 12)
                 }
-                .padding(.top, 12)
             }
             .padding(.bottom)
             .padding(.horizontal)
