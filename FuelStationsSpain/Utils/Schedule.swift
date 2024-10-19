@@ -3,10 +3,12 @@ import Foundation
 class OpeningSchedule {
     let schedule: [Date]
     let isCurrentlyOpen: Bool
+    let parsedSchedule: [[Date?]?]
     
-    init(schedule: [Date], isCurrentlyOpen: Bool) {
+    init(schedule: [Date], isCurrentlyOpen: Bool, parsedSchedule: [[Date?]?]) {
         self.schedule = schedule
         self.isCurrentlyOpen = isCurrentlyOpen
+        self.parsedSchedule = parsedSchedule
     }
 }
 
@@ -107,7 +109,7 @@ func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
                 
                 // If opening is 00:00 and closing is 23:59 that's converted to open 24h
                 if opening.hour == 00 && opening.minute == 00 && closing.hour == 23 && closing.minute == 59 {
-                    return OpeningSchedule(schedule: [], isCurrentlyOpen: true)
+                    return OpeningSchedule(schedule: [], isCurrentlyOpen: true, parsedSchedule: schedule)
                 }
                 
                 // Take the current date and apply the opening hour and minute
@@ -125,10 +127,10 @@ func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
                     if openingDate <= currentDate && currentDate <= closingDate {
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "HH:mm"
-                        return OpeningSchedule(schedule: [openingDate, closingDate], isCurrentlyOpen: true)
+                        return OpeningSchedule(schedule: [openingDate, closingDate], isCurrentlyOpen: true, parsedSchedule: schedule)
                     }
                     else {
-                        return OpeningSchedule(schedule: [openingDate, closingDate], isCurrentlyOpen: false)
+                        return OpeningSchedule(schedule: [openingDate, closingDate], isCurrentlyOpen: false, parsedSchedule: schedule)
                     }
                 }
                 else {
@@ -172,10 +174,10 @@ func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
                     if (openingDate1 <= currentDate && currentDate <= closingDate1) || (openingDate2 <= currentDate && currentDate <= closingDate2) {
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "HH:mm"
-                        return OpeningSchedule(schedule: [openingDate1, closingDate1, openingDate2, closingDate2], isCurrentlyOpen: true)
+                        return OpeningSchedule(schedule: [openingDate1, closingDate1, openingDate2, closingDate2], isCurrentlyOpen: true, parsedSchedule: schedule)
                     }
                     else {
-                        return OpeningSchedule(schedule: [openingDate1, closingDate1, openingDate2, closingDate2], isCurrentlyOpen: false)
+                        return OpeningSchedule(schedule: [openingDate1, closingDate1, openingDate2, closingDate2], isCurrentlyOpen: false, parsedSchedule: schedule)
                     }
                 }
                 else {
@@ -191,6 +193,6 @@ func getStationSchedule(_ openingHours: String) -> OpeningSchedule? {
         }
     }
     else {
-        return OpeningSchedule(schedule: [], isCurrentlyOpen: false)
+        return OpeningSchedule(schedule: [], isCurrentlyOpen: false, parsedSchedule: schedule)
     }
 }

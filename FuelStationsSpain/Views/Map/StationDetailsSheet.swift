@@ -79,11 +79,19 @@ struct StationDetailsSheetContent: View {
     
     var body: some View {
         if let station = mapManager.selectedStation {
+            let formattedSchedule = getStationSchedule(station.openingHours!)
+            let distanceToUserLocation: Double? = {
+                if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
+                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                    return distance
+                }
+                return nil
+            }()
+            
             VStack(alignment: .leading, spacing: 12) {
                 if let address = station.address {
                     let distanceText: String? = {
-                        if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                            let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                        if let distance = distanceToUserLocation {
                             if distance < 1 {
                                 return String(localized: "\(Int(distance*1000)) m from your current location")
                             } else {
@@ -97,7 +105,7 @@ struct StationDetailsSheetContent: View {
                         Spacer()
                             .frame(height: 12)
                                         
-                        StationDetailsComponents.Summary(station: station)
+                        StationDetailsComponents.Summary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                             .customBackgroundWithMaterial()
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         
@@ -134,7 +142,7 @@ struct StationDetailsSheetContent: View {
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 }
-                StationDetailsComponents.ScheduleItem(station: station, alwaysExpanded: showStationSummary)
+                StationDetailsComponents.ScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                     .customBackgroundWithMaterial()
                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 if let saleType = station.saleType {

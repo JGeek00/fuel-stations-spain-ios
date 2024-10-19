@@ -4,9 +4,13 @@ import MapKit
 class StationDetailsComponents {
     struct Summary: View {
         var station: FuelStation
+        var schedule: OpeningSchedule?
+        var distanceToLocation: Double?
         
-        init(station: FuelStation) {
+        init(station: FuelStation, schedule: OpeningSchedule?, distanceToLocation: Double?) {
             self.station = station
+            self.schedule = schedule
+            self.distanceToLocation = distanceToLocation
         }
         
         @EnvironmentObject private var locationManager: LocationManager
@@ -33,7 +37,7 @@ class StationDetailsComponents {
                         .padding(.horizontal, 12)
                     Spacer()
                 }
-                if let formattedSchedule = getStationSchedule(station.openingHours!) {
+                if let formattedSchedule = schedule {
                     VStack(alignment: .center) {
                         Text("Schedule")
                             .foregroundStyle(Color.gray)
@@ -49,31 +53,25 @@ class StationDetailsComponents {
                         }
                     }
                 }
-                if locationManager.lastLocation != nil {
-                    let distanceText: String? = {
-                        if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                            let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
-                            if distance < 1 {
-                                return String("\(Int(distance*1000)) m")
-                            } else {
-                                return String("\(formattedNumber(value: distance)) Km")
-                            }
+                if let distance = distanceToLocation {
+                    let distanceText: String = {
+                        if distance < 1 {
+                            return String("\(Int(distance*1000)) m")
+                        } else {
+                            return String("\(formattedNumber(value: distance)) Km")
                         }
-                        return nil
                     }()
-                    if let distanceText {
+                    Spacer()
+                    Divider()
+                        .frame(width: 1, height: 30)
+                        .padding(.horizontal, 12)
+                    Spacer()
+                    VStack(alignment: .center) {
+                        Text("Distance")
+                            .foregroundStyle(Color.gray)
                         Spacer()
-                        Divider()
-                            .frame(width: 1, height: 30)
-                            .padding(.horizontal, 12)
-                        Spacer()
-                        VStack(alignment: .center) {
-                            Text("Distance")
-                                .foregroundStyle(Color.gray)
-                            Spacer()
-                                .frame(height: 4)
-                            Text(verbatim: distanceText)
-                        }
+                            .frame(height: 4)
+                        Text(verbatim: distanceText)
                     }
                 }
                 Spacer()
@@ -121,10 +119,12 @@ class StationDetailsComponents {
     
     struct ScheduleItem: View {
         var station: FuelStation
+        var schedule: OpeningSchedule?
         var alwaysExpanded: Bool
         
-        init(station: FuelStation, alwaysExpanded: Bool = false) {
+        init(station: FuelStation, schedule: OpeningSchedule?, alwaysExpanded: Bool = false) {
             self.station = station
+            self.schedule = schedule
             self.alwaysExpanded = alwaysExpanded
             if alwaysExpanded == true {
                 _showFullSchedule = State(wrappedValue: true)
@@ -165,9 +165,6 @@ class StationDetailsComponents {
         }
         
         @ViewBuilder func Content(openingHours: String) -> some View {
-            let schedule = parseSchedule(schedule: openingHours)
-            let formattedSchedule = getStationSchedule(openingHours)
-            
             let dateFormatter = {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "HH:mm"
@@ -190,7 +187,7 @@ class StationDetailsComponents {
                         Spacer()
                             .frame(height: 8)
                         Group {
-                            if let formattedSchedule = formattedSchedule {
+                            if let formattedSchedule = schedule {
                                 if formattedSchedule.schedule.isEmpty && formattedSchedule.isCurrentlyOpen == true {
                                     Text("Open 24 hours")
                                         .foregroundStyle(Color.green)
@@ -233,7 +230,7 @@ class StationDetailsComponents {
                             .animation(.default, value: chevronAngle)
                     }
                 }
-                if showFullSchedule == true {
+                if let schedule = schedule?.parsedSchedule, showFullSchedule == true {
                     Spacer()
                         .frame(height: 12)
                     HStack {
@@ -833,8 +830,14 @@ class StationDetailsComponents {
 #Preview("Summary") {
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     
-    StationDetailsComponents.Summary(station: station)
-        .environmentObject(LocationManager(mockData: true))
+    let locationManager = LocationManager(mockData: true)
+    
+    let formattedSchedule = getStationSchedule(station.openingHours!)
+    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+
+    
+    StationDetailsComponents.Summary(station: station, schedule: formattedSchedule, distanceToLocation: distance)
+        .environmentObject(locationManager)
 }
 
 #Preview("FavoriteButton") {    
@@ -847,8 +850,10 @@ class StationDetailsComponents {
 #Preview("ScheduleItem") {
     let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil)
     
+    let formattedSchedule = getStationSchedule(station.openingHours!)
+    
     ScrollView {
-        StationDetailsComponents.ScheduleItem(station: station)
+        StationDetailsComponents.ScheduleItem(station: station, schedule: formattedSchedule)
             .environmentObject(LocationManager(mockData: true))
     }
 }

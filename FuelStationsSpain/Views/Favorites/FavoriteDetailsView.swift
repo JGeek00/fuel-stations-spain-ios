@@ -23,6 +23,16 @@ struct FavoriteDetailsView: View {
     
     var body: some View {
         let alias = favoritesProvider.favorites.first(where: { $0.id == station.id! })?.alias
+        
+        let formattedSchedule = getStationSchedule(station.openingHours!)
+        let distanceToUserLocation: Double? = {
+            if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
+                let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                return distance
+            }
+            return nil
+        }()
+        
         NavigationStack(path: $navigationPath) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 12) {
@@ -30,7 +40,7 @@ struct FavoriteDetailsView: View {
                         Text("Summary")
                             .fontSize(22)
                             .fontWeight(.bold)
-                        StationDetailsComponents.Summary(station: station)
+                        StationDetailsComponents.Summary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                             .customBackgroundWithMaterial()
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         
@@ -45,7 +55,7 @@ struct FavoriteDetailsView: View {
                     Alias(alias: alias)
                     Address()
                     Locality()
-                    StationDetailsComponents.ScheduleItem(station: station, alwaysExpanded: showStationSummary)
+                    StationDetailsComponents.ScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                         .background(Color.listItemBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     SaleType()

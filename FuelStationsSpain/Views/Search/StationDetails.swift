@@ -16,13 +16,22 @@ struct SearchStationDetails: View {
         NavigationStack(path: $navigationPath) {
             Group {
                 if let station = searchViewModel.selectedStation {
+                    let formattedSchedule = getStationSchedule(station.openingHours!)
+                    let distanceToUserLocation: Double? = {
+                        if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
+                            let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                            return distance
+                        }
+                        return nil
+                    }()
+                    
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
                             if showStationSummary {
                                 Text("Summary")
                                     .fontSize(22)
                                     .fontWeight(.bold)
-                                StationDetailsComponents.Summary(station: station)
+                                StationDetailsComponents.Summary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                                     .customBackgroundWithMaterial()
                                     .clipShape(RoundedRectangle(cornerRadius: 8.0))
                                 
@@ -34,9 +43,9 @@ struct SearchStationDetails: View {
                                     .fontSize(22)
                                     .fontWeight(.bold)
                             }
-                            Address(station: station)
+                            Address(station: station, distance: distanceToUserLocation)
                             Locality(station: station)
-                            StationDetailsComponents.ScheduleItem(station: station, alwaysExpanded: showStationSummary)
+                            StationDetailsComponents.ScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                                 .background(Color.listItemBackground)
                                 .clipShape(RoundedRectangle(cornerRadius: 8.0))
                             SaleType(station: station)
@@ -81,11 +90,10 @@ struct SearchStationDetails: View {
         }
     }
     
-    @ViewBuilder private func Address(station: FuelStation) -> some View {
+    @ViewBuilder private func Address(station: FuelStation, distance: Double?) -> some View {
         if let address = station.address {
             let distanceText: String? = {
-                if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                if let distance {
                     if distance < 1 {
                         return String(localized: "\(Int(distance*1000)) m from your current location")
                     } else {
