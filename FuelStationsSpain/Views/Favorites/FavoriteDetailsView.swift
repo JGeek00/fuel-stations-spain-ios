@@ -115,7 +115,7 @@ struct FavoriteDetailsView: View {
             .navigationDestination(for: NavigateHowToReachStation.self) { value in
                 HowToReachStation(station: value.station)
             }
-            .onAppear {
+            .onChange(of: station, initial: true) {
                 DispatchQueue.global(qos: .background).async {
                     Task {
                         let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)

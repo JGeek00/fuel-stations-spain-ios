@@ -81,7 +81,7 @@ struct SearchStationDetails: View {
                     .toolbar {
                         StationDetailsFavoriteButton(station: station)
                     }
-                    .onAppear {
+                    .onChange(of: station, initial: true) {
                         DispatchQueue.global(qos: .background).async {
                             Task {
                                 let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
