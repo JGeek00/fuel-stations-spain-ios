@@ -12,6 +12,7 @@
 		0D5F59742CA4CF5500342D3F /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5F59732CA4CF5500342D3F /* SentrySwiftUI */; };
 		0D5F5B162CA62D9A00342D3F /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5F5B152CA62D9A00342D3F /* AlertToast */; };
 		0D7E9C2F2CAC870000CAC020 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0D7E9C2E2CAC870000CAC020 /* .gitignore */; };
+		0DB14FB02CC47F8F00634B8A /* LICENSE.md in Resources */ = {isa = PBXBuildFile; fileRef = 0DB14FAF2CC47F8800634B8A /* LICENSE.md */; };
 		0DB7144B2CBC8A65008A0BAC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144A2CBC8A65008A0BAC /* WidgetKit.framework */; };
 		0DB7144D2CBC8A65008A0BAC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144C2CBC8A65008A0BAC /* SwiftUI.framework */; };
 		0DB7145A2CBC8A66008A0BAC /* PriceWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0DB714482CBC8A65008A0BAC /* PriceWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -56,6 +57,7 @@
 		0D5F58712CA42B8300342D3F /* FuelStationsSpain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuelStationsSpain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D5F58D82CA4C6BD00342D3F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0D7E9C2E2CAC870000CAC020 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		0DB14FAF2CC47F8800634B8A /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		0DB714482CBC8A65008A0BAC /* PriceWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PriceWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DB7144A2CBC8A65008A0BAC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		0DB7144C2CBC8A65008A0BAC /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -194,6 +196,7 @@
 				0DB7146C2CBC8DEE008A0BAC /* PriceWidgetExtension.entitlements */,
 				0DB71C1B2CC031F2008A0BAC /* PriceHistoryWidgetExtension.entitlements */,
 				0D5F58D82CA4C6BD00342D3F /* README.md */,
+				0DB14FAF2CC47F8800634B8A /* LICENSE.md */,
 				0D7E9C2E2CAC870000CAC020 /* .gitignore */,
 			);
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DB14FB02CC47F8F00634B8A /* LICENSE.md in Resources */,
 				0D7E9C2F2CAC870000CAC020 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
