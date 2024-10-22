@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate struct ListSection: Hashable {
+struct SearchListSection: Hashable {
     let sectionId: String
     let sectionName: String
     let municipalities: [Municipality]
@@ -23,60 +23,49 @@ struct SearchMunicipalitiesList: View {
                     .transition(.opacity)
             }
             else {
-                if let data = searchViewModel.municipalitiesData {
-                    let filtered = searchViewModel.municipalitiesSearchText != "" ? data.filter() { $0.Municipio!.lowercased().contains(searchViewModel.municipalitiesSearchText.lowercased()) } : data
-                    Group {
-                        if searchViewModel.municipalitiesListHasContent == false {
-                            ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
-                                .transition(.opacity)
+                if searchViewModel.municipalitiesData != nil {
+                    DataList()
+                        .searchable(text: $searchViewModel.municipalitiesSearchText, isPresented: $searchViewModel.municipalitiesSearchPresented, prompt: "Search municipality")
+                        .onSubmit(of: .search) {
+                            searchViewModel.filterMunicipalities()
                         }
-                        else {
-                            DataList(data: filtered)
-                        }
-                    }
-                    .onChange(of: filtered) {
-                        withAnimation(.default) {
-                            if filtered.isEmpty {
-                                searchViewModel.municipalitiesListHasContent = false
+                        .onChange(of: searchViewModel.municipalitiesSearchPresented, { oldValue, newValue in
+                            if oldValue == true && newValue == false {
+                                searchViewModel.filterMunicipalities(clearSearch: true)
                             }
-                            else {
-                                searchViewModel.municipalitiesListHasContent = true
-                            }
-                        }
-                    }
-                    .searchable(text: $searchViewModel.municipalitiesSearchText, isPresented: $searchViewModel.municipalitiesSearchPresented, prompt: "Search municipality")
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Menu {
-                                Button {
-                                    withAnimation(.default) {
-                                        searchViewModel.municipalitiesSorting = .groupedProvince
+                        })
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Menu {
+                                    Button {
+                                        withAnimation(.default) {
+                                            searchViewModel.municipalitiesSorting = .groupedProvince
+                                        }
+                                    } label: {
+                                        if searchViewModel.municipalitiesSorting == .groupedProvince {
+                                            Label("Grouped by province", systemImage: "checkmark")
+                                        }
+                                        else {
+                                            Text("Grouped by province")
+                                        }
+                                    }
+                                    Button {
+                                        withAnimation(.default) {
+                                            searchViewModel.municipalitiesSorting = .alphabetical
+                                        }
+                                    } label: {
+                                        if searchViewModel.municipalitiesSorting == .alphabetical {
+                                            Label("Alphabetically by municipality", systemImage: "checkmark")
+                                        }
+                                        else {
+                                            Text("Alphabetically by municipality")
+                                        }
                                     }
                                 } label: {
-                                    if searchViewModel.municipalitiesSorting == .groupedProvince {
-                                        Label("Grouped by province", systemImage: "checkmark")
-                                    }
-                                    else {
-                                        Text("Grouped by province")
-                                    }
+                                    Image(systemName: "arrow.up.arrow.down")
                                 }
-                                Button {
-                                    withAnimation(.default) {
-                                        searchViewModel.municipalitiesSorting = .alphabetical
-                                    }
-                                } label: {
-                                    if searchViewModel.municipalitiesSorting == .alphabetical {
-                                        Label("Alphabetically by municipality", systemImage: "checkmark")
-                                    }
-                                    else {
-                                        Text("Alphabetically by municipality")
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: "arrow.up.arrow.down")
                             }
                         }
-                    }
                 }
                 else {
                     ContentUnavailableView("Cannot load municipalities", systemImage: "exclamationmark.circle.fill", description: Text("An error occured when loading the municipalities. Try again later."))
@@ -96,122 +85,70 @@ struct SearchMunicipalitiesList: View {
     }
     
     @ViewBuilder
-    private func DataList(data: [Municipality]) -> some View {        
-        switch searchViewModel.municipalitiesSorting {
-        case .groupedProvince:
-            let grouped: [ListSection] = {
-                var grouped = [String: [Municipality]]()
-                   
-                for municipality in data {
-                    if grouped[municipality.IDProvincia!] != nil {
-                        grouped[municipality.IDProvincia!]?.append(municipality)
-                    } else {
-                        grouped[municipality.IDProvincia!] = [municipality]
-                    }
+    private func DataList() -> some View {
+        if let filtered = searchViewModel.filteredMunicipalitiesData {
+            if !filtered.isEmpty {
+                List(filtered, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
+                    Text(item.Municipio!)
                 }
-                   
-                var sections: [ListSection] = []
-                   
-                for (provinceId, munList) in grouped {
-                    let provinceName = munList.first?.Provincia! ?? ""
-                    
-                    let provinceData = ListSection(
-                        sectionId: provinceId,
-                        sectionName: provinceName,
-                        municipalities: munList
-                    )
-                    
-                    sections.append(provinceData)
-                }
-                
-                return sections.sorted { a, b in
-                    a.sectionName < b.sectionName
-                }
-            }()
-            
-            List(grouped, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
-                Section(item.sectionName) {
-                    ForEach(item.municipalities, id: \.self) { item in
-                        Text(item.Municipio!)
-                    }
-                }
-            }
-            .animation(.default, value: data)
-            .transition(.opacity)
-        case .alphabetical:
-            let grouped: [ListSection] = {
-                func removeAccents(from text: String) -> String {
-                    return text.folding(options: .diacriticInsensitive, locale: .current)
-                            .replacingOccurrences(of: "[^a-zA-Z0-9]", with: "", options: .regularExpression)
-                }
-                
-                var grouped = [String: [Municipality]]()
-                   
-                for municipality in data {
-                    if let mun = municipality.Municipio?.first {
-                        let noAccent = removeAccents(from: String(mun))
-                        if grouped[noAccent] != nil {
-                            grouped[noAccent]?.append(municipality)
-                        } else {
-                            grouped[noAccent] = [municipality]
-                        }
-                    }
-                }
-                   
-                var sections: [ListSection] = []
-                   
-                for (id, munList) in grouped {
-                    let provinceData = ListSection(
-                        sectionId: id,
-                        sectionName: id,
-                        municipalities: munList
-                    )
-                    
-                    sections.append(provinceData)
-                }
-                
-                return sections.sorted { a, b in
-                    a.sectionName < b.sectionName
-                }
-            }()
-            
-            if showSectionIndexList {
-                ScrollViewReader { proxy in
-                    List(grouped, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
-                        // Simulates a section header. Not using Section because it causes "List failed to visit cell content, returning an empty cell" error
-                        Text(section.sectionName.uppercased())
-                            .listRowBackground(Color.listBackground)
-                            .listRowSeparator(.hidden)
-                            .fontSize(14)
-                            .foregroundStyle(Color.gray)
-                            .padding(.top, section == grouped.first ? 12 : 24)
-                            .disabled(true)
-                        ForEach(section.municipalities, id: \.self) { item in
-                            Text(item.Municipio!)
-                                .listRowSeparator(item == section.municipalities.last ? .hidden : .visible)
-                        }
-                        .id(section.sectionId)
-                    }
-                    .overlay(content: {
-                        if !searchViewModel.municipalitiesSearchPresented {
-                            SectionIndexTitles(proxy: proxy, titles: grouped.map() { $0.sectionName })
-                                .transition(.opacity)
-                        }
-                    })
-                    .animation(.default, value: data)
-                    .transition(.opacity)
-                }
+                .transition(.opacity)
             }
             else {
-                List(grouped, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
-                    Section(section.sectionName.uppercased()) {
-                        ForEach(section.municipalities, id: \.self) { item in
+                ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
+                    .transition(.opacity)
+            }
+        }
+        else {
+            switch searchViewModel.municipalitiesSorting {
+            case .groupedProvince:
+                List(searchViewModel.municipalitiesDataByProvince!, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
+                    Section(item.sectionName) {
+                        ForEach(item.municipalities, id: \.self) { item in
                             Text(item.Municipio!)
                         }
                     }
                 }
-                .animation(.default, value: data)
+                .animation(.default, value: searchViewModel.municipalitiesDataByProvince!)
                 .transition(.opacity)
+            case .alphabetical:
+                if showSectionIndexList {
+                    ScrollViewReader { proxy in
+                        List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
+                            // Simulates a section header. Not using Section because it causes "List failed to visit cell content, returning an empty cell" error
+                            Text(section.sectionName.uppercased())
+                                .listRowBackground(Color.listBackground)
+                                .listRowSeparator(.hidden)
+                                .fontSize(14)
+                                .foregroundStyle(Color.gray)
+                                .padding(.top, section == searchViewModel.municipalitiesDataByInitial!.first ? 12 : 24)
+                                .disabled(true)
+                            ForEach(section.municipalities, id: \.self) { item in
+                                Text(item.Municipio!)
+                                    .listRowSeparator(item == section.municipalities.last ? .hidden : .visible)
+                            }
+                            .id(section.sectionId)
+                        }
+                        .overlay(content: {
+                            if !searchViewModel.municipalitiesSearchPresented {
+                                SectionIndexTitles(proxy: proxy, titles: searchViewModel.municipalitiesDataByInitial!.map() { $0.sectionName })
+                                    .transition(.opacity)
+                            }
+                        })
+                        .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
+                        .transition(.opacity)
+                    }
+                }
+                else {
+                    List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
+                        Section(section.sectionName.uppercased()) {
+                            ForEach(section.municipalities, id: \.self) { item in
+                                Text(item.Municipio!)
+                            }
+                        }
+                    }
+                    .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
+                    .transition(.opacity)
+                }
             }
         }
     }
