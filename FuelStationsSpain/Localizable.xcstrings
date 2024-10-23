@@ -1937,6 +1937,16 @@
         }
       }
     },
+    "There may be a small difference between the price shown here and the actual price, because of the time that elapses between a station changing the price and that price being updated on the server." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede existir una pequeña diferencia entre el precio mostrado aquí y el precio real, por el tiempo que pasa entre que una estación cambia el precio hasta que ese precio se actualiza en el servidor."
+          }
+        }
+      }
+    },
     "This application receives the data from a public API of the Spanish government." : {
       "localizations" : {
         "es" : {

@@ -38,6 +38,12 @@ struct StationDetailsPricesItem: View {
                     Product(name: String(localized: "Liquefied petroleum gases"), value: station.lpgPrice)
                     Product(name: String(localized: "Hydrogen"), value: station.hydrogenPrice)
                 }
+                Spacer()
+                    .frame(height: 8)
+                Text("There may be a small difference between the price shown here and the actual price, because of the time that elapses between a station changing the price and that price being updated on the server.")
+                    .fontSize(12)
+                    .foregroundStyle(Color.gray)
+                    .fontWeight(.semibold)
             }
             Spacer()
         }
