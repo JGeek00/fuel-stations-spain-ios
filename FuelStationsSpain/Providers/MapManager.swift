@@ -134,4 +134,14 @@ class MapManager: ObservableObject {
         
         self.isOpeningOrClosingSheet = false
     }
+    
+    func showStationOnMap(station: FuelStation) async {
+        await fetchData(latitude: station.latitude!, longitude: station.longitude!)
+        withAnimation(.default) {
+            self.centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
+        }
+        self.selectedStationAnimation = station
+        self.selectedStation = station
+        self.showStationDetailsSheet = true
+    }
 }

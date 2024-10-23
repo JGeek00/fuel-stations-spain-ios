@@ -39,6 +39,7 @@ struct StationDetailsMapItem: View {
     @State private var camera = MapCameraPosition.region(.init(center: Config.defaultCoordinates, span: .init(latitudeDelta: delta, longitudeDelta: delta)))
     @State private var mapMode = Enums.LocationPreviewMode.map
     @State private var showLookAround = false // Just for the transition
+    @State private var loadingShowOnMap = false
     
     var body: some View {
         VStack {
@@ -77,9 +78,26 @@ struct StationDetailsMapItem: View {
                     Spacer()
                         .frame(height: 4)
                     HStack {
-                        Button("Show in map") {
-                            mapManager.selectStation(station: station, centerLocation: true)
-                            tabViewManager.selectedTab = .map
+                        Button {
+                            Task {
+                                withAnimation(.easeOut(duration: 0.1)) {
+                                    loadingShowOnMap = true
+                                }
+                                await mapManager.showStationOnMap(station: station)
+                                withAnimation(.easeOut(duration: 0.1)) {
+                                    loadingShowOnMap = false
+                                }
+                                tabViewManager.selectedTab = .map
+                            }
+                        } label: {
+                            if loadingShowOnMap == true {
+                                ProgressView()
+                                    .transition(.opacity)
+                            }
+                            else {
+                                Text("Show on map")
+                                    .transition(.opacity)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         .disabled(runningOnPreview())

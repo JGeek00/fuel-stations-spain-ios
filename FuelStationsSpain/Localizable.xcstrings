@@ -1687,22 +1687,22 @@
         }
       }
     },
-    "Show in map" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ver en el mapa"
-          }
-        }
-      }
-    },
     "Show normally" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mostrar normalmente"
+          }
+        }
+      }
+    },
+    "Show on map" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar en el mapa"
           }
         }
       }
