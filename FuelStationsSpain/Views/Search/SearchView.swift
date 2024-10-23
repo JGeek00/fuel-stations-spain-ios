@@ -12,17 +12,37 @@ struct SearchView: View {
     @State private var columnVisibility = NavigationSplitViewVisibility.all
         
     var body: some View {
-        NavigationSplitView(columnVisibility: $columnVisibility) {
-            SearchMunicipalitiesList()
-        } content: {
-            SearchStationsList()
-        } detail: {
-            SearchStationDetails()
+        if horizontalSizeClass == .regular {
+            NavigationSplitView(columnVisibility: $columnVisibility) {
+                SearchMunicipalitiesList(isSplitView: true)
+            } content: {
+                SearchStationsList(isSplitView: true)
+            } detail: {
+                SearchStationDetails(isSplitView: true)
+            }
+            .navigationSplitViewStyle(.balanced)
+            .onAppear {
+                searchViewModel.location = locationManager.lastLocation
+                searchViewModel.stationsSelectedSorting = defaultListSorting
+            }
         }
-        .navigationSplitViewStyle(.balanced)
-        .onAppear {
-            searchViewModel.location = locationManager.lastLocation
-            searchViewModel.stationsSelectedSorting = defaultListSorting
+        else {
+            NavigationStack(path: $searchViewModel.navigationPath) {
+                SearchMunicipalitiesList(isSplitView: false)
+                    .navigationDestination(for: Municipality.self) { item in
+                        SearchStationsList(isSplitView: false)
+                    }
+                    .navigationDestination(for: FuelStation.self) { _ in
+                        SearchStationDetails(isSplitView: false)
+                    }
+                    .navigationDestination(for: NavigateHowToReachStation.self) { value in
+                        HowToReachStation(station: value.station)
+                    }
+            }
+            .onAppear {
+                searchViewModel.location = locationManager.lastLocation
+                searchViewModel.stationsSelectedSorting = defaultListSorting
+            }
         }
     }
 }

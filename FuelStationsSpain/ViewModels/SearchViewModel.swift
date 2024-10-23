@@ -3,6 +3,8 @@ import SwiftUI
 
 @MainActor
 class SearchViewModel: ObservableObject {
+    @Published var navigationPath = NavigationPath()
+    
     @Published var municipalitiesData: [Municipality]? = nil
     @Published var municipalitiesDataByProvince: [SearchListSection]? = nil
     @Published var municipalitiesDataByInitial: [SearchListSection]? = nil

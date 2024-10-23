@@ -2,6 +2,13 @@ import SwiftUI
 import CoreLocation
 
 struct SearchStationsList: View {
+    var isSplitView: Bool
+    var selectedMunicipality: Municipality?
+    
+    init(isSplitView: Bool, selectedMunicipality: Municipality? = nil) {
+        self.isSplitView = isSplitView
+        self.selectedMunicipality = selectedMunicipality
+    }
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -9,7 +16,7 @@ struct SearchStationsList: View {
     @EnvironmentObject private var searchViewModel: SearchViewModel
         
     var body: some View {        
-        NavigationStack {
+        Group {
             if let selectedMunicipality = searchViewModel.selectedMunicipality {
                 Group {
                     if searchViewModel.stationsLoading == true {
@@ -47,9 +54,77 @@ struct SearchStationsList: View {
                 Group {
                     if let filtered = searchViewModel.filteredStationsList {
                         if !filtered.isEmpty {
+                            if isSplitView == true {
+                                List(selection: $searchViewModel.selectedStation) {
+                                    Section {
+                                        ForEach(filtered, id: \.self) { item in
+                                            StationListEntry(station: item, sortingMethod: searchViewModel.stationsSelectedSorting)
+                                        }
+                                    } header: {
+                                        HStack {
+                                            if horizontalSizeClass == .regular {
+                                                Spacer()
+                                            }
+                                            Text(sortingText(sortingMethod: searchViewModel.stationsSelectedSorting))
+                                                .fontWeight(.semibold)
+                                                .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
+                                                .padding(.bottom, 12)
+                                                .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
+                                                .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
+                                                .textCase(nil)
+                                                .fontSize(14)
+                                            Spacer()
+                                        }
+                                    }
+                                }
+                                .animation(.default, value: filtered)
+                                .transition(.opacity)
+                                .listStyle(.insetGrouped)
+                            }
+                            else {
+                                List {
+                                    Section {
+                                        ForEach(filtered, id: \.self) { item in
+                                            Button {
+                                                searchViewModel.selectedStation = item
+                                                searchViewModel.navigationPath.append(item)
+                                            } label: {
+                                                StationListEntry(station: item, sortingMethod: searchViewModel.stationsSelectedSorting)
+                                            }
+                                            .foregroundStyle(Color.foreground)
+                                        }
+                                    } header: {
+                                        HStack {
+                                            if horizontalSizeClass == .regular {
+                                                Spacer()
+                                            }
+                                            Text(sortingText(sortingMethod: searchViewModel.stationsSelectedSorting))
+                                                .fontWeight(.semibold)
+                                                .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
+                                                .padding(.bottom, 12)
+                                                .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
+                                                .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
+                                                .textCase(nil)
+                                                .fontSize(14)
+                                            Spacer()
+                                        }
+                                    }
+                                }
+                                .animation(.default, value: filtered)
+                                .transition(.opacity)
+                                .listStyle(.insetGrouped)
+                            }
+                        }
+                        else {
+                            ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
+                                .transition(.opacity)
+                        }
+                    }
+                    else {
+                        if isSplitView == true {
                             List(selection: $searchViewModel.selectedStation) {
                                 Section {
-                                    ForEach(filtered, id: \.self) { item in
+                                    ForEach(data, id: \.self) { item in
                                         StationListEntry(station: item, sortingMethod: searchViewModel.stationsSelectedSorting)
                                     }
                                 } header: {
@@ -69,41 +144,43 @@ struct SearchStationsList: View {
                                     }
                                 }
                             }
-                            .animation(.default, value: filtered)
+                            .animation(.default, value: data)
                             .transition(.opacity)
                             .listStyle(.insetGrouped)
                         }
                         else {
-                            ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
-                                .transition(.opacity)
-                        }
-                    }
-                    else {
-                        List(selection: $searchViewModel.selectedStation) {
-                            Section {
-                                ForEach(data, id: \.self) { item in
-                                    StationListEntry(station: item, sortingMethod: searchViewModel.stationsSelectedSorting)
-                                }
-                            } header: {
-                                HStack {
-                                    if horizontalSizeClass == .regular {
+                            List {
+                                Section {
+                                    ForEach(data, id: \.self) { item in
+                                        Button {
+                                            searchViewModel.selectedStation = item
+                                            searchViewModel.navigationPath.append(item)
+                                        } label: {
+                                            StationListEntry(station: item, sortingMethod: searchViewModel.stationsSelectedSorting)
+                                        }
+                                        .foregroundStyle(Color.foreground)
+                                    }
+                                } header: {
+                                    HStack {
+                                        if horizontalSizeClass == .regular {
+                                            Spacer()
+                                        }
+                                        Text(sortingText(sortingMethod: searchViewModel.stationsSelectedSorting))
+                                            .fontWeight(.semibold)
+                                            .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
+                                            .padding(.bottom, 12)
+                                            .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
+                                            .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
+                                            .textCase(nil)
+                                            .fontSize(14)
                                         Spacer()
                                     }
-                                    Text(sortingText(sortingMethod: searchViewModel.stationsSelectedSorting))
-                                        .fontWeight(.semibold)
-                                        .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
-                                        .padding(.bottom, 12)
-                                        .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
-                                        .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
-                                        .textCase(nil)
-                                        .fontSize(14)
-                                    Spacer()
                                 }
                             }
+                            .animation(.default, value: data)
+                            .transition(.opacity)
+                            .listStyle(.insetGrouped)
                         }
-                        .animation(.default, value: data)
-                        .transition(.opacity)
-                        .listStyle(.insetGrouped)
                     }
                 }
                 .searchable(text: $searchViewModel.stationsSearchText, isPresented: $searchViewModel.stationsSearchPresented, prompt: "Search service station by name")

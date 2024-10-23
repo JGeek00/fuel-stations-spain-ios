@@ -7,6 +7,11 @@ struct SearchListSection: Hashable {
 }
 
 struct SearchMunicipalitiesList: View {
+    var isSplitView: Bool
+    
+    init(isSplitView: Bool) {
+        self.isSplitView = isSplitView
+    }
     
     @EnvironmentObject private var searchViewModel: SearchViewModel
     
@@ -88,10 +93,24 @@ struct SearchMunicipalitiesList: View {
     private func DataList() -> some View {
         if let filtered = searchViewModel.filteredMunicipalitiesData {
             if !filtered.isEmpty {
-                List(filtered, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
-                    Text(item.Municipio!)
+                if isSplitView == true {
+                    List(filtered, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
+                        Text(item.Municipio!)
+                    }
+                    .transition(.opacity)
                 }
-                .transition(.opacity)
+                else {
+                    List(filtered, id: \.self) { item in
+                        Button {
+                            searchViewModel.selectedMunicipality = item
+                            searchViewModel.navigationPath.append(item)
+                        } label: {
+                            Text(item.Municipio!)
+                        }
+                        .foregroundStyle(Color.foreground)
+                    }
+                    .transition(.opacity)
+                }
             }
             else {
                 ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))
@@ -101,53 +120,124 @@ struct SearchMunicipalitiesList: View {
         else {
             switch searchViewModel.municipalitiesSorting {
             case .groupedProvince:
-                List(searchViewModel.municipalitiesDataByProvince!, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
-                    Section(item.sectionName) {
-                        ForEach(item.municipalities, id: \.self) { item in
-                            Text(item.Municipio!)
+                if isSplitView == true {
+                    List(searchViewModel.municipalitiesDataByProvince!, id: \.self, selection: $searchViewModel.selectedMunicipality) { item in
+                        Section(item.sectionName) {
+                            ForEach(item.municipalities, id: \.self) { item in
+                                Text(item.Municipio!)
+                            }
                         }
                     }
+                    .animation(.default, value: searchViewModel.municipalitiesDataByProvince!)
+                    .transition(.opacity)
                 }
-                .animation(.default, value: searchViewModel.municipalitiesDataByProvince!)
-                .transition(.opacity)
+                else {
+                    List(searchViewModel.municipalitiesDataByProvince!, id: \.self) { item in
+                        Section(item.sectionName) {
+                            ForEach(item.municipalities, id: \.self) { item in
+                                Button {
+                                    searchViewModel.selectedMunicipality = item
+                                    searchViewModel.navigationPath.append(item)
+                                } label: {
+                                    Text(item.Municipio!)
+                                }
+                                .foregroundStyle(Color.foreground)
+                            }
+                        }
+                    }
+                    .animation(.default, value: searchViewModel.municipalitiesDataByProvince!)
+                    .transition(.opacity)
+                }
             case .alphabetical:
                 if showSectionIndexList {
                     ScrollViewReader { proxy in
-                        List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
-                            // Simulates a section header. Not using Section because it causes "List failed to visit cell content, returning an empty cell" error
-                            Text(section.sectionName.uppercased())
-                                .listRowBackground(Color.listBackground)
-                                .listRowSeparator(.hidden)
-                                .fontSize(14)
-                                .foregroundStyle(Color.gray)
-                                .padding(.top, section == searchViewModel.municipalitiesDataByInitial!.first ? 12 : 24)
-                                .disabled(true)
-                            ForEach(section.municipalities, id: \.self) { item in
-                                Text(item.Municipio!)
-                                    .listRowSeparator(item == section.municipalities.last ? .hidden : .visible)
+                        if isSplitView == true {
+                            List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
+                                // Simulates a section header. Not using Section because it causes "List failed to visit cell content, returning an empty cell" error
+                                Text(section.sectionName.uppercased())
+                                    .listRowBackground(Color.listBackground)
+                                    .listRowSeparator(.hidden)
+                                    .fontSize(14)
+                                    .foregroundStyle(Color.gray)
+                                    .padding(.top, section == searchViewModel.municipalitiesDataByInitial!.first ? 12 : 24)
+                                    .disabled(true)
+                                ForEach(section.municipalities, id: \.self) { item in
+                                    Text(item.Municipio!)
+                                        .listRowSeparator(item == section.municipalities.last ? .hidden : .visible)
+                                }
+                                .id(section.sectionId)
                             }
-                            .id(section.sectionId)
+                            .overlay(content: {
+                                if !searchViewModel.municipalitiesSearchPresented {
+                                    SectionIndexTitles(proxy: proxy, titles: searchViewModel.municipalitiesDataByInitial!.map() { $0.sectionName })
+                                        .transition(.opacity)
+                                }
+                            })
+                            .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
+                            .transition(.opacity)
                         }
-                        .overlay(content: {
-                            if !searchViewModel.municipalitiesSearchPresented {
-                                SectionIndexTitles(proxy: proxy, titles: searchViewModel.municipalitiesDataByInitial!.map() { $0.sectionName })
-                                    .transition(.opacity)
+                        else {
+                            List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId) { section in
+                                // Simulates a section header. Not using Section because it causes "List failed to visit cell content, returning an empty cell" error
+                                Text(section.sectionName.uppercased())
+                                    .listRowBackground(Color.listBackground)
+                                    .listRowSeparator(.hidden)
+                                    .fontSize(14)
+                                    .foregroundStyle(Color.gray)
+                                    .padding(.top, section == searchViewModel.municipalitiesDataByInitial!.first ? 12 : 24)
+                                    .disabled(true)
+                                ForEach(section.municipalities, id: \.self) { item in
+                                    Button {
+                                        searchViewModel.selectedMunicipality = item
+                                        searchViewModel.navigationPath.append(item)
+                                    } label: {
+                                        Text(item.Municipio!)
+                                    }
+                                    .foregroundStyle(Color.foreground)
+                                    .listRowSeparator(item == section.municipalities.last ? .hidden : .visible)
+                                }
+                                .id(section.sectionId)
                             }
-                        })
-                        .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
-                        .transition(.opacity)
+                            .overlay(content: {
+                                if !searchViewModel.municipalitiesSearchPresented {
+                                    SectionIndexTitles(proxy: proxy, titles: searchViewModel.municipalitiesDataByInitial!.map() { $0.sectionName })
+                                        .transition(.opacity)
+                                }
+                            })
+                            .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
+                            .transition(.opacity)
+                        }
                     }
                 }
                 else {
-                    List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
-                        Section(section.sectionName.uppercased()) {
-                            ForEach(section.municipalities, id: \.self) { item in
-                                Text(item.Municipio!)
+                    if isSplitView == true {
+                        List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId, selection: $searchViewModel.selectedMunicipality) { section in
+                            Section(section.sectionName.uppercased()) {
+                                ForEach(section.municipalities, id: \.self) { item in
+                                    Text(item.Municipio!)
+                                }
                             }
                         }
+                        .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
+                        .transition(.opacity)
                     }
-                    .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
-                    .transition(.opacity)
+                    else {
+                        List(searchViewModel.municipalitiesDataByInitial!, id: \.sectionId) { section in
+                            Section(section.sectionName.uppercased()) {
+                                ForEach(section.municipalities, id: \.self) { item in
+                                    Button {
+                                        searchViewModel.selectedMunicipality = item
+                                        searchViewModel.navigationPath.append(item)
+                                    } label: {
+                                        Text(item.Municipio!)
+                                    }
+                                    .foregroundStyle(Color.foreground)
+                                }
+                            }
+                        }
+                        .animation(.default, value: searchViewModel.municipalitiesDataByInitial!)
+                        .transition(.opacity)
+                    }
                 }
             }
         }
