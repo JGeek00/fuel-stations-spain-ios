@@ -183,7 +183,7 @@ struct StationDetailsSheetContent: View {
                     StationDetailsPricesItem(station: station)
                         .customBackgroundWithMaterial()
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: showStationSummary)
+                    StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: false)
                         .customBackgroundWithMaterial()
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
                     StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
