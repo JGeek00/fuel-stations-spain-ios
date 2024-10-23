@@ -91,10 +91,17 @@ class SearchViewModel: ObservableObject {
         var sections: [SearchListSection] = []
            
         for (id, munList) in grouped {
+            let munSorted = munList.sorted { a, b in
+                if let aName = a.Municipio, let bName = b.Municipio {
+                    return aName < bName
+                } else {
+                    return a.Municipio != nil
+                }
+            }
             let provinceData = SearchListSection(
                 sectionId: id,
                 sectionName: id,
-                municipalities: munList
+                municipalities: munSorted
             )
             
             sections.append(provinceData)
