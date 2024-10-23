@@ -44,71 +44,73 @@ struct SearchStationDetails: View {
                 return nil
             }()
             
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    if showStationSummary {
-                        Text("Summary")
-                            .fontSize(22)
-                            .fontWeight(.bold)
-                        StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
-                            .customBackgroundWithMaterial()
+            GeometryReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 12) {
+                        if showStationSummary {
+                            Text("Summary")
+                                .fontSize(22)
+                                .fontWeight(.bold)
+                            StationDetailsSummary(width: proxy.size.width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                                .customBackgroundWithMaterial()
+                                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            
+                            Divider()
+                                .padding(.top, 12)
+                                .padding(.bottom, 8)
+                            
+                            Text("Details")
+                                .fontSize(22)
+                                .fontWeight(.bold)
+                        }
+                        Address(station: station, distance: distanceToUserLocation)
+                        Locality(station: station)
+                        StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
+                            .background(Color.listItemBackground)
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        SaleType(station: station)
+                        StationDetailsPricesItem(station: station)
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         
-                        Divider()
-                            .padding(.top, 12)
-                            .padding(.bottom, 8)
-                        
-                        Text("Details")
-                            .fontSize(22)
-                            .fontWeight(.bold)
-                    }
-                    Address(station: station, distance: distanceToUserLocation)
-                    Locality(station: station)
-                    StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
+                        StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
+                            if isSplitView == true {
+                                navigationPath.append(NavigateHowToReachStation(station: station))
+                            }
+                            else {
+                                searchViewModel.navigationPath.append(NavigateHowToReachStation(station: station))
+                            }
+                        }
                         .background(Color.listItemBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    SaleType(station: station)
-                    StationDetailsPricesItem(station: station)
-                        .background(Color.listItemBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    
-                    StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
-                        if isSplitView == true {
-                            navigationPath.append(NavigateHowToReachStation(station: station))
+                        LastUpdated()
+                        HStack {
+                            NavigationLink {
+                                HistoricPricesView(station: station, showingInSheet: false)
+                            } label: {
+                                Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .clipShape(RoundedRectangle(cornerRadius: 30))
                         }
-                        else {
-                            searchViewModel.navigationPath.append(NavigateHowToReachStation(station: station))
-                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 12)
                     }
-                    .background(Color.listItemBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    LastUpdated()
-                    HStack {
-                        NavigationLink {
-                            HistoricPricesView(station: station, showingInSheet: false)
-                        } label: {
-                            Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.top, 12)
+                    .padding()
                 }
-                .padding()
-            }
-            .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color.listBackground)
-            .toolbar {
-                StationDetailsFavoriteButton(station: station)
-            }
-            .onChange(of: station, initial: true) {
-                DispatchQueue.global(qos: .background).async {
-                    Task {
-                        let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
-                        DispatchQueue.main.async {
-                            lookAroundScene = result
+                .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.listBackground)
+                .toolbar {
+                    StationDetailsFavoriteButton(station: station)
+                }
+                .onChange(of: station, initial: true) {
+                    DispatchQueue.global(qos: .background).async {
+                        Task {
+                            let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                            DispatchQueue.main.async {
+                                lookAroundScene = result
+                            }
                         }
                     }
                 }

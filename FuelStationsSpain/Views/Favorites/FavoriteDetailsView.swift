@@ -35,92 +35,94 @@ struct FavoriteDetailsView: View {
         }()
         
         NavigationStack(path: $navigationPath) {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    if showStationSummary {
-                        Text("Summary")
-                            .fontSize(22)
-                            .fontWeight(.bold)
-                        StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
-                            .customBackgroundWithMaterial()
+            GeometryReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 12) {
+                        if showStationSummary {
+                            Text("Summary")
+                                .fontSize(22)
+                                .fontWeight(.bold)
+                            StationDetailsSummary(width: proxy.size.width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                                .customBackgroundWithMaterial()
+                                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            
+                            Divider()
+                                .padding(.top, 12)
+                                .padding(.bottom, 8)
+                            
+                            Text("Details")
+                                .fontSize(22)
+                                .fontWeight(.bold)
+                        }
+                        Alias(alias: alias)
+                        Address()
+                        Locality()
+                        StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
+                            .background(Color.listItemBackground)
+                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        SaleType()
+                        StationDetailsPricesItem(station: station)
+                            .background(Color.listItemBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 8.0))
                         
-                        Divider()
-                            .padding(.top, 12)
-                            .padding(.bottom, 8)
-                        
-                        Text("Details")
-                            .fontSize(22)
-                            .fontWeight(.bold)
-                    }
-                    Alias(alias: alias)
-                    Address()
-                    Locality()
-                    StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
-                        .background(Color.listItemBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    SaleType()
-                    StationDetailsPricesItem(station: station)
-                        .background(Color.listItemBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    
-                    StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
-                        navigationPath.append(NavigateHowToReachStation(station: station))
-                    }
-                    .background(Color.listItemBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    LastUpdated()
-                    HStack {
-                        NavigationLink {
-                            HistoricPricesView(station: station, showingInSheet: false)
-                        } label: {
-                            Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                        StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
+                            navigationPath.append(NavigateHowToReachStation(station: station))
                         }
-                        .buttonStyle(.borderedProminent)
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                        .background(Color.listItemBackground)
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        LastUpdated()
+                        HStack {
+                            NavigationLink {
+                                HistoricPricesView(station: station, showingInSheet: false)
+                            } label: {
+                                Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .clipShape(RoundedRectangle(cornerRadius: 30))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 12)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.top, 12)
+                    .padding()
                 }
-                .padding()
-            }
-            .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color.listBackground)
-            .toolbar {
-                StationDetailsFavoriteButton(station: station, backgroundCircle: false)
-                Menu {
-                    Button {
-                        stationAliasTextField = alias ?? ""
-                        defineStationAliasOpen = true
+                .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.listBackground)
+                .toolbar {
+                    StationDetailsFavoriteButton(station: station, backgroundCircle: false)
+                    Menu {
+                        Button {
+                            stationAliasTextField = alias ?? ""
+                            defineStationAliasOpen = true
+                        } label: {
+                            Label("Set station alias", systemImage: "pencil")
+                        }
                     } label: {
-                        Label("Set station alias", systemImage: "pencil")
+                        Image(systemName: "ellipsis.circle")
                     }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
                 }
-            }
-            .alert("Define station alias", isPresented: $defineStationAliasOpen) {
-                TextField("Alias", text: $stationAliasTextField)
-                Button("Cancel", role: .cancel) {
-                    defineStationAliasOpen = false
+                .alert("Define station alias", isPresented: $defineStationAliasOpen) {
+                    TextField("Alias", text: $stationAliasTextField)
+                    Button("Cancel", role: .cancel) {
+                        defineStationAliasOpen = false
+                    }
+                    Button("Save") {
+                        favoritesProvider.setFavoriteAlias(stationId: station.id!, newAlias: stationAliasTextField)
+                        defineStationAliasOpen = false
+                    }
+                } message: {
+                    Text("You can define an alias for this station. This will make it easier for you to identify it.")
                 }
-                Button("Save") {
-                    favoritesProvider.setFavoriteAlias(stationId: station.id!, newAlias: stationAliasTextField)
-                    defineStationAliasOpen = false
+                .navigationDestination(for: NavigateHowToReachStation.self) { value in
+                    HowToReachStation(station: value.station)
                 }
-            } message: {
-                Text("You can define an alias for this station. This will make it easier for you to identify it.")
-            }
-            .navigationDestination(for: NavigateHowToReachStation.self) { value in
-                HowToReachStation(station: value.station)
-            }
-            .onChange(of: station, initial: true) {
-                DispatchQueue.global(qos: .background).async {
-                    Task {
-                        let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
-                        DispatchQueue.main.async {
-                            lookAroundScene = result
+                .onChange(of: station, initial: true) {
+                    DispatchQueue.global(qos: .background).async {
+                        Task {
+                            let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                            DispatchQueue.main.async {
+                                lookAroundScene = result
+                            }
                         }
                     }
                 }
