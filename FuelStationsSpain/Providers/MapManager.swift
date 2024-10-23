@@ -83,7 +83,7 @@ class MapManager: ObservableObject {
         if result.successful == true {
             DispatchQueue.main.async {
                 withAnimation(.default) {
-                    self.data = FuelStationsResult.filterStations(result.data!)
+                    self.data = FuelStationsResult.filterStationsResult(result.data!)
                     self.loading = false
                     self.error = nil
                 }

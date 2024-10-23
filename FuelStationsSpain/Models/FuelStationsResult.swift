@@ -6,12 +6,17 @@ struct FuelStationsResult: Codable, Hashable {
     let count: Int?
     let results: [FuelStation]?
     
-    static func filterStations(_ data: FuelStationsResult) -> FuelStationsResult {
+    static func filterStationsResult(_ data: FuelStationsResult) -> FuelStationsResult {
         if let stations = data.results {
             let filtered = stations.filter() { $0.id != nil && $0.signage != nil && $0.address != nil }
             return FuelStationsResult(lastUpdated: data.lastUpdated, count: filtered.count, results: filtered)
         }
         return data
+    }
+    
+    static func filterStations(_ data: [FuelStation]) -> [FuelStation] {
+        let filtered = data.filter() { $0.id != nil && $0.signage != nil && $0.address != nil }
+        return filtered
     }
 }
 
