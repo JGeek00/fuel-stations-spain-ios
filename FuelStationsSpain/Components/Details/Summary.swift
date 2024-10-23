@@ -78,6 +78,8 @@ struct StationDetailsSummary: View {
                 }
                 Spacer()
             }
+            .lineLimit(1)
+            .truncationMode(.tail)
             .frame(maxWidth: .infinity)
             .fontWeight(.semibold)
             .padding(.vertical)

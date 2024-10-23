@@ -89,21 +89,23 @@ fileprivate struct MapComponent: View {
             })
             .if(UIDevice.current.userInterfaceIdiom == .pad) { view in
                 Group {
-                    view
-                        .bottomSheet(
-                            bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
-                            switchablePositions: [.absoluteBottom(70), .dynamicTop],
-                            headerContent: {
-                                StationDetailsSheetHeader(isSideSheet: true)
+                    GeometryReader { proxy in
+                        view
+                            .bottomSheet(
+                                bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
+                                switchablePositions: [.absoluteBottom(70), .dynamicTop],
+                                headerContent: {
+                                    StationDetailsSheetHeader(isSideSheet: true)
+                                }
+                            ) {
+                                StationDetailsSheetContent(width: proxy.size.width)
+                                    .padding(.top)
                             }
-                        ) {
-                            StationDetailsSheetContent()
-                                .padding(.top)
-                        }
-                        .sheetWidth(.relative(0.4))
-                        .enableAccountingForKeyboardHeight()
-                        .enableAppleScrollBehavior()
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
+                            .sheetWidth(.relative(0.4))
+                            .enableAccountingForKeyboardHeight()
+                            .enableAppleScrollBehavior()
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
+                    }
                 }
             }
             .if(UIDevice.current.userInterfaceIdiom != .pad) { view in
@@ -112,28 +114,30 @@ fileprivate struct MapComponent: View {
                         mapManager.selectedStationAnimation = nil
                         mapManager.isOpeningOrClosingSheet = true
                     }, content: {
-                        Group {
-                            if mapManager.selectedStation != nil {
-                                ScrollView {
-                                    StationDetailsSheetHeader(isSideSheet: false)
-                                    StationDetailsSheetContent()
-                                }
-                                .transition(.opacity)
-                            }
-                            else {
-                                ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
+                        GeometryReader { proxy in
+                            Group {
+                                if mapManager.selectedStation != nil {
+                                    ScrollView {
+                                        StationDetailsSheetHeader(isSideSheet: false)
+                                        StationDetailsSheetContent(width: proxy.size.width)
+                                    }
                                     .transition(.opacity)
+                                }
+                                else {
+                                    ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
+                                        .transition(.opacity)
+                                }
                             }
-                        }
-                        .presentationBackground(Material.regular)
-                        .presentationDetents([.fraction(0.5), .fraction(0.99)])
-                        .presentationBackgroundInteraction(
-                            .enabled(upThrough: .fraction(0.99))
-                        )
-                        .onDisappear {
-                            if mapManager.isOpeningOrClosingSheet == true {
-                                mapManager.selectedStation = nil
-                                mapManager.isOpeningOrClosingSheet = false
+                            .presentationBackground(Material.regular)
+                            .presentationDetents([.fraction(0.5), .fraction(0.99)])
+                            .presentationBackgroundInteraction(
+                                .enabled(upThrough: .fraction(0.99))
+                            )
+                            .onDisappear {
+                                if mapManager.isOpeningOrClosingSheet == true {
+                                    mapManager.selectedStation = nil
+                                    mapManager.isOpeningOrClosingSheet = false
+                                }
                             }
                         }
                     })
