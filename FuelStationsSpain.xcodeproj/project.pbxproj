@@ -11,8 +11,6 @@
 		0D5F58D92CA4C6C400342D3F /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 0D5F58D82CA4C6BD00342D3F /* README.md */; };
 		0D5F59742CA4CF5500342D3F /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5F59732CA4CF5500342D3F /* SentrySwiftUI */; };
 		0D5F5B162CA62D9A00342D3F /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5F5B152CA62D9A00342D3F /* AlertToast */; };
-		0D7E9C2F2CAC870000CAC020 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0D7E9C2E2CAC870000CAC020 /* .gitignore */; };
-		0DB14FB02CC47F8F00634B8A /* LICENSE.md in Resources */ = {isa = PBXBuildFile; fileRef = 0DB14FAF2CC47F8800634B8A /* LICENSE.md */; };
 		0DB7144B2CBC8A65008A0BAC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144A2CBC8A65008A0BAC /* WidgetKit.framework */; };
 		0DB7144D2CBC8A65008A0BAC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DB7144C2CBC8A65008A0BAC /* SwiftUI.framework */; };
 		0DB7145A2CBC8A66008A0BAC /* PriceWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0DB714482CBC8A65008A0BAC /* PriceWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -67,6 +65,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0DB1B6932D6F871600E71511 /* Exceptions for "FuelStationsSpain" folder in "FuelStationsSpain" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 0D5F58702CA42B8300342D3F /* FuelStationsSpain */;
+		};
 		0DB7145E2CBC8A66008A0BAC /* Exceptions for "PriceWidget" folder in "PriceWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -129,6 +134,7 @@
 		0D5F58732CA42B8300342D3F /* FuelStationsSpain */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				0DB1B6932D6F871600E71511 /* Exceptions for "FuelStationsSpain" folder in "FuelStationsSpain" target */,
 				0DB714612CBC8AAA008A0BAC /* Exceptions for "FuelStationsSpain" folder in "PriceWidgetExtension" target */,
 				0DB71C272CC0324C008A0BAC /* Exceptions for "FuelStationsSpain" folder in "PriceHistoryWidgetExtension" target */,
 			);
@@ -348,8 +354,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DB14FB02CC47F8F00634B8A /* LICENSE.md in Resources */,
-				0D7E9C2F2CAC870000CAC020 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,6 +545,7 @@
 				DEVELOPMENT_TEAM = 38Z3B9TJTR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FuelStationsSpain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HispaFuel;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "The application needs access to your location to show you the nearby service stations.";
@@ -550,6 +555,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -576,6 +582,7 @@
 				DEVELOPMENT_TEAM = 38Z3B9TJTR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FuelStationsSpain/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HispaFuel;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "The application needs access to your location to show you the nearby service stations.";
@@ -585,6 +592,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
