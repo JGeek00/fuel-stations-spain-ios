@@ -5,4 +5,5 @@ class Urls {
     public static let dataSourceApi = "https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas"
     public static let appRepo = "https://github.com/JGeek00/fuel-stations-spain-ios"
     public static let appStoreAppPage = "itms-apps://itunes.apple.com/app/id6720709096"
+    public static let appDetailsPage = "https://apps.jgeek00.com/46fyvvjqk3ezlfl"
 }

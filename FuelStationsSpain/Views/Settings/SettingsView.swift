@@ -9,7 +9,7 @@ struct SettingsView: View {
     @State private var contactDeveloperSafariOpen = false
     @State private var showBuildNumber = false
     @State private var dataSourceSafariOpen = false
-    @State private var appRepoSafariOpen = false
+    @State private var appDetails = false
     
     var body: some View {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
@@ -53,14 +53,14 @@ struct SettingsView: View {
                         ListRowWithIconEntry(systemIcon: "dollarsign.circle.fill", iconColor: .green, label: "Give a tip to the developer")
                     }
                     Button {
+                        appDetails.toggle()
+                    } label: {
+                        ListRowWithIconEntry(systemIcon: "info.circle.fill", iconColor: .orange, label: "More information about the app")
+                    }
+                    Button {
                         contactDeveloperSafariOpen.toggle()
                     } label: {
                         ListRowWithIconEntry(systemIcon: "message.fill", iconColor: .brown, label: "Contact the developer")
-                    }
-                    Button {
-                        appRepoSafariOpen.toggle()
-                    } label: {
-                        ListRowWithIconEntry(assetIcon: colorScheme == .dark ? "github" : "github-white", iconColor: Color.github, label: "App repository")
                     }
                     HStack {
                         ListRowWithIconEntry(systemIcon: "info.circle.fill", iconColor: .teal, label: "App version")
@@ -92,8 +92,8 @@ struct SettingsView: View {
             .fullScreenCover(isPresented: $dataSourceSafariOpen, content: {
                 SFSafariViewWrapper(url: URL(string: Urls.dataSourceApi)!).ignoresSafeArea()
             })
-            .fullScreenCover(isPresented: $appRepoSafariOpen, content: {
-                SFSafariViewWrapper(url: URL(string: Urls.appRepo)!).ignoresSafeArea()
+            .fullScreenCover(isPresented: $appDetails, content: {
+                SFSafariViewWrapper(url: URL(string: Urls.appDetailsPage)!).ignoresSafeArea()
             })
         }
     }
