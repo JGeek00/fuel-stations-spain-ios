@@ -977,6 +977,16 @@
         }
       }
     },
+    "In this area" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En este área"
+          }
+        }
+      }
+    },
     "In this case, the price of this fuel at all nearby service stations that supply it will be taken.\nThen, the minimum price and the maximum price will be taken and a range will be elaborated with them.\nThen, it is calculated where in the range is the price of the service station being analyzed." : {
       "localizations" : {
         "es" : {
@@ -1163,16 +1173,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Municipio"
-          }
-        }
-      }
-    },
-    "Nearby service stations" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estaciones de servicio cercanas"
           }
         }
       }
@@ -1657,6 +1657,17 @@
         }
       }
     },
+    "Service stations within a %lld Km radius from the current map center position." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estaciones de servicio en un radio de %lld Km desde la posición central actual del mapa."
+          }
+        }
+      }
+    },
     "Set station alias" : {
       "localizations" : {
         "es" : {
@@ -1737,6 +1748,16 @@
         }
       }
     },
+    "Showing service stations within a %lld Km radius from the current map center position." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrando estaciones de servicio dentro de un radio de %lld Km desde la posición central actual del mapa."
+          }
+        }
+      }
+    },
     "Shows a list of letters at the right of the municipalities list on the search tab that you can use to scroll the list quickly to a specific letter." : {
       "localizations" : {
         "es" : {
@@ -1793,6 +1814,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alias de estación actualizado"
+          }
+        }
+      }
+    },
+    "Stations shown" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estaciones mostradas"
           }
         }
       }

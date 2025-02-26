@@ -17,6 +17,8 @@ struct StationsSheet: View {
     
     @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
     
+    @State private var showInfoAlert = false
+    
     var body: some View {
         NavigationStack {
             Group {
@@ -62,7 +64,7 @@ struct StationsSheet: View {
                                             } header: {
                                                 Text(sortingText(sortingMethod: selectedSorting))
                                                     .fontWeight(.semibold)
-                                                    .padding(.bottom, 12)
+                                                    .padding(.bottom, 6)
                                                     .padding(.leading, -12)
                                                     .padding(.top, -12)
                                                     .textCase(nil)
@@ -96,7 +98,14 @@ struct StationsSheet: View {
                                         .clipShape(Circle())
                                     }
                                     ToolbarItem(placement: .topBarTrailing) {
-                                        SortingPicker(selectedSorting: $selectedSorting)
+                                        HStack {
+                                            SortingPicker(selectedSorting: $selectedSorting)
+                                            Button {
+                                                showInfoAlert = true
+                                            } label: {
+                                                Image(systemName: "info.circle")
+                                            }
+                                        }
                                     }
                                 }
                                 .searchable(text: $searchText, prompt: "Search service station by name")
@@ -111,7 +120,14 @@ struct StationsSheet: View {
                     }
                 }
             }
-            .navigationTitle("Nearby service stations")
+            .navigationTitle("In this area")
+            .alert("Stations shown", isPresented: $showInfoAlert) {
+                Button("Close") {
+                    showInfoAlert = false
+                }
+            } message: {
+                Text("Showing service stations within a \(Int(Config.defaultFetchDistance)) Km radius from the current map center position.")
+            }
         }
         .onAppear {
             location = locationManager.lastLocation
