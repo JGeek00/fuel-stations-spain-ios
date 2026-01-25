@@ -1,5 +1,4 @@
 import CoreData
-import Sentry
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -47,7 +46,6 @@ struct PersistenceController {
                             return
                         }
                     } catch {
-                        SentrySDK.capture(error: error)
                     }
                 }
                 

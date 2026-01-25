@@ -44,7 +44,7 @@ struct FavoriteDetailsView: View {
                                 .fontWeight(.bold)
                             StationDetailsSummary(width: proxy.size.width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                                 .customBackgroundWithMaterial()
-                                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                                .cardCornerRadius()
                             
                             Divider()
                                 .padding(.top, 12)
@@ -59,17 +59,17 @@ struct FavoriteDetailsView: View {
                         Locality()
                         StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                             .background(Color.listItemBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .cardCornerRadius()
                         SaleType()
                         StationDetailsPricesItem(station: station)
                             .background(Color.listItemBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .cardCornerRadius()
                         
                         StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
                             navigationPath.append(NavigateHowToReachStation(station: station))
                         }
                         .background(Color.listItemBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                         LastUpdated()
                         HStack {
                             NavigationLink {
@@ -77,7 +77,13 @@ struct FavoriteDetailsView: View {
                             } label: {
                                 Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
                             }
-                            .buttonStyle(.borderedProminent)
+                            .condition { view in
+                                if #available(iOS 26.0, *) {
+                                    view.buttonStyle(.glassProminent)
+                                } else {
+                                    view.buttonStyle(.borderedProminent)
+                                }
+                            }
                             .clipShape(RoundedRectangle(cornerRadius: 30))
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -139,7 +145,7 @@ struct FavoriteDetailsView: View {
                 subtitle: stationAlias
             )
             .customBackgroundWithMaterial()
-            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+            .cardCornerRadius()
             .animation(.default, value: alias)
         }
     }
@@ -169,7 +175,7 @@ struct FavoriteDetailsView: View {
                     subtitle: distanceText
                 )
                 .customBackgroundWithMaterial()
-                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                .cardCornerRadius()
             }
             .buttonStyle(.plain)
         }
@@ -184,7 +190,7 @@ struct FavoriteDetailsView: View {
                 subtitle: String(locality.capitalized)
             )
             .background(Color.listItemBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+            .cardCornerRadius()
         }
     }
     
@@ -223,7 +229,7 @@ struct FavoriteDetailsView: View {
                 }
             }
             .background(Color.listItemBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+            .cardCornerRadius()
         }
     }
     
@@ -243,7 +249,7 @@ struct FavoriteDetailsView: View {
                     )
                 }
                 .background(Color.listItemBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                .cardCornerRadius()
             }
         }
     }

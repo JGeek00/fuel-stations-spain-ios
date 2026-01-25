@@ -367,16 +367,10 @@ struct StationDetailsPriceScale: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
+                    CloseButton {
                         howIsCalculatedSheet = false
                         mapManager.selectedStationAnimation = nil
-                    } label: {
-                        Image(systemName: "xmark")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.foreground.opacity(0.5))
                     }
-                    .buttonStyle(BorderedButtonStyle())
-                    .clipShape(Circle())
                 }
             }
         }

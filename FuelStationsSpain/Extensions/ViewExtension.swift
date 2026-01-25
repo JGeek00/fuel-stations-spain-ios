@@ -81,4 +81,18 @@ extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func condition<Content: View>(@ViewBuilder transform: (Self) -> Content) -> some View {
+        transform(self)
+    }
+    
+    @ViewBuilder
+    func cardCornerRadius() -> some View {
+        if #available(iOS 26.0, *) {
+            clipShape(RoundedRectangle(cornerRadius: 20))
+        } else {
+            clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+    }
 }

@@ -22,13 +22,24 @@ struct StationDetailsFavoriteButton: View {
             }
         } label: {
             Image(systemName: isFavorite == true ? "star.fill" : "star")
+                .padding(4)
                 .fontWeight(.semibold)
                 .animation(.default, value: isFavorite)
         }
+        .condition { view in
+            if backgroundCircle == true {
+                if #available(iOS 26.0, *) {
+                    view.buttonStyle(.glass)
+                } else {
+                    view.buttonStyle(.bordered)
+                }
+            }
+            else {
+                view
+            }
+        }
         .if(backgroundCircle == true) { view in
-            view
-                .buttonStyle(BorderedButtonStyle())
-                .clipShape(Circle())
+            view.clipShape(Circle())
         }
     }
 }

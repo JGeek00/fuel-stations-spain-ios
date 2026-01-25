@@ -90,7 +90,13 @@ struct FavoritesView: View {
                                         .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
                                         .padding(.bottom, 12)
                                         .padding(.leading, horizontalSizeClass == .regular ? 0 : -12)
-                                        .padding(.top, horizontalSizeClass == .regular ? 0 : -12)
+                                        .condition { view in
+                                            if #available(iOS 26.0, *) {
+                                                view
+                                            } else {
+                                                view.padding(.top, -12)
+                                            }
+                                        }
                                         .textCase(nil)
                                         .fontSize(14)
                                     Spacer()

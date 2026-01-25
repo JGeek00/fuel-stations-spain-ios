@@ -152,13 +152,22 @@ struct HowToReachStation: View {
                                 Text(verbatim: time)
                             }
                         }
-                        .padding(8)
                         .fontSize(14)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.foreground)
-                        .background(Material.regular)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: .black.opacity(0.3), radius: 5)
+                        .condition { view in
+                            if #available(iOS 26.0, *) {
+                                view
+                                    .padding(12)
+                                    .glassEffect(in: .rect(cornerRadius: 24.0))
+                            } else {
+                                view
+                                    .padding(8)
+                                    .background(Material.regular)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .shadow(color: .black.opacity(0.3), radius: 5)
+                            }
+                        }
                         
                         Spacer()
                             .frame(height: 12)

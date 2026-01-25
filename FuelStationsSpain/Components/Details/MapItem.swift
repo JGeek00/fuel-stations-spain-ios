@@ -1,6 +1,5 @@
 import SwiftUI
 import MapKit
-import Sentry
 
 fileprivate let delta = 0.003
 
@@ -9,10 +8,7 @@ func getLookAroundScene(latitude: Double, longitude: Double) async -> MKLookArou
     do {
         let result = try await request.scene
         return result
-    } catch let error {
-        DispatchQueue.main.async {
-            SentrySDK.capture(error: error)
-        }
+    } catch {
         return nil
     }
 }

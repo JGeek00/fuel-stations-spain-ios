@@ -28,41 +28,84 @@ struct StationDetailsSheetHeader: View {
                 Spacer()
                 StationDetailsFavoriteButton(station: station)
                 if isSideSheet == false {
-                    Button {
+                    CloseButton {
                         mapManager.showStationDetailsSheet = false
                         mapManager.selectedStationAnimation = nil
-                    } label: {
-                        Image(systemName: "xmark")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.foreground.opacity(0.5))
                     }
-                    .buttonStyle(BorderedButtonStyle())
-                    .clipShape(Circle())
                 }
                 else {
-                    Button {
+                    ChevronButton {
                         if mapManager.stationDetailsSheetPosition == .dynamicTop {
                             mapManager.stationDetailsSheetPosition = .absoluteTop(70)
                         }
                         else {
                             mapManager.stationDetailsSheetPosition = .dynamicTop
                         }
-                    } label: {
-                        Image(systemName: "chevron.up")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.foreground.opacity(0.5))
-                            .padding(4.5)
-                            .rotationEffect(mapManager.stationDetailsSheetPosition == .dynamicTop ? .degrees(0) : .degrees(180), anchor: .center)
-                            .animation(.default, value: mapManager.stationDetailsSheetPosition)
                     }
-                    .buttonStyle(BorderedButtonStyle())
-                    .clipShape(Circle())
                 }
             }
             .padding()
         }
     }
     
+    @ViewBuilder
+    func CloseButton(action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            Image(systemName: "xmark")
+                .fontWeight(.semibold)
+                .padding(4)
+                .condition { view in
+                    if #available(iOS 26.0, *) {
+                        view
+                    } else {
+                        view.foregroundColor(.foreground.opacity(0.5))
+                    }
+                }
+        }
+        .condition { view in
+            if #available(iOS 26.0, *) {
+                view.buttonStyle(.glass)
+            }
+            else {
+                view.buttonStyle(BorderedButtonStyle())
+            }
+            
+        }
+        .clipShape(Circle())
+    }
+    
+    @ViewBuilder
+    func ChevronButton(action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            Image(systemName: "chevron.up")
+                .fontWeight(.semibold)
+                .padding(4)
+                .condition { view in
+                    if #available(iOS 26.0, *) {
+                        view
+                    }
+                    else {
+                        view.foregroundColor(.foreground.opacity(0.5))
+                    }
+                }
+                .rotationEffect(mapManager.stationDetailsSheetPosition == .dynamicTop ? .degrees(0) : .degrees(180), anchor: .center)
+                .animation(.default, value: mapManager.stationDetailsSheetPosition)
+        }
+        .condition { view in
+            if #available(iOS 26.0, *) {
+                view.buttonStyle(.glass)
+            }
+            else {
+                view.buttonStyle(BorderedButtonStyle())
+            }
+            
+        }
+        .clipShape(Circle())
+    }
 }
 
 struct StationDetailsSheetContent: View {
@@ -100,8 +143,8 @@ struct StationDetailsSheetContent: View {
                 if showStationSummary {
                     StationDetailsSummary(width: width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                         .customBackgroundWithMaterial()
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                    
+                        .cardCornerRadius()
+                
                     Divider()
                         .padding(.vertical)
                     
@@ -133,7 +176,7 @@ struct StationDetailsSheetContent: View {
                                 subtitle: distanceText
                             )
                             .customBackgroundWithMaterial()
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .cardCornerRadius()
                         }
                         .buttonStyle(.plain)
                     }
@@ -145,11 +188,11 @@ struct StationDetailsSheetContent: View {
                             subtitle: String(locality.capitalized)
                         )
                         .customBackgroundWithMaterial()
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                     }
                     StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                         .customBackgroundWithMaterial()
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                     if let saleType = station.saleType {
                         StationDetailsListItem(
                             icon: "person.fill",
@@ -184,17 +227,17 @@ struct StationDetailsSheetContent: View {
                             }
                         }
                         .customBackgroundWithMaterial()
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                     }
                     StationDetailsPricesItem(station: station)
                         .customBackgroundWithMaterial()
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                     StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: false)
                         .customBackgroundWithMaterial()
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                     StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
                         .customBackgroundWithMaterial()
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                     if let update = mapManager.data?.lastUpdated {
                         if let date = formatDate(update) {
                             StationDetailsListItem(
@@ -210,7 +253,7 @@ struct StationDetailsSheetContent: View {
                                 )
                             }
                             .customBackgroundWithMaterial()
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .cardCornerRadius()
                         }
                     }
                     HStack {
@@ -222,7 +265,14 @@ struct StationDetailsSheetContent: View {
                                 .lineLimit(1)
                                 .truncationMode(.tail)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .condition { view in
+                            if #available(iOS 26.0, *) {
+                                view.buttonStyle(.glassProminent)
+                            }
+                            else {
+                                view.buttonStyle(.borderedProminent)
+                            }
+                        }
                         .clipShape(.rect(cornerRadius: 30))
                         Spacer()
                         Button {
@@ -232,7 +282,14 @@ struct StationDetailsSheetContent: View {
                                 .lineLimit(1)
                                 .truncationMode(.tail)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .condition { view in
+                            if #available(iOS 26.0, *) {
+                                view.buttonStyle(.glassProminent)
+                            }
+                            else {
+                                view.buttonStyle(.borderedProminent)
+                            }
+                        }
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                         Spacer()
                     }
@@ -266,15 +323,9 @@ struct StationDetailsSheetContent: View {
                     HistoricPricesView(station: station, showingInSheet: true)
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
-                                Button {
+                                CloseButton {
                                     showHistoricPricesSheet = false
-                                } label: {
-                                    Image(systemName: "xmark")
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.foreground.opacity(0.5))
                                 }
-                                .buttonStyle(BorderedButtonStyle())
-                                .clipShape(Circle())
                             }
                         }
                 }
@@ -284,15 +335,9 @@ struct StationDetailsSheetContent: View {
                     HowToReachStation(station: station)
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
-                                Button {
+                                CloseButton {
                                     showHowToReachSheet = false
-                                } label: {
-                                    Image(systemName: "xmark")
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.foreground.opacity(0.5))
                                 }
-                                .buttonStyle(BorderedButtonStyle())
-                                .clipShape(Circle())
                             }
                         }
                 }

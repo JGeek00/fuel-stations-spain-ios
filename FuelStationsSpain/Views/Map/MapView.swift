@@ -32,6 +32,8 @@ fileprivate struct MapComponent: View {
 
     @Namespace private var mapScope
     
+    @State private var selectedDetent: PresentationDetent = .fraction(0.5)
+
     var body: some View {
         MapComponent()
             .alert("Success", isPresented: $mapManager.showSuccessAlert, actions: {
@@ -128,8 +130,12 @@ fileprivate struct MapComponent: View {
                                         .transition(.opacity)
                                 }
                             }
-                            .presentationBackground(Material.regular)
-                            .presentationDetents([.fraction(0.5), .fraction(0.99)])
+                            .presentationBackground {
+                                if selectedDetent == .fraction(0.99) {
+                                    Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+                                }
+                            }
+                            .presentationDetents([.fraction(0.5), .fraction(0.99)], selection: $selectedDetent)
                             .presentationBackgroundInteraction(
                                 .enabled(upThrough: .fraction(0.99))
                             )
@@ -146,7 +152,7 @@ fileprivate struct MapComponent: View {
     }
     
     @ViewBuilder
-    private func MapComponent() -> some View {        
+    private func MapComponent() -> some View {
         let mpStyle: MapStyle = {
             switch mapStyle {
             case .standard: return MapStyle.standard
@@ -175,7 +181,7 @@ fileprivate struct MapComponent: View {
                 }()
                 ForEach(markers, id: \.id) { value in
                     Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
-                        MapMarkerItem(value)
+                        MapMarkerBubble(value)
                             .environmentObject(MapManager.shared)
                     }
                 }
@@ -189,171 +195,10 @@ fileprivate struct MapComponent: View {
             mapManager.onMapCameraChange(value)
         })
         .overlay(alignment: .topTrailing) {
-            MapOverlayRightButtons()
+            MapOverlayRightButtons(mapScope: mapScope)
         }
         .overlay(alignment: .topLeading, content: {
             MapOverlayLeftButtons()
         })
     }
-    
-    @ViewBuilder
-    private func MapOverlayRightButtons() -> some View {
-        VStack {
-            Button {
-                withAnimation(.easeOut) {
-                    mapManager.centerToLocation(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude)
-                }
-            } label: {
-                Image(systemName: "location.fill.viewfinder")
-                    .fontSize(22)
-                    .foregroundStyle(locationManager.lastLocation != nil ? Color.foreground : Color.gray)
-                    .contentShape(Rectangle())
-            }
-            .disabled(locationManager.lastLocation == nil)
-            .frameDynamicSize(width: 40, height: 40)
-            .background(.regularMaterial)
-            .cornerRadius(10)
-            .shadow(color: .black.opacity(0.3), radius: 5)
-            
-            Spacer()
-                .frame(height: 12)
-            
-            Button {
-                mapManager.showStationDetailsSheet = false
-                mapManager.stationDetailsSheetPosition = .hidden
-                mapManager.selectedStationAnimation = nil
-                mapManager.selectedStation = nil
-                mapManager.showStationsSheet = true
-            } label: {
-                Image(systemName: "list.bullet")
-                    .fontSize(22)
-                    .foregroundStyle(Color.foreground)
-                    .contentShape(Rectangle())
-            }
-            .frameDynamicSize(width: 40, height: 40)
-            .background(.regularMaterial)
-            .cornerRadius(10)
-            .shadow(color: .black.opacity(0.3), radius: 5)
-            
-            Spacer()
-                .frame(height: 12)
-            
-            MapCompass(scope: mapScope)
-        }
-        .offset(x: -12, y: 12)
-    }
-    
-    @ViewBuilder func MapOverlayLeftButtons() -> some View {
-        if mapManager.loading == true || mapManager.error != nil {
-            Group {
-                Button {
-                    mapManager.showErrorAlert.toggle()
-                } label: {
-                    Group {
-                        if mapManager.loading == true {
-                            ProgressView()
-                                .fontSize(24)
-                        }
-                        else {
-                            Image(systemName: "exclamationmark.circle.fill")
-                                .fontSize(22)
-                                .foregroundStyle(Color.red)
-                        }
-                    }
-                    .contentShape(Rectangle())
-                }
-                .frameDynamicSize(width: 40, height: 40)
-                .background(.regularMaterial)
-                .cornerRadius(10)
-                .shadow(color: .black.opacity(0.3), radius: 5)
-                .disabled(mapManager.loading)
-            }
-            .offset(x: 12 * fontSizeMultiplier(for: dynamicTypeSize), y: 50 * fontSizeMultiplier(for: dynamicTypeSize))
-            .transition(.opacity)
-        }
-    }
-}
-
-fileprivate struct MapMarkerItem: View {
-    var value: FuelStation
-    
-    init(_ value: FuelStation) {
-        self.value = value
-    }
-    
-    @EnvironmentObject private var mapManager: MapManager
-    
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    
-    @AppStorage(StorageKeys.closedStationsShowMethod, store: UserDefaults.shared) private var closedStationsShowMethod: Enums.ClosedStationsMode = Defaults.closedStationsShowMethod
-    @AppStorage(StorageKeys.showRedClockClosedStations, store: UserDefaults.shared) private var showRedClockClosedStations = Defaults.showRedClockClosedStations
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
-    
-    @State private var formattedSchedule: OpeningSchedule?
-    
-    var body: some View {
-        let fuelPrice: Double? = FuelStation.getObjectProperty(station: value, propertyName: "\(favoriteFuel.rawValue)Price")
-        Group {
-            if !(formattedSchedule?.isCurrentlyOpen == false && closedStationsShowMethod == .hideCompletely) {
-                if favoriteFuel != .none, let fuelPrice = fuelPrice {
-                    PriceMarker()
-                        .foregroundStyle(Color.background)
-                        .frameDynamicSize(width: 60, height: 34)
-                        .overlay(alignment: .center) {
-                            Text(verbatim: "\(formattedNumber(value: fuelPrice, digits: 3))€")
-                                .fontSize(14)
-                                .fontWeight(.semibold)
-                                .padding(.bottom, 30*0.2)
-                        }
-                        .overlay(PriceMarker().stroke(Color.gray, lineWidth: 0.5))
-                        .overlay(alignment: .topTrailing, content: {
-                            if formattedSchedule?.isCurrentlyOpen == false && showRedClockClosedStations == true {
-                                RedClock()
-                            }
-                        })
-                        .opacity(formattedSchedule?.isCurrentlyOpen == false && closedStationsShowMethod == .showDimmed ? 0.5 : 1)
-                        .shadow(color: .black.opacity(0.3), radius: 5)
-                        .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
-                        .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
-                        .onTapGesture {
-                            mapManager.selectStation(station: value)
-                        }
-                }
-                else {
-                    NormalMarker()
-                        .foregroundStyle(LinearGradient(gradient: Gradient(colors: [Color.markerGradientStart, Color.markerGradientEnd]), startPoint: .top, endPoint: .bottom))
-                        .frameDynamicSize(width: 30, height: 30)
-                        .overlay(alignment: .topTrailing, content: {
-                            if formattedSchedule?.isCurrentlyOpen == false && showRedClockClosedStations == true {
-                                RedClock()
-                            }
-                        })
-                        .opacity(formattedSchedule?.isCurrentlyOpen == false && closedStationsShowMethod == .showDimmed ? 0.5 : 1)
-                        .scaleEffect(value.id == mapManager.selectedStationAnimation?.id ? 1.5 : 1, anchor: .bottom)
-                        .animation(.bouncy(extraBounce: 0.2), value: mapManager.selectedStationAnimation?.id)
-                        .onTapGesture {
-                            mapManager.selectStation(station: value)
-                        }
-                }
-            }
-        }
-        .onAppear {
-            formattedSchedule = value.openingHours != nil ? getStationSchedule(value.openingHours!) : nil
-        }
-    }
-    
-    @ViewBuilder
-    private func RedClock() -> some View {
-        Circle()
-            .offset(x: 6 * fontSizeMultiplier(for: dynamicTypeSize), y: -6 * fontSizeMultiplier(for: dynamicTypeSize))
-            .frameDynamicSize(width: 15, height: 15)
-            .foregroundStyle(Color.background)
-            .overlay(alignment: .center) {
-                Image(systemName: "clock.fill")
-                    .offset(x: 6 * fontSizeMultiplier(for: dynamicTypeSize), y: -6 * fontSizeMultiplier(for: dynamicTypeSize))
-                    .foregroundStyle(Color.red)
-                    .fontSize(14)
-            }
-    }
-    
 }

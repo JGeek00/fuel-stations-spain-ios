@@ -53,7 +53,7 @@ struct SearchStationDetails: View {
                                 .fontWeight(.bold)
                             StationDetailsSummary(width: proxy.size.width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                                 .customBackgroundWithMaterial()
-                                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                                .cardCornerRadius()
                             
                             Divider()
                                 .padding(.top, 12)
@@ -67,11 +67,11 @@ struct SearchStationDetails: View {
                         Locality(station: station)
                         StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
                             .background(Color.listItemBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .cardCornerRadius()
                         SaleType(station: station)
                         StationDetailsPricesItem(station: station)
                             .background(Color.listItemBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                            .cardCornerRadius()
                         
                         StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
                             if isSplitView == true {
@@ -82,7 +82,7 @@ struct SearchStationDetails: View {
                             }
                         }
                         .background(Color.listItemBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .cardCornerRadius()
                         LastUpdated()
                         HStack {
                             NavigationLink {
@@ -90,7 +90,13 @@ struct SearchStationDetails: View {
                             } label: {
                                 Label("Price history", systemImage: "chart.line.uptrend.xyaxis")
                             }
-                            .buttonStyle(.borderedProminent)
+                            .condition { view in
+                                if #available(iOS 26.0, *) {
+                                    view.buttonStyle(.glassProminent)
+                                } else {
+                                    view.buttonStyle(.borderedProminent)
+                                }
+                            }
                             .clipShape(RoundedRectangle(cornerRadius: 30))
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -102,7 +108,7 @@ struct SearchStationDetails: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.listBackground)
                 .toolbar {
-                    StationDetailsFavoriteButton(station: station)
+                    StationDetailsFavoriteButton(station: station, backgroundCircle: false)
                 }
                 .onChange(of: station, initial: true) {
                     DispatchQueue.global(qos: .background).async {
@@ -145,7 +151,7 @@ struct SearchStationDetails: View {
                     subtitle: distanceText
                 )
                 .customBackgroundWithMaterial()
-                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                .cardCornerRadius()
             }
             .buttonStyle(.plain)
         }
@@ -160,7 +166,7 @@ struct SearchStationDetails: View {
                 subtitle: String(locality.capitalized)
             )
             .background(Color.listItemBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+            .cardCornerRadius()
         }
     }
     
@@ -199,7 +205,7 @@ struct SearchStationDetails: View {
                 }
             }
             .background(Color.listItemBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 8.0))
+            .cardCornerRadius()
         }
     }
     
@@ -219,7 +225,7 @@ struct SearchStationDetails: View {
                     )
                 }
                 .background(Color.listItemBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                .cardCornerRadius()
             }
         }
     }

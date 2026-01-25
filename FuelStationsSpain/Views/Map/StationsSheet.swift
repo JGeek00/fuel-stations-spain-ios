@@ -66,36 +66,33 @@ struct StationsSheet: View {
                                                     .fontWeight(.semibold)
                                                     .padding(.bottom, 6)
                                                     .padding(.leading, -12)
-                                                    .padding(.top, -12)
+                                                    .condition { view in
+                                                        if #available(iOS 26.0, *) {
+                                                            view
+                                                        } else {
+                                                            view.padding(.top, -12)
+                                                        }
+                                                    }
                                                     .textCase(nil)
                                                     .fontSize(14)
                                             }
                                         }
-                                        .animation(.default, value: processedData)
                                         .transition(.opacity)
                                     }
                                 }
                                 .onChange(of: processedData) {
-                                    withAnimation(.default) {
-                                        if processedData.isEmpty {
-                                            listHasContent = false
-                                        }
-                                        else {
-                                            listHasContent = true
-                                        }
+                                    if processedData.isEmpty {
+                                        listHasContent = false
+                                    }
+                                    else {
+                                        listHasContent = true
                                     }
                                 }
                                 .toolbar {
                                     ToolbarItem(placement: .topBarLeading) {
-                                        Button {
+                                        CloseButton {
                                             mapManager.showStationsSheet.toggle()
-                                        } label: {
-                                            Image(systemName: "xmark")
-                                                .fontWeight(.semibold)
-                                                .foregroundColor(.foreground.opacity(0.5))
                                         }
-                                        .buttonStyle(BorderedButtonStyle())
-                                        .clipShape(Circle())
                                     }
                                     ToolbarItem(placement: .topBarTrailing) {
                                         HStack {
