@@ -47,6 +47,16 @@ struct FavoriteFuelSelection: View {
                             .frame(width: 4)
                         Text("Previous")
                     }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                }
+                .condition { view in
+                    if #available(iOS 26.0, *) {
+                        view.buttonStyle(.glass)
+                    }
+                    else {
+                        view.buttonStyle(.plain)
+                    }
                 }
                 Spacer()
                 Button {
@@ -54,6 +64,16 @@ struct FavoriteFuelSelection: View {
                 } label: {
                     HStack {
                         Text("Finish")
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                }
+                .condition { view in
+                    if #available(iOS 26.0, *) {
+                        view.buttonStyle(.glassProminent)
+                    }
+                    else {
+                        view.buttonStyle(.borderedProminent)
                     }
                 }
             }

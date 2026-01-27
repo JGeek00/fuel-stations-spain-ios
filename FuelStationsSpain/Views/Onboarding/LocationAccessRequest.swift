@@ -31,6 +31,16 @@ struct LocationAccessRequest: View {
                             .frame(width: 4)
                         Text("Previous")
                     }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                }
+                .condition { view in
+                    if #available(iOS 26.0, *) {
+                        view.buttonStyle(.glass)
+                    }
+                    else {
+                        view.buttonStyle(.plain)
+                    }
                 }
                 Spacer()
                 Button {
@@ -44,6 +54,16 @@ struct LocationAccessRequest: View {
                         Spacer()
                             .frame(width: 4)
                         Image(systemName: "chevron.right")
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                }
+                .condition { view in
+                    if #available(iOS 26.0, *) {
+                        view.buttonStyle(.glass)
+                    }
+                    else {
+                        view.buttonStyle(.plain)
                     }
                 }
             }

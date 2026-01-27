@@ -42,11 +42,18 @@ struct Welcome: View {
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
                 }
-                .buttonStyle(BorderedProminentButtonStyle())
+                .condition { view in
+                    if #available(iOS 26.0, *) {
+                        view.buttonStyle(.glassProminent)
+                    }
+                    else {
+                        view.buttonStyle(.borderedProminent)
+                    }
+                }
                 .padding()
                 Spacer()
             }
-            .padding(0)
+            .padding()
         }
         .padding(0)
         .fontDesign(.rounded)
