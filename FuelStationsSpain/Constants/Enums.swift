@@ -49,6 +49,7 @@ class Enums {
         case lng
         case lpg
         case hydrogen
+        case adblue
     }
     
     public enum FavoriteFuelType: String {

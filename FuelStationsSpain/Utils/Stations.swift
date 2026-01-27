@@ -93,6 +93,8 @@ func sortStations(stations: [FuelStation], sortingMethod: Enums.StationsSortingO
             return sort(a.lpgPrice, b.lpgPrice)
         case .hydrogen:
             return sort(a.hydrogenPrice, b.hydrogenPrice)
+        case .adblue:
+            return sort(a.adbluePrice, b.adbluePrice)
         }
     }
     return sorted
@@ -131,6 +133,8 @@ func sortingText(sortingMethod: Enums.StationsSortingOptions) -> String {
             return String(localized: "Liquefied petroleum gases")
         case .hydrogen:
             return String(localized: "Hydrogen")
+        case .adblue:
+            return String("AdBlue")
         }
     }
     if sortingMethod == .proximity {

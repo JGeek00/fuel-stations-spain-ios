@@ -38,6 +38,7 @@ struct ListsSettings: View {
                 case .lng: return String(localized: "Liquefied Natural Gas")
                 case .lpg: return String(localized: "Liquefied petroleum gases")
                 case .hydrogen: return String(localized: "Hydrogen")
+                case .adblue: return String("AdBlue")
             }
         }()
         

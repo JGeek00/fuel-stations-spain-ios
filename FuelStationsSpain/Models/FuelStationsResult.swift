@@ -43,6 +43,7 @@ struct FuelStation: Codable, Hashable {
     let gasoline98E10Price: Double?
     let gasoline98E5Price: Double?
     let hydrogenPrice: Double?
+    let adbluePrice: Double?
     var distanceToUserLocation: Double?  // This parameter is filled when it's rendered
 
     enum CodingKeys: String, CodingKey {
@@ -54,7 +55,7 @@ struct FuelStation: Codable, Hashable {
         case cngPrice = "CNGPrice"
         case lngPrice = "LNGPrice"
         case lpgPrice = "LPGPrice"
-        case gasoilAPrice, gasoilBPrice, premiumGasoilPrice, gasoline95E10Price, gasoline95E5Price, gasoline95E5PremiumPrice, gasoline98E10Price, gasoline98E5Price, hydrogenPrice
+        case gasoilAPrice, gasoilBPrice, premiumGasoilPrice, gasoline95E10Price, gasoline95E5Price, gasoline95E5PremiumPrice, gasoline98E10Price, gasoline98E5Price, hydrogenPrice, adbluePrice
     }
     
     static func getObjectProperty<T>(station: FuelStation, propertyName: String) -> T? {

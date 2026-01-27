@@ -31,6 +31,7 @@ struct SortingPicker: View {
                     }
                     Section("Others") {
                         MenuItem(label: String(localized: "Hydrogen"), selectedOption: $selectedSorting, value: .hydrogen)
+                        MenuItem(label: String("AdBlue"), selectedOption: $selectedSorting, value: .adblue)
                     }
                 } label: {
                     if selectedSorting != .proximity {
