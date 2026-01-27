@@ -5,7 +5,6 @@ struct RootView: View {
     @AppStorage(StorageKeys.theme, store: UserDefaults.shared) private var theme: Enums.Theme = .system
     @AppStorage(StorageKeys.onboardingCompleted, store: UserDefaults.shared) private var onboardingCompleted: Bool = Defaults.onboardingCompleted
         
-    @Environment(\.horizontalSizeClass) private var defaultHorizontalSizeClass
     @Environment(\.openURL) private var openURL
     
     @EnvironmentObject private var locationManager: LocationManager
@@ -32,27 +31,22 @@ struct RootView: View {
                     Label("Map", systemImage: "map")
                 }
                 .tag(Enums.Tabs.map)
-                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "star")
                 }
                 .tag(Enums.Tabs.favorites)
-                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
                 .tag(Enums.Tabs.search)
-                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
                 .tag(Enums.Tabs.settings)
-                .environment(\.horizontalSizeClass, defaultHorizontalSizeClass)
         }
-        .environment(\.horizontalSizeClass, .compact)
         .fontDesign(.rounded)
         .preferredColorScheme(getColorScheme(theme: theme))
         .fullScreenCover(isPresented: $onboardingViewModel.showOnboarding, content: {
