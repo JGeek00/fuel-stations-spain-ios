@@ -52,7 +52,14 @@ struct OnboardingView: View {
                         .contentShape(Rectangle()).simultaneousGesture(DragGesture())
                     }
                     .frame(maxWidth: 600, maxHeight: 800)
-                    .cornerRadius(12)
+                    .condition { view in
+                        if #available(iOS 26.0, *) {
+                            view.cornerRadius(32)
+                        }
+                        else {
+                            view.cornerRadius(12)
+                        }
+                    }
                     Spacer()
                 }
                 Spacer()
