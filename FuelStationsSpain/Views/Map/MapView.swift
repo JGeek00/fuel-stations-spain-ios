@@ -131,7 +131,13 @@ fileprivate struct MapComponent: View {
                                 }
                             }
                             .presentationBackground {
-                                if selectedDetent == .fraction(0.99) {
+                                // On versions prior to iOS 26 a background must always be defined
+                                if #available(iOS 26.0, *) {
+                                    if selectedDetent == .fraction(0.99) {
+                                        Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+                                    }
+                                }
+                                else {
                                     Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
                                 }
                             }

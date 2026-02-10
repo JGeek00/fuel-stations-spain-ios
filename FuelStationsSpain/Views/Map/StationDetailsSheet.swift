@@ -142,7 +142,7 @@ struct StationDetailsSheetContent: View {
             VStack(alignment: .leading) {
                 if showStationSummary {
                     StationDetailsSummary(width: width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
-                        .cardGlassBackgroundIfAvailable()
+                        .cardGlassBackgroundIfAvailable(onSheet: true)
                 
                     Divider()
                         .padding(.vertical)
@@ -175,7 +175,7 @@ struct StationDetailsSheetContent: View {
                                 title: address.capitalized,
                                 subtitle: distanceText
                             )
-                            .cardGlassBackgroundIfAvailable()
+                            .cardGlassBackgroundIfAvailable(onSheet: true)
                         }
                         .buttonStyle(.plain)
                     }
@@ -187,11 +187,11 @@ struct StationDetailsSheetContent: View {
                             title: String(localized: "Locality"),
                             subtitle: String(locality.capitalized)
                         )
-                        .cardGlassBackgroundIfAvailable()
+                        .cardGlassBackgroundIfAvailable(onSheet: true)
                     }
                     
                     StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
-                        .cardGlassBackgroundIfAvailable()
+                        .cardGlassBackgroundIfAvailable(onSheet: true)
                     
                     if let saleType = station.saleType {
                         StationDetailsListItem(
@@ -226,18 +226,17 @@ struct StationDetailsSheetContent: View {
                                 )
                             }
                         }
-                        .cardGlassBackgroundIfAvailable()
+                        .cardGlassBackgroundIfAvailable(onSheet: true)
                     }
                     
                     StationDetailsPricesItem(station: station)
-                        .cardGlassBackgroundIfAvailable()
+                        .cardGlassBackgroundIfAvailable(onSheet: true)
                     
                     StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: false)
-                        .cardGlassBackgroundIfAvailable()
+                        .cardGlassBackgroundIfAvailable(onSheet: true)
                     
                     StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
-                        .clipShape(.rect(cornerRadius: 20))
-                        .cardGlassBackgroundIfAvailable()
+                        .cardGlassBackgroundIfAvailable(onSheet: true)
                     
                     if let update = mapManager.data?.lastUpdated {
                         if let date = formatDate(update) {
@@ -253,7 +252,7 @@ struct StationDetailsSheetContent: View {
                                         .fontWeight(.medium)
                                 )
                             }
-                            .cardGlassBackgroundIfAvailable()
+                            .cardGlassBackgroundIfAvailable(onSheet: true)
                         }
                     }
                     

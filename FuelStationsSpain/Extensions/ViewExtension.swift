@@ -18,15 +18,29 @@ fileprivate struct ConditionalBackgroundWithMaterial: ViewModifier {
 }
 
 fileprivate struct CardGlassBackgroundIfAvailable: ViewModifier {
+    let onSheet: Bool
+    
+    init(onSheet: Bool) {
+        self.onSheet = onSheet
+    }
+    
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
             content
+                .clipShape(.rect(cornerRadius: 20))
                 .glassEffect(.regular.tint(Color.sheetGlassCardBackground), in: .rect(cornerRadius: 20))
         }
         else {
-            content
-                .background(Material.ultraThick)
-                .clipShape(.rect(cornerRadius: 8))
+            if onSheet == true {
+                content
+                    .background(Material.ultraThick)
+                    .clipShape(.rect(cornerRadius: 8))
+            }
+            else {
+                content
+                    .background(Color.listItemBackground)
+                    .clipShape(.rect(cornerRadius: 8))
+            }
         }
     }
 }
@@ -80,8 +94,8 @@ extension View {
         modifier(ConditionalBackgroundWithMaterial())
     }
     
-    func cardGlassBackgroundIfAvailable() -> some View {
-        modifier(CardGlassBackgroundIfAvailable())
+    func cardGlassBackgroundIfAvailable(onSheet: Bool = false) -> some View {
+        modifier(CardGlassBackgroundIfAvailable(onSheet: onSheet))
     }
     
     func fontSize(_ size: CGFloat) -> some View {
