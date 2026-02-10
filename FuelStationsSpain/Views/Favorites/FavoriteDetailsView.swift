@@ -43,8 +43,7 @@ struct FavoriteDetailsView: View {
                                 .fontSize(22)
                                 .fontWeight(.bold)
                             StationDetailsSummary(width: proxy.size.width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
-                                .customBackgroundWithMaterial()
-                                .cardCornerRadius()
+                                .cardGlassBackgroundIfAvailable()
                             
                             Divider()
                                 .padding(.top, 12)
@@ -58,18 +57,18 @@ struct FavoriteDetailsView: View {
                         Address()
                         Locality()
                         StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
-                            .background(Color.listItemBackground)
-                            .cardCornerRadius()
+                            .cardGlassBackgroundIfAvailable()
+                        
                         SaleType()
+                        
                         StationDetailsPricesItem(station: station)
-                            .background(Color.listItemBackground)
-                            .cardCornerRadius()
+                            .cardGlassBackgroundIfAvailable()
                         
                         StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
                             navigationPath.append(NavigateHowToReachStation(station: station))
                         }
-                        .background(Color.listItemBackground)
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
+                        
                         LastUpdated()
                         HStack {
                             NavigationLink {
@@ -144,8 +143,7 @@ struct FavoriteDetailsView: View {
                 title: String(localized: "Station alias"),
                 subtitle: stationAlias
             )
-            .customBackgroundWithMaterial()
-            .cardCornerRadius()
+            .cardGlassBackgroundIfAvailable()
             .animation(.default, value: alias)
         }
     }
@@ -174,8 +172,7 @@ struct FavoriteDetailsView: View {
                     title: address.capitalized,
                     subtitle: distanceText
                 )
-                .customBackgroundWithMaterial()
-                .cardCornerRadius()
+                .cardGlassBackgroundIfAvailable()
             }
             .buttonStyle(.plain)
         }
@@ -189,8 +186,7 @@ struct FavoriteDetailsView: View {
                 title: String(localized: "Locality"),
                 subtitle: String(locality.capitalized)
             )
-            .background(Color.listItemBackground)
-            .cardCornerRadius()
+            .cardGlassBackgroundIfAvailable()
         }
     }
     
@@ -228,8 +224,7 @@ struct FavoriteDetailsView: View {
                     )
                 }
             }
-            .background(Color.listItemBackground)
-            .cardCornerRadius()
+            .cardGlassBackgroundIfAvailable()
         }
     }
     
@@ -248,8 +243,7 @@ struct FavoriteDetailsView: View {
                             .fontWeight(.medium)
                     )
                 }
-                .background(Color.listItemBackground)
-                .cardCornerRadius()
+                .cardGlassBackgroundIfAvailable()
             }
         }
     }

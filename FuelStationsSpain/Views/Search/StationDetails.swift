@@ -52,8 +52,7 @@ struct SearchStationDetails: View {
                                 .fontSize(22)
                                 .fontWeight(.bold)
                             StationDetailsSummary(width: proxy.size.width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
-                                .customBackgroundWithMaterial()
-                                .cardCornerRadius()
+                                .cardGlassBackgroundIfAvailable()
                             
                             Divider()
                                 .padding(.top, 12)
@@ -63,15 +62,18 @@ struct SearchStationDetails: View {
                                 .fontSize(22)
                                 .fontWeight(.bold)
                         }
+                        
                         Address(station: station, distance: distanceToUserLocation)
+                        
                         Locality(station: station)
+                        
                         StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
-                            .background(Color.listItemBackground)
-                            .cardCornerRadius()
+                            .cardGlassBackgroundIfAvailable()
+                        
                         SaleType(station: station)
+                        
                         StationDetailsPricesItem(station: station)
-                            .background(Color.listItemBackground)
-                            .cardCornerRadius()
+                            .cardGlassBackgroundIfAvailable()
                         
                         StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {
                             if isSplitView == true {
@@ -81,9 +83,10 @@ struct SearchStationDetails: View {
                                 searchViewModel.navigationPath.append(NavigateHowToReachStation(station: station))
                             }
                         }
-                        .background(Color.listItemBackground)
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
+                        
                         LastUpdated()
+                        
                         HStack {
                             NavigationLink {
                                 HistoricPricesView(station: station, showingInSheet: false)
@@ -150,8 +153,7 @@ struct SearchStationDetails: View {
                     title: address.capitalized,
                     subtitle: distanceText
                 )
-                .customBackgroundWithMaterial()
-                .cardCornerRadius()
+                .cardGlassBackgroundIfAvailable()
             }
             .buttonStyle(.plain)
         }
@@ -165,8 +167,7 @@ struct SearchStationDetails: View {
                 title: String(localized: "Locality"),
                 subtitle: String(locality.capitalized)
             )
-            .background(Color.listItemBackground)
-            .cardCornerRadius()
+            .cardGlassBackgroundIfAvailable()
         }
     }
     
@@ -204,8 +205,7 @@ struct SearchStationDetails: View {
                     )
                 }
             }
-            .background(Color.listItemBackground)
-            .cardCornerRadius()
+            .cardGlassBackgroundIfAvailable()
         }
     }
     
@@ -224,8 +224,7 @@ struct SearchStationDetails: View {
                             .fontWeight(.medium)
                     )
                 }
-                .background(Color.listItemBackground)
-                .cardCornerRadius()
+                .cardGlassBackgroundIfAvailable()
             }
         }
     }

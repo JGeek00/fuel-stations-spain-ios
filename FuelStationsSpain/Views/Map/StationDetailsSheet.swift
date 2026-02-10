@@ -237,7 +237,7 @@ struct StationDetailsSheetContent: View {
                     
                     StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
                         .clipShape(.rect(cornerRadius: 20))
-                        .shadow(color: .black.opacity(0.1), radius: 16)
+                        .cardGlassBackgroundIfAvailable()
                     
                     if let update = mapManager.data?.lastUpdated {
                         if let date = formatDate(update) {
