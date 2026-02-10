@@ -110,6 +110,10 @@ struct HowToReachStation: View {
             .mapControls {
                 MapScaleView()
             }
+            .overlay(alignment: .topTrailing) {
+                MapCompass(scope: mapScope)
+                    .offset(x: -12, y: 12)
+            }
             .overlay(alignment: .bottom, content: {
                 if let distance = route?.distance, let time = route?.expectedTravelTime {
                     let d: String = {
