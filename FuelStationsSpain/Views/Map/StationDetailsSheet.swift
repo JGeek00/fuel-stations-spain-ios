@@ -333,7 +333,7 @@ struct StationDetailsSheetContent: View {
             }
             .sheet(isPresented: $showHowToReachSheet) {
                 NavigationStack {
-                    HowToReachStation(station: station)
+                    HowToReachStation(station: station, embeddedOnSheet: true)
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 CloseButton {

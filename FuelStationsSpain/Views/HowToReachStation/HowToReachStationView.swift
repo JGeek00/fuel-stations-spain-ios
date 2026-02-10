@@ -11,9 +11,11 @@ struct NavigateHowToReachStation: Hashable {
 
 struct HowToReachStation: View {
     var station: FuelStation
+    let embeddedOnSheet: Bool
     
-    init(station: FuelStation) {
+    init(station: FuelStation, embeddedOnSheet: Bool = false) {
         self.station = station
+        self.embeddedOnSheet = false
     }
         
     @EnvironmentObject private var locationManager: LocationManager
@@ -170,6 +172,11 @@ struct HowToReachStation: View {
                                 .background(Material.regular)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .shadow(color: .black.opacity(0.3), radius: 5)
+                        }
+                    }
+                    .condition { view in
+                        if embeddedOnSheet == false {
+                            view.offset(y: -12)
                         }
                     }
                 }
