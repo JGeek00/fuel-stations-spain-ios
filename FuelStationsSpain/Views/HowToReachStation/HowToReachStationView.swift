@@ -110,7 +110,7 @@ struct HowToReachStation: View {
             .mapControls {
                 MapScaleView()
             }
-            .overlay(alignment: .topTrailing, content: {
+            .overlay(alignment: .bottom, content: {
                 if let distance = route?.distance, let time = route?.expectedTravelTime {
                     let d: String = {
                         if distance >= 1000 {
@@ -135,46 +135,39 @@ struct HowToReachStation: View {
                         return text.joined(separator: ", ")
                     }()
                     
-                    VStack(alignment: .trailing) {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill")
-                                Spacer()
-                                    .frame(width: 8)
-                                Text(verbatim: d)
-                            }
+                    HStack(alignment: .center) {
+                        HStack {
+                            Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill")
                             Spacer()
-                                .frame(height: 12)
-                            HStack {
-                                Image(systemName: "timer")
-                                Spacer()
-                                    .frame(width: 8)
-                                Text(verbatim: time)
-                            }
+                                .frame(width: 8)
+                            Text(verbatim: d)
                         }
-                        .fontSize(14)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.foreground)
-                        .condition { view in
-                            if #available(iOS 26.0, *) {
-                                view
-                                    .padding(12)
-                                    .glassEffect(in: .rect(cornerRadius: 24.0))
-                            } else {
-                                view
-                                    .padding(8)
-                                    .background(Material.regular)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .shadow(color: .black.opacity(0.3), radius: 5)
-                            }
-                        }
-                        
                         Spacer()
-                            .frame(height: 12)
+                            .frame(width: 24)
                         
-                        MapCompass(scope: mapScope)
+                        HStack {
+                            Image(systemName: "timer")
+                            Spacer()
+                                .frame(width: 8)
+                            Text(verbatim: time)
+                        }
                     }
-                    .offset(x: -(12 * fontSizeMultiplier(for: dynamicTypeSize)), y: 12 * fontSizeMultiplier(for: dynamicTypeSize))
+                    .fontSize(14)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.foreground)
+                    .condition { view in
+                        if #available(iOS 26.0, *) {
+                            view
+                                .padding(12)
+                                .glassEffect(in: .rect(cornerRadius: 24.0))
+                        } else {
+                            view
+                                .padding(8)
+                                .background(Material.regular)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .shadow(color: .black.opacity(0.3), radius: 5)
+                        }
+                    }
                 }
             })
         }
