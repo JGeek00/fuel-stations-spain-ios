@@ -17,6 +17,20 @@ fileprivate struct ConditionalBackgroundWithMaterial: ViewModifier {
     }
 }
 
+fileprivate struct CardGlassBackgroundIfAvailable: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(.regular.tint(Color.sheetGlassCardBackground), in: .rect(cornerRadius: 20))
+        }
+        else {
+            content
+                .background(Material.ultraThick)
+                .clipShape(.rect(cornerRadius: 8))
+        }
+    }
+}
+
 fileprivate struct FontSize: ViewModifier {
     var size: CGFloat
     
@@ -64,6 +78,10 @@ fileprivate struct FrameDynamicSize: ViewModifier {
 extension View {
     func customBackgroundWithMaterial() -> some View {
         modifier(ConditionalBackgroundWithMaterial())
+    }
+    
+    func cardGlassBackgroundIfAvailable() -> some View {
+        modifier(CardGlassBackgroundIfAvailable())
     }
     
     func fontSize(_ size: CGFloat) -> some View {

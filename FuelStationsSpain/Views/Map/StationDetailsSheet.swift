@@ -142,8 +142,7 @@ struct StationDetailsSheetContent: View {
             VStack(alignment: .leading) {
                 if showStationSummary {
                     StationDetailsSummary(width: width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
-                        .customBackgroundWithMaterial()
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
                 
                     Divider()
                         .padding(.vertical)
@@ -152,6 +151,7 @@ struct StationDetailsSheetContent: View {
                         .fontSize(22)
                         .fontWeight(.semibold)
                 }
+                
                 LazyVStack(alignment: .leading, spacing: 12) {
                     if let address = station.address {
                         let distanceText: String? = {
@@ -175,11 +175,11 @@ struct StationDetailsSheetContent: View {
                                 title: address.capitalized,
                                 subtitle: distanceText
                             )
-                            .customBackgroundWithMaterial()
-                            .cardCornerRadius()
+                            .cardGlassBackgroundIfAvailable()
                         }
                         .buttonStyle(.plain)
                     }
+                    
                     if let locality = station.locality {
                         StationDetailsListItem(
                             icon: "building.2.fill",
@@ -187,12 +187,12 @@ struct StationDetailsSheetContent: View {
                             title: String(localized: "Locality"),
                             subtitle: String(locality.capitalized)
                         )
-                        .customBackgroundWithMaterial()
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
                     }
+                    
                     StationDetailsScheduleItem(station: station, schedule: formattedSchedule, alwaysExpanded: showStationSummary)
-                        .customBackgroundWithMaterial()
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
+                    
                     if let saleType = station.saleType {
                         StationDetailsListItem(
                             icon: "person.fill",
@@ -226,18 +226,19 @@ struct StationDetailsSheetContent: View {
                                 )
                             }
                         }
-                        .customBackgroundWithMaterial()
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
                     }
+                    
                     StationDetailsPricesItem(station: station)
-                        .customBackgroundWithMaterial()
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
+                    
                     StationDetailsPriceScale(station: station, priceScaleItems: pricesScaleItems, alwaysExpanded: false)
-                        .customBackgroundWithMaterial()
-                        .cardCornerRadius()
+                        .cardGlassBackgroundIfAvailable()
+                    
                     StationDetailsMapItem(station: station, showOnlyLookAround: true, lookAroundScene: lookAroundScene) {}
-                        .customBackgroundWithMaterial()
-                        .cardCornerRadius()
+                        .clipShape(.rect(cornerRadius: 20))
+                        .shadow(color: .black.opacity(0.1), radius: 16)
+                    
                     if let update = mapManager.data?.lastUpdated {
                         if let date = formatDate(update) {
                             StationDetailsListItem(
@@ -252,10 +253,10 @@ struct StationDetailsSheetContent: View {
                                         .fontWeight(.medium)
                                 )
                             }
-                            .customBackgroundWithMaterial()
-                            .cardCornerRadius()
+                            .cardGlassBackgroundIfAvailable()
                         }
                     }
+                    
                     HStack {
                         Spacer()
                         Button {
