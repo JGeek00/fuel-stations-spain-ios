@@ -170,7 +170,7 @@ fileprivate struct MapComponent: View {
         Map(position: $mapManager.position, bounds: MapCameraBounds(minimumDistance: 500, maximumDistance: 50000), scope: mapScope) {
             if let stations = mapManager.data?.results {
                 let markers = {
-                    var m = stations.filter() { $0.signage != nil && $0.latitude != nil && $0.longitude != nil }
+                    var m = stations
                     if hideStationsNotOpenPublic == true {
                         m = m.filter() { $0.saleType != .r }
                     }
@@ -186,7 +186,7 @@ fileprivate struct MapComponent: View {
                     return m
                 }()
                 ForEach(markers, id: \.id) { value in
-                    Annotation(value.signage!, coordinate: CLLocationCoordinate2D(latitude: value.latitude!, longitude: value.longitude!)) {
+                    Annotation(value.signage, coordinate: CLLocationCoordinate2D(latitude: value.latitude, longitude: value.longitude)) {
                         MapMarkerBubble(value)
                             .environmentObject(MapManager.shared)
                     }

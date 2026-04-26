@@ -31,7 +31,7 @@ struct StationsSheet: View {
                             Group {
                                 let processedData = {
                                     let d = addDistancesToStations(stations: data, lastLocation: location)
-                                    let filtered = searchText != "" ? d.filter() { $0.signage!.lowercased().contains(searchText.lowercased()) } : d
+                                    let filtered = searchText != "" ? d.filter() { $0.signage.lowercased().contains(searchText.lowercased()) } : d
                                     let sorted = sortStations(stations: filtered, sortingMethod: selectedSorting)
                                     if hideStationsNotOpenPublic == true {
                                         return sorted.filter() { $0.saleType != .r }
@@ -55,7 +55,7 @@ struct StationsSheet: View {
                                                             mapManager.selectStation(station: item, centerLocation: true)
                                                         }
                                                         Task {
-                                                            await mapManager.fetchData(latitude: item.latitude!, longitude: item.longitude!)
+                                                            await mapManager.fetchData(latitude: item.latitude, longitude: item.longitude)
                                                         }
                                                     } label: {
                                                         StationListEntry(station: item, sortingMethod: selectedSorting)

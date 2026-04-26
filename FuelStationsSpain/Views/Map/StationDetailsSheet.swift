@@ -18,8 +18,8 @@ struct StationDetailsSheetHeader: View {
     var body: some View {
         if let station = mapManager.selectedStation {
             HStack {
-                if let name = station.signage {
-                    Text(verbatim: name.capitalized)
+                if !station.signage.isEmpty {
+                    Text(verbatim: station.signage.capitalized)
                         .fontSize(32)
                         .fontWeight(.bold)
                         .truncationMode(.tail)
@@ -130,10 +130,10 @@ struct StationDetailsSheetContent: View {
     
     var body: some View {
         if let station = mapManager.selectedStation {
-            let formattedSchedule = getStationSchedule(station.openingHours!)
+            let formattedSchedule = getStationSchedule(station.openingHours)
             let distanceToUserLocation: Double? = {
-                if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                if let userLat = locationManager.lastLocation?.coordinate.latitude, let userLon = locationManager.lastLocation?.coordinate.longitude {
+                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude, longitude: station.longitude), Coordinate(latitude: userLat, longitude: userLon))
                     return distance
                 }
                 return nil
@@ -153,7 +153,8 @@ struct StationDetailsSheetContent: View {
                 }
                 
                 LazyVStack(alignment: .leading, spacing: 12) {
-                    if let address = station.address {
+                    if !station.address.isEmpty {
+                        let address = station.address
                         let distanceText: String? = {
                             if let distance = distanceToUserLocation {
                                 if distance < 1 {
@@ -180,12 +181,12 @@ struct StationDetailsSheetContent: View {
                         .buttonStyle(.plain)
                     }
                     
-                    if let locality = station.locality {
+                    if !station.locality.isEmpty {
                         StationDetailsListItem(
                             icon: "building.2.fill",
                             iconColor: .green,
                             title: String(localized: "Locality"),
-                            subtitle: String(locality.capitalized)
+                            subtitle: String(station.locality.capitalized)
                         )
                         .cardGlassBackgroundIfAvailable(onSheet: true)
                     }
@@ -303,7 +304,7 @@ struct StationDetailsSheetContent: View {
             .onChange(of: station, initial: true) {
                 DispatchQueue.global(qos: .background).async {
                     Task {
-                        let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                        let result = await getLookAroundScene(latitude: station.latitude, longitude: station.longitude)
                         DispatchQueue.main.async {
                             lookAroundScene = result
                         }

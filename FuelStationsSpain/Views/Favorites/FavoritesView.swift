@@ -68,7 +68,7 @@ struct FavoritesView: View {
             else {
                 let dataWithDistance = addDistancesToStations(stations: data, lastLocation: favoritesListViewModel.location)
                 let sorted = sortStations(stations: dataWithDistance, sortingMethod: favoritesListViewModel.selectedSorting)
-                let filtered = favoritesListViewModel.searchText != "" ? sorted.filter() { $0.signage!.lowercased().contains(favoritesListViewModel.searchText.lowercased()) } : sorted
+                let filtered = favoritesListViewModel.searchText != "" ? sorted.filter() { $0.signage.lowercased().contains(favoritesListViewModel.searchText.lowercased()) } : sorted
                 Group {
                     if favoritesListViewModel.listHasContent == false {
                         ContentUnavailableView("No results", systemImage: "magnifyingglass", description: Text("Change the inputted search term."))

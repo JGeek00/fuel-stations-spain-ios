@@ -64,7 +64,7 @@ struct MapMarkerBubble: View {
             }
         }
         .onAppear {
-            formattedSchedule = value.openingHours != nil ? getStationSchedule(value.openingHours!) : nil
+            formattedSchedule = getStationSchedule(value.openingHours)
         }
     }
     

@@ -57,7 +57,7 @@ struct HowToReachStation: View {
                             latitude: latitude,
                             longitude: longitude
                         )
-                        destination = MKMapItem(placemark: MKPlacemark(coordinate: .init(latitude: station.latitude!, longitude: station.longitude!)))
+                        destination = MKMapItem(placemark: MKPlacemark(coordinate: .init(latitude: station.latitude, longitude: station.longitude)))
                     }
                 }
             }
@@ -71,10 +71,10 @@ struct HowToReachStation: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Button("Open in Apple Maps") {
-                                openInAppleMaps(sourceLatitude: latitude, sourceLongitude: longitude, destinationLatitude: station.latitude!, destinationLongitude: station.longitude!, stationName: station.signage!.capitalized)
+                                 openInAppleMaps(sourceLatitude: latitude, sourceLongitude: longitude, destinationLatitude: station.latitude, destinationLongitude: station.longitude, stationName: station.signage.capitalized)
                             }
                             Button("Open in Google Maps") {
-                                openURL(URL(string: "https://www.google.com/maps/search/?api=1&query=\(station.latitude!)%2C\(station.longitude!)")!)
+                                 openURL(URL(string: "https://www.google.com/maps/search/?api=1&query=\(station.latitude)%2C\(station.longitude)")!)
                             }
                         } label: {
                             Text("Open in...")
@@ -101,7 +101,7 @@ struct HowToReachStation: View {
                         .overlay(Circle().stroke(Color.white, lineWidth: 3))
                         .shadow(color: .black.opacity(0.5), radius: 5)
                 }
-                Marker(station.signage!.capitalized, coordinate: destination.placemark.coordinate)
+                Marker(station.signage.capitalized, coordinate: destination.placemark.coordinate)
                         
                 if let route {
                     MapPolyline(route)
@@ -191,8 +191,50 @@ struct HowToReachStation: View {
 }
 
 #Preview {
-    let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil, adbluePrice: nil)
-    
+    let station = FuelStation(
+        id: "5272",
+        postalCode: "02328",
+        address: "AVENIDA PRINCIPE, 2328",
+        openingHours: "L-D: 08:00-16:00",
+        latitude: 38.900944,
+        longitude: -1.994028,
+        locality: "SANTA ANA",
+        margin: .d,
+        municipality: nil,
+        province: nil,
+        referral: .om,
+        signage: "REPSOL",
+        saleType: .p,
+        percBioEthanol: "0.0",
+        percMethylEster: "0.0",
+        municipalityID: 54,
+        provinceID: 2,
+        regionID: 7,
+        adbluePrice: nil,
+        ammoniaPrice: nil,
+        biodieselPrice: nil,
+        bioethanolPrice: nil,
+        compressedBiogasPrice: nil,
+        liquefiedBiogasPrice: nil,
+        renewableDieselPrice: nil,
+        cngPrice: nil,
+        lngPrice: nil,
+        lpgPrice: nil,
+        gasoilAPrice: 1.459,
+        gasoilBPrice: 1.16,
+        premiumGasoilPrice: 1.509,
+        gasoline95E10Price: nil,
+        gasoline95E25Price: nil,
+        gasoline95E5Price: 1.499,
+        gasoline95E5PremiumPrice: nil,
+        gasoline95E85Price: nil,
+        gasoline98E10Price: nil,
+        gasoline98E5Price: 1.609,
+        renewableGasolinePrice: nil,
+        hydrogenPrice: nil,
+        methanolPrice: nil
+    )
+
     NavigationStack {
         HowToReachStation(station: station)
             .environmentObject(LocationManager(mockData: true))

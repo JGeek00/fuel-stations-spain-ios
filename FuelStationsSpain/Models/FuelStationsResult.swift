@@ -1,71 +1,43 @@
 import Foundation
 
 // MARK: - FuelStationsResult
-struct FuelStationsResult: Codable, Hashable {
-    let lastUpdated: String?
-    let count: Int?
-    let results: [FuelStation]?
-    
-    static func filterStationsResult(_ data: FuelStationsResult) -> FuelStationsResult {
-        if let stations = data.results {
-            let filtered = stations.filter() { $0.id != nil && $0.signage != nil && $0.address != nil }
-            return FuelStationsResult(lastUpdated: data.lastUpdated, count: filtered.count, results: filtered)
-        }
-        return data
-    }
-    
-    static func filterStations(_ data: [FuelStation]) -> [FuelStation] {
-        let filtered = data.filter() { $0.id != nil && $0.signage != nil && $0.address != nil }
-        return filtered
-    }
+struct FuelStationsResult: Codable {
+    let lastUpdated: String
+    let count: Int
+    let results: [FuelStation]
 }
 
 // MARK: - FuelStation
 struct FuelStation: Codable, Hashable {
-    let id, postalCode, address, openingHours: String?
-    let latitude, longitude: Double?
-    let locality: String?
+    let id, postalCode, address, openingHours: String
+    let latitude, longitude: Double
+    let locality: String
     let margin: Margin?
-    let municipality, province: Int?
+    let municipality, province: String?
     let referral: Referral?
-    let signage: String?
+    let signage: String
     let saleType: SaleType?
-    let percBioEthanol, percMethylEster: String?
-    let municipalityID, provinceID: Int?
-    let regionID: Int?
-    let biodieselPrice, bioethanolPrice, cngPrice, lngPrice: Double?
-    let lpgPrice: Double?
-    let gasoilAPrice: Double?
-    let gasoilBPrice, premiumGasoilPrice: Double?
-    let gasoline95E10Price: Double?
-    let gasoline95E5Price: Double?
-    let gasoline95E5PremiumPrice: Double?
-    let gasoline98E10Price: Double?
-    let gasoline98E5Price: Double?
-    let hydrogenPrice: Double?
+    let percBioEthanol, percMethylEster: String
+    let municipalityID, provinceID, regionID: Int
     let adbluePrice: Double?
-    var distanceToUserLocation: Double?  // This parameter is filled when it's rendered
+    let ammoniaPrice, biodieselPrice, bioethanolPrice, compressedBiogasPrice: Double?
+    let liquefiedBiogasPrice: Double?
+    let renewableDieselPrice: Double?
+    let cngPrice, lngPrice: Double?
+    let lpgPrice, gasoilAPrice, gasoilBPrice, premiumGasoilPrice: Double?
+    let gasoline95E10Price, gasoline95E25Price: Double?
+    let gasoline95E5Price, gasoline95E5PremiumPrice: Double?
+    let gasoline95E85Price, gasoline98E10Price: Double?
+    let gasoline98E5Price: Double?
+    let renewableGasolinePrice, hydrogenPrice, methanolPrice: Double?
+    var distanceToUserLocation: Double? // filled on runtime, not from API
 
     enum CodingKeys: String, CodingKey {
         case id, postalCode, address, openingHours, latitude, longitude, locality, margin, municipality, province, referral, signage, saleType, percBioEthanol, percMethylEster
         case municipalityID = "municipalityId"
         case provinceID = "provinceId"
         case regionID = "regionId"
-        case biodieselPrice, bioethanolPrice
-        case cngPrice = "CNGPrice"
-        case lngPrice = "LNGPrice"
-        case lpgPrice = "LPGPrice"
-        case gasoilAPrice, gasoilBPrice, premiumGasoilPrice, gasoline95E10Price, gasoline95E5Price, gasoline95E5PremiumPrice, gasoline98E10Price, gasoline98E5Price, hydrogenPrice, adbluePrice
-    }
-    
-    static func getObjectProperty<T>(station: FuelStation, propertyName: String) -> T? {
-        let mirror = Mirror(reflecting: station)
-        for child in mirror.children {
-            if let label = child.label, label == propertyName {
-                return child.value as? T
-            }
-        }
-        return nil
+        case adbluePrice, ammoniaPrice, biodieselPrice, bioethanolPrice, compressedBiogasPrice, liquefiedBiogasPrice, renewableDieselPrice, cngPrice, lngPrice, lpgPrice, gasoilAPrice, gasoilBPrice, premiumGasoilPrice, gasoline95E10Price, gasoline95E25Price, gasoline95E5Price, gasoline95E5PremiumPrice, gasoline95E85Price, gasoline98E10Price, gasoline98E5Price, renewableGasolinePrice, hydrogenPrice, methanolPrice
     }
 }
 
@@ -92,5 +64,18 @@ struct StationWithDistance: Hashable {
     init(station: FuelStation, distance: Double?) {
         self.station = station
         self.distance = distance
+    }
+}
+
+// Helper to access fuel price properties by name (used in previews and views)
+extension FuelStation {
+    static func getObjectProperty(station: FuelStation, propertyName: String) -> Double? {
+        let mirror = Mirror(reflecting: station)
+        for child in mirror.children {
+            if let label = child.label, label == propertyName {
+                return child.value as? Double
+            }
+        }
+        return nil
     }
 }

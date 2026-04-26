@@ -30,15 +30,15 @@ class FavoritesProvider: ObservableObject {
     
     func addFavorite(station: FuelStation) {
         let fetchRequest: NSFetchRequest = FavoriteStation.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %@", station.id! as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", station.id as CVarArg)
         do {
             let items = try coredataContext.fetch(fetchRequest)
             if items.count == 0 {
                 let newFavorite = FavoriteStation(context: coredataContext)
-                newFavorite.id = station.id!
+                newFavorite.id = station.id
                 newFavorite.date = Date()
-                newFavorite.name = station.signage!
-                newFavorite.address = station.address!
+                newFavorite.name = station.signage
+                newFavorite.address = station.address
                 newFavorite.locality = station.locality
                 try coredataContext.save()
                 _ = self.fetchFavorites()

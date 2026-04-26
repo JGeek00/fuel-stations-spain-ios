@@ -35,10 +35,10 @@ struct SearchStationDetails: View {
     
     @ViewBuilder private func Content() -> some View {
         if let station = searchViewModel.selectedStation {
-            let formattedSchedule = getStationSchedule(station.openingHours!)
+            let formattedSchedule = getStationSchedule(station.openingHours)
             let distanceToUserLocation: Double? = {
-                if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+                if let userLat = locationManager.lastLocation?.coordinate.latitude, let userLon = locationManager.lastLocation?.coordinate.longitude {
+                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude, longitude: station.longitude), Coordinate(latitude: userLat, longitude: userLon))
                     return distance
                 }
                 return nil
@@ -107,7 +107,7 @@ struct SearchStationDetails: View {
                     }
                     .padding()
                 }
-                .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
+                .navigationTitle(station.signage.capitalized)
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.listBackground)
                 .toolbar {
@@ -116,7 +116,7 @@ struct SearchStationDetails: View {
                 .onChange(of: station, initial: true) {
                     DispatchQueue.global(qos: .background).async {
                         Task {
-                            let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                            let result = await getLookAroundScene(latitude: station.latitude, longitude: station.longitude)
                             DispatchQueue.main.async {
                                 lookAroundScene = result
                             }
@@ -131,7 +131,8 @@ struct SearchStationDetails: View {
     }
     
     @ViewBuilder private func Address(station: FuelStation, distance: Double?) -> some View {
-        if let address = station.address {
+        if !station.address.isEmpty {
+            let address = station.address
             let distanceText: String? = {
                 if let distance {
                     if distance < 1 {
@@ -160,12 +161,12 @@ struct SearchStationDetails: View {
     }
     
     @ViewBuilder private func Locality(station: FuelStation) -> some View {
-        if let locality = station.locality {
+        if !station.locality.isEmpty {
             StationDetailsListItem(
                 icon: "building.2.fill",
                 iconColor: .green,
                 title: String(localized: "Locality"),
-                subtitle: String(locality.capitalized)
+                subtitle: String(station.locality.capitalized)
             )
             .cardGlassBackgroundIfAvailable()
         }

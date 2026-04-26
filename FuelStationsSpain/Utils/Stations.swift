@@ -30,14 +30,9 @@ func distanceBetweenCoordinates(_ coordinate1: Coordinate, _ coordinate2: Coordi
 func addDistancesToStations(stations: [FuelStation], lastLocation: CLLocation?) -> [FuelStation] {
     if let latitude = lastLocation?.coordinate.latitude, let longitude = lastLocation?.coordinate.longitude {
         return stations.map { item in
-            if let stationLatitude = item.latitude, let stationLongitude = item.longitude {
-                var itemCloned = item
-                itemCloned.distanceToUserLocation = distanceBetweenCoordinates(Coordinate(latitude: stationLatitude, longitude: stationLongitude), Coordinate(latitude: latitude, longitude: longitude))
-                return itemCloned
-            }
-            else {
-                return item
-            }
+            var itemCloned = item
+            itemCloned.distanceToUserLocation = distanceBetweenCoordinates(Coordinate(latitude: item.latitude, longitude: item.longitude), Coordinate(latitude: latitude, longitude: longitude))
+            return itemCloned
         }
     }
     else {

@@ -42,7 +42,7 @@ class HistoricPricesViewModel: ObservableObject {
         let today = Date()
         let start = Calendar.current.date(byAdding: .year, value: -1, to: today)!
         
-        let result = await ApiClient.fetchHistoricPrices(stationId: station.id!, startDate: start, endDate: today)
+        let result = await ApiClient.fetchHistoricPrices(stationId: station.id, startDate: start, endDate: today)
         
         DispatchQueue.main.async {
             withAnimation(.default) {

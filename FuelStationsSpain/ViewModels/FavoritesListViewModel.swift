@@ -32,10 +32,10 @@ class FavoritesListViewModel: ObservableObject {
         self.loading = true
     
         let result = await ApiClient.fetchServiceStationsById(stationIds: favorites)
-        if result.successful == true {
+        if let data = result.data {
             DispatchQueue.main.async {
                 withAnimation(.default) {
-                    self.data = FuelStationsResult.filterStationsResult(result.data!)
+                    self.data = data
                     self.loading = false
                     self.error = nil
                 }

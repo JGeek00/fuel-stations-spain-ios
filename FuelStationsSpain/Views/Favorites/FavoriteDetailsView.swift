@@ -23,12 +23,12 @@ struct FavoriteDetailsView: View {
     @State private var lookAroundScene: MKLookAroundScene? = nil
     
     var body: some View {
-        let alias = favoritesProvider.favorites.first(where: { $0.id == station.id! })?.alias
-        
-        let formattedSchedule = getStationSchedule(station.openingHours!)
+        let alias = favoritesProvider.favorites.first(where: { $0.id == station.id })?.alias
+
+        let formattedSchedule = getStationSchedule(station.openingHours)
         let distanceToUserLocation: Double? = {
-            if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
+            if let userLat = locationManager.lastLocation?.coordinate.latitude, let userLon = locationManager.lastLocation?.coordinate.longitude {
+                let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude, longitude: station.longitude), Coordinate(latitude: userLat, longitude: userLon))
                 return distance
             }
             return nil
@@ -90,7 +90,7 @@ struct FavoriteDetailsView: View {
                     }
                     .padding()
                 }
-                .navigationTitle(station.signage?.capitalized ?? String(localized: "Service station"))
+                .navigationTitle(station.signage.capitalized)
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color.listBackground)
                 .toolbar {
@@ -112,7 +112,7 @@ struct FavoriteDetailsView: View {
                         defineStationAliasOpen = false
                     }
                     Button("Save") {
-                        favoritesProvider.setFavoriteAlias(stationId: station.id!, newAlias: stationAliasTextField)
+                        favoritesProvider.setFavoriteAlias(stationId: station.id, newAlias: stationAliasTextField)
                         defineStationAliasOpen = false
                     }
                 } message: {
@@ -124,7 +124,7 @@ struct FavoriteDetailsView: View {
                 .onChange(of: station, initial: true) {
                     DispatchQueue.global(qos: .background).async {
                         Task {
-                            let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                            let result = await getLookAroundScene(latitude: station.latitude, longitude: station.longitude)
                             DispatchQueue.main.async {
                                 lookAroundScene = result
                             }
@@ -149,42 +149,40 @@ struct FavoriteDetailsView: View {
     }
     
     @ViewBuilder private func Address() -> some View {
-        if let address = station.address {
-            let distanceText: String? = {
-                if station.latitude != nil && station.longitude != nil && locationManager.lastLocation?.coordinate.latitude != nil && locationManager.lastLocation?.coordinate.longitude != nil {
-                    let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude!, longitude: station.longitude!), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
-                    if distance < 1 {
-                        return String(localized: "\(Int(distance*1000)) m from your current location")
-                    } else {
-                        return String(localized: "\(formattedNumber(value: distance)) Km from your current location")
-                    }
+        let distanceText: String? = {
+            if let userLat = locationManager.lastLocation?.coordinate.latitude, let userLon = locationManager.lastLocation?.coordinate.longitude {
+                let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude, longitude: station.longitude), Coordinate(latitude: userLat, longitude: userLon))
+                if distance < 1 {
+                    return String(localized: "\(Int(distance*1000)) m from your current location")
+                } else {
+                    return String(localized: "\(formattedNumber(value: distance)) Km from your current location")
                 }
-                return nil
-            }()
-            
-            Button {
-                UIPasteboard.general.string = address.capitalized
-                toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
-            } label: {
-                StationDetailsListItem(
-                    icon: "mappin",
-                    iconColor: .red,
-                    title: address.capitalized,
-                    subtitle: distanceText
-                )
-                .cardGlassBackgroundIfAvailable()
             }
-            .buttonStyle(.plain)
+            return nil
+        }()
+        
+        Button {
+            UIPasteboard.general.string = station.address.capitalized
+            toastProvider.showToast(icon: "document.on.document.fill", title: String(localized: "Address copied to the clipboard"))
+        } label: {
+            StationDetailsListItem(
+                icon: "mappin",
+                iconColor: .red,
+                title: station.address.capitalized,
+                subtitle: distanceText
+            )
+            .cardGlassBackgroundIfAvailable()
         }
+        .buttonStyle(.plain)
     }
     
     @ViewBuilder private func Locality() -> some View {
-        if let locality = station.locality {
+        if !station.locality.isEmpty {
             StationDetailsListItem(
                 icon: "building.2.fill",
                 iconColor: .green,
                 title: String(localized: "Locality"),
-                subtitle: String(locality.capitalized)
+                subtitle: String(station.locality.capitalized)
             )
             .cardGlassBackgroundIfAvailable()
         }

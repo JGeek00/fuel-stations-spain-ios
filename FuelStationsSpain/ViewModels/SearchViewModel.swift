@@ -171,14 +171,12 @@ class SearchViewModel: ObservableObject {
             self.stationsLoading = true
             
             let result = await ApiClient.fetchServiceStationsByMunicipality(municipalityId: municipalityId)
-            if result.successful == true, let stations = result.data?.results {
-                let filteredResult = FuelStationsResult.filterStationsResult(result.data!)
-                let filteredStations = FuelStationsResult.filterStations(stations)
-                let dataWithDistance = addDistancesToStations(stations: filteredStations, lastLocation: location)
+            if result.successful == true, let data = result.data {
+                let dataWithDistance = addDistancesToStations(stations: data.results, lastLocation: location)
                 let sorted = sortStations(stations: dataWithDistance, sortingMethod: stationsSelectedSorting)
                 DispatchQueue.main.async {
                     withAnimation(.default) {
-                        self.stationsData = filteredResult
+                        self.stationsData = data
                         self.sortedStationsList = sorted
                         self.stationsLoading = false
                         self.stationsError = false
@@ -225,7 +223,7 @@ class SearchViewModel: ObservableObject {
         let searchText = stationsSearchText
         if let data = sortedStationsList {
             DispatchQueue.global(qos: .background).async {
-                let filtered = data.filter({ $0.signage?.lowercased().contains(searchText.lowercased()) ?? false })
+                let filtered = data.filter({ $0.signage.lowercased().contains(searchText.lowercased()) })
                 DispatchQueue.main.async {
                     withAnimation(.default) {
                         self.filteredStationsList = filtered

@@ -83,13 +83,13 @@ struct StationListEntry: View {
             return dateFormatter
         }()
         
-        let alias = favoritesProvider.favorites.first(where: { $0.id == station.id! })?.alias
+        let alias = favoritesProvider.favorites.first(where: { $0.id == station.id })?.alias
         
         VStack(alignment: .leading) {
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
-                        if let stationId = station.id, favoritesProvider.isFavorite(stationId: stationId) && !hideFavoriteSymbol {
+                        if favoritesProvider.isFavorite(stationId: station.id) && !hideFavoriteSymbol {
                             Group {
                                 Image(systemName: "star.fill")
                                     .foregroundStyle(Color.accentColor)
@@ -104,16 +104,16 @@ struct StationListEntry: View {
                                 .fontSize(18)
                                 .fontWeight(.semibold)
                         }
-                        else if let signage = station.signage {
-                            Text(signage.capitalized)
+                        else if !station.signage.isEmpty {
+                            Text(station.signage.capitalized)
                                 .fontSize(18)
                                 .fontWeight(.semibold)
                         }
                     }
                     Spacer()
                         .frame(height: 4)
-                    if let address = station.address {
-                        Text(address.capitalized)
+                    if !station.address.isEmpty {
+                        Text(station.address.capitalized)
                             .fontSize(14)
                     }
                     if sortingMethod != .proximity {
@@ -131,8 +131,8 @@ struct StationListEntry: View {
                     }
                     Spacer()
                         .frame(height: 4)
-                    if let schedule = station.openingHours {
-                        let formattedSchedule = getStationSchedule(schedule)
+                    if !station.openingHours.isEmpty {
+                        let formattedSchedule = getStationSchedule(station.openingHours)
                         if let formattedSchedule = formattedSchedule {
                             Group {
                                 if formattedSchedule.schedule.isEmpty && formattedSchedule.isCurrentlyOpen == true {
@@ -208,23 +208,21 @@ struct StationListEntry: View {
         }
         .foregroundStyle(Color.foreground)
         .contextMenu {
-            if let id = station.id {
-                Button {
-                    withAnimation(.default) {
-                        if favoritesProvider.isFavorite(stationId: id) {
-                            favoritesProvider.removeFavorite(stationId: id)
-                        }
-                        else {
-                            favoritesProvider.addFavorite(station: station)
-                        }
-                    }
-                } label: {
-                    if favoritesProvider.isFavorite(stationId: id) {
-                        Label("Remove from favorites", systemImage: "star.slash.fill")
+            Button {
+                withAnimation(.default) {
+                    if favoritesProvider.isFavorite(stationId: station.id) {
+                        favoritesProvider.removeFavorite(stationId: station.id)
                     }
                     else {
-                        Label("Add to favorites", systemImage: "star.fill")
+                        favoritesProvider.addFavorite(station: station)
                     }
+                }
+            } label: {
+                if favoritesProvider.isFavorite(stationId: station.id) {
+                    Label("Remove from favorites", systemImage: "star.slash.fill")
+                }
+                else {
+                    Label("Add to favorites", systemImage: "star.fill")
                 }
             }
             Button {
@@ -254,9 +252,51 @@ struct StationListEntry: View {
     }
 }
 
-#Preview {    
-    let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil, adbluePrice: nil)
-    
+#Preview {
+    let station = FuelStation(
+        id: "5272",
+        postalCode: "02328",
+        address: "AVENIDA PRINCIPE, 2328",
+        openingHours: "L-D: 08:00-16:00",
+        latitude: 38.900944,
+        longitude: -1.994028,
+        locality: "SANTA ANA",
+        margin: .d,
+        municipality: nil,
+        province: nil,
+        referral: .om,
+        signage: "REPSOL",
+        saleType: .p,
+        percBioEthanol: "0.0",
+        percMethylEster: "0.0",
+        municipalityID: 54,
+        provinceID: 2,
+        regionID: 7,
+        adbluePrice: nil,
+        ammoniaPrice: nil,
+        biodieselPrice: nil,
+        bioethanolPrice: nil,
+        compressedBiogasPrice: nil,
+        liquefiedBiogasPrice: nil,
+        renewableDieselPrice: nil,
+        cngPrice: nil,
+        lngPrice: nil,
+        lpgPrice: nil,
+        gasoilAPrice: 1.459,
+        gasoilBPrice: 1.16,
+        premiumGasoilPrice: 1.509,
+        gasoline95E10Price: nil,
+        gasoline95E25Price: nil,
+        gasoline95E5Price: 1.499,
+        gasoline95E5PremiumPrice: nil,
+        gasoline95E85Price: nil,
+        gasoline98E10Price: nil,
+        gasoline98E5Price: 1.609,
+        renewableGasolinePrice: nil,
+        hydrogenPrice: nil,
+        methanolPrice: nil
+    )
+
     List {
         StationListEntry(station: station, sortingMethod: .aGasoil)
     }

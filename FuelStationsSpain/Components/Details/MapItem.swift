@@ -39,7 +39,9 @@ struct StationDetailsMapItem: View {
     
     var body: some View {
         VStack {
-            if let signage = station.signage, let latitude = station.latitude, let longitude = station.longitude {
+            if !station.signage.isEmpty {
+                let latitude = station.latitude
+                let longitude = station.longitude
                 if showOnlyLookAround {
                     LookAround()
                         .frame(height: 300)
@@ -59,7 +61,7 @@ struct StationDetailsMapItem: View {
                         }
                         else {
                             Map(position: $camera, interactionModes: []) {
-                                Marker(signage.capitalized, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+                                Marker(station.signage.capitalized, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
                             }
                             .mapStyle(.standard(pointsOfInterest: .excludingAll))
                             .transition(.opacity)
@@ -109,9 +111,9 @@ struct StationDetailsMapItem: View {
             }
         }
         .onChange(of: station, initial: true) {
-            if let latitude = station.latitude, let longitude = station.longitude {
-                camera = MapCameraPosition.region(.init(center: .init(latitude: latitude, longitude: longitude), span: .init(latitudeDelta: delta, longitudeDelta: delta)))
-            }
+            let latitude = station.latitude
+            let longitude = station.longitude
+            camera = MapCameraPosition.region(.init(center: .init(latitude: latitude, longitude: longitude), span: .init(latitudeDelta: delta, longitudeDelta: delta)))
         }
     }
     
@@ -130,7 +132,49 @@ struct StationDetailsMapItem: View {
 #Preview("MapItem") {
     @Previewable @State var lookAroundScene: MKLookAroundScene? = nil
     
-    let station = FuelStation(id: "5272", postalCode: "02328", address: "AVENIDA PRINCIPE, 2328", openingHours: "L-D: 08:00-16:00", latitude: 38.900944, longitude: -1.994028, locality: "SANTA ANA", margin: .d, municipality: nil, province: nil, referral: .om, signage: "REPSOL", saleType: .p, percBioEthanol: "0.0", percMethylEster: "0.0", municipalityID: 54, provinceID: 2, regionID: 7, biodieselPrice: nil, bioethanolPrice: nil, cngPrice: nil, lngPrice: nil, lpgPrice: nil, gasoilAPrice: 1.459, gasoilBPrice: 1.16, premiumGasoilPrice: 1.509, gasoline95E10Price: nil, gasoline95E5Price: 1.499, gasoline95E5PremiumPrice: nil, gasoline98E10Price: nil, gasoline98E5Price: 1.609, hydrogenPrice: nil, adbluePrice: nil)
+    let station = FuelStation(
+        id: "5272",
+        postalCode: "02328",
+        address: "AVENIDA PRINCIPE, 2328",
+        openingHours: "L-D: 08:00-16:00",
+        latitude: 38.900944,
+        longitude: -1.994028,
+        locality: "SANTA ANA",
+        margin: .d,
+        municipality: nil,
+        province: nil,
+        referral: .om,
+        signage: "REPSOL",
+        saleType: .p,
+        percBioEthanol: "0.0",
+        percMethylEster: "0.0",
+        municipalityID: 54,
+        provinceID: 2,
+        regionID: 7,
+        adbluePrice: nil,
+        ammoniaPrice: nil,
+        biodieselPrice: nil,
+        bioethanolPrice: nil,
+        compressedBiogasPrice: nil,
+        liquefiedBiogasPrice: nil,
+        renewableDieselPrice: nil,
+        cngPrice: nil,
+        lngPrice: nil,
+        lpgPrice: nil,
+        gasoilAPrice: 1.459,
+        gasoilBPrice: 1.16,
+        premiumGasoilPrice: 1.509,
+        gasoline95E10Price: nil,
+        gasoline95E25Price: nil,
+        gasoline95E5Price: 1.499,
+        gasoline95E5PremiumPrice: nil,
+        gasoline95E85Price: nil,
+        gasoline98E10Price: nil,
+        gasoline98E5Price: 1.609,
+        renewableGasolinePrice: nil,
+        hydrogenPrice: nil,
+        methanolPrice: nil
+    )
     
     ScrollView {
         StationDetailsMapItem(station: station, lookAroundScene: lookAroundScene) {}
@@ -139,7 +183,7 @@ struct StationDetailsMapItem: View {
             .onAppear {
                 DispatchQueue.global(qos: .background).async {
                     Task {
-                        let result = await getLookAroundScene(latitude: station.latitude!, longitude: station.longitude!)
+                        let result = await getLookAroundScene(latitude: station.latitude, longitude: station.longitude)
                         DispatchQueue.main.async {
                             lookAroundScene = result
                         }

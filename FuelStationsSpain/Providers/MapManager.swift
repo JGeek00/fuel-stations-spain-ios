@@ -80,10 +80,10 @@ class MapManager: ObservableObject {
         
         let result = await ApiClient.fetchServiceStationsByLocation(lat: latitude, long: longitude, distance: (Config.defaultFetchDistance*0.75).truncate())
         
-        if result.successful == true {
+        if let data = result.data {
             DispatchQueue.main.async {
                 withAnimation(.default) {
-                    self.data = FuelStationsResult.filterStationsResult(result.data!)
+                    self.data = data
                     self.loading = false
                     self.error = nil
                 }
@@ -129,16 +129,16 @@ class MapManager: ObservableObject {
         self.showStationDetailsSheet = true
         self.stationDetailsSheetPosition = .dynamicTop
         if centerLocation == true {
-            centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
+            centerToLocation(latitude: station.latitude, longitude: station.longitude)
         }
         
         self.isOpeningOrClosingSheet = false
     }
     
     func showStationOnMap(station: FuelStation) async {
-        await fetchData(latitude: station.latitude!, longitude: station.longitude!)
+        await fetchData(latitude: station.latitude, longitude: station.longitude)
         withAnimation(.default) {
-            self.centerToLocation(latitude: station.latitude!, longitude: station.longitude!)
+            self.centerToLocation(latitude: station.latitude, longitude: station.longitude)
         }
         self.selectedStationAnimation = station
         self.selectedStation = station

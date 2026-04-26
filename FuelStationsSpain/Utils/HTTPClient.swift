@@ -26,7 +26,8 @@ func httpRequest<T: Decodable>(url: String, httpMethod: String? = "GET", body: D
         else {
             return StatusResponse<T>(successful: false, statusCode: response.statusCode, rawBody: String(data: data, encoding: .utf8))
         }
-    } catch {
+    } catch let e {
+        print(e)
         return defaultErrorResponse
     }
 }
