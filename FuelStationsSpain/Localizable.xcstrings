@@ -267,17 +267,6 @@
         }
       }
     },
-    "App repository" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Repositorio de la app"
-          }
-        }
-      }
-    },
     "App settings" : {
       "localizations" : {
         "es" : {
@@ -464,6 +453,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "respecto a ayer"
+          }
+        }
+      }
+    },
+    "Compressed Biogas" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biogás comprimido"
           }
         }
       }
@@ -828,6 +827,26 @@
         }
       }
     },
+    "Gasoline 95 E25" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina 95 E25"
+          }
+        }
+      }
+    },
+    "Gasoline 95 E85" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina 95 E85"
+          }
+        }
+      }
+    },
     "Gasoline 98 E5" : {
       "localizations" : {
         "es" : {
@@ -1018,6 +1037,16 @@
         }
       }
     },
+    "Liquefied Biogas" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biogás licuado"
+          }
+        }
+      }
+    },
     "Liquefied Natural Gas" : {
       "localizations" : {
         "es" : {
@@ -1164,6 +1193,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Marca algunas estaciones de servicio como favoritas para verlas aquí."
+          }
+        }
+      }
+    },
+    "Methanol" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metanol"
           }
         }
       }
@@ -1514,6 +1553,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminado de favoritos"
+          }
+        }
+      }
+    },
+    "Renewable Diesel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diésel renovable"
+          }
+        }
+      }
+    },
+    "Renewable Gasoline" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gasolina renovable"
           }
         }
       }
