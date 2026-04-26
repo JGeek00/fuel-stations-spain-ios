@@ -33,41 +33,63 @@ class Enums {
         case notFound
     }
     
-    public enum StationsSortingOptions: String {
+    public enum StationsSortingOptions: RawRepresentable, Equatable, Hashable {
         case proximity
-        case aGasoil
-        case bGasoil
-        case premiumGasoil
+        case fuelType(FuelType)
+
+        public var rawValue: String {
+            switch self {
+            case .proximity:
+                return "proximity"
+            case .fuelType(let fuel):
+                return "fuelType:\(fuel.rawValue)"
+            }
+        }
+
+        public init?(rawValue: String) {
+            if rawValue == "proximity" {
+                self = .proximity
+                return
+            }
+
+            let prefix = "fuelType:"
+            if rawValue.hasPrefix(prefix) {
+                let value = String(rawValue.dropFirst(prefix.count))
+                if let f = FuelType(rawValue: value) {
+                    self = .fuelType(f)
+                    return
+                }
+            }
+
+            return nil
+
+        }
+    }
+    
+    public enum FuelType: String, Hashable, CaseIterable {
+        case adBlue
+        case ammonia
         case biodiesel
-        case gasoline95E10
-        case gasoline95E5
-        case gasoline95E5Premium
-        case gasoline98E10
-        case gasoline98E5
         case bioethanol
+        case compressedBiogas
+        case liquefiedBiogas
+        case renewableDiesel
         case cng
         case lng
         case lpg
-        case hydrogen
-        case adblue
-    }
-    
-    public enum FavoriteFuelType: String {
-        case none
         case gasoilA
         case gasoilB
         case premiumGasoil
-        case biodiesel
-        case gasoline95E10
         case gasoline95E5
+        case gasoline95E10
+        case gasoline95E25
+        case gasoline95E85
         case gasoline95E5Premium
-        case gasoline98E10
         case gasoline98E5
-        case bioethanol
-        case cng
-        case lng
-        case lpg
+        case gasoline98E10
+        case renewableGasoline
         case hydrogen
+        case methanol
     }
     
     public enum SearchSortingOptions: String {
@@ -93,23 +115,6 @@ class Enums {
         case month3
         case month6
         case year1
-    }
-    
-    public enum FuelType: String {
-        case gasoilA
-        case gasoilB
-        case premiumGasoil
-        case biodiesel
-        case gasoline95E10
-        case gasoline95E5
-        case gasoline95E5Premium
-        case gasoline98E10
-        case gasoline98E5
-        case bioethanol
-        case cng
-        case lng
-        case lpg
-        case hydrogen
     }
     
     public enum ChartAnnotationMode: String {

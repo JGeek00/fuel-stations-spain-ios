@@ -4,7 +4,7 @@ import SwiftUI
 
 struct MapSettings: View {
     
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel = Defaults.favoriteFuel
+    @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel = Defaults.hideStationsDontHaveFavoriteFuel
     @AppStorage(StorageKeys.closedStationsShowMethod, store: UserDefaults.shared) private var closedStationsShowMethod: Enums.ClosedStationsMode = Defaults.closedStationsShowMethod
     @AppStorage(StorageKeys.showRedClockClosedStations, store: UserDefaults.shared) private var showRedClockClosedStations = Defaults.showRedClockClosedStations
@@ -22,7 +22,7 @@ struct MapSettings: View {
                     .tag(Enums.MapStyle.satellite)
             }
             Toggle("Hide stations that aren't open to the general public", isOn: $hideStationsNotOpenPublic)
-            if favoriteFuel != .none {
+            if favoriteFuel != nil {
                 Toggle("Hide stations that don't sell the selected favorite fuel", isOn: $hideStationsDontHaveFavoriteFuel)
             }
             Picker("Closed stations", selection: $closedStationsShowMethod) {

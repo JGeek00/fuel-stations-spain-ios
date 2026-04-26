@@ -17,6 +17,12 @@ struct FuelStationsSpainApp: App {
     let favoritesListViewModel = FavoritesListViewModel()
     let searchViewModel = SearchViewModel()
     
+    init() {
+        // Run migrations as early as possible so AppStorage-backed properties read the migrated values
+        FavoriteFuelMigrator.migrateIfNeeded()
+        SortingMigrator.migrateIfNeeded()
+    }
+    
     var body: some Scene {
         WindowGroup {
             RootView()

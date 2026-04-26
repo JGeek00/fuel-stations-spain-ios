@@ -7,15 +7,13 @@ struct StationsSheet: View {
     @EnvironmentObject private var locationManager: LocationManager
     
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
-    @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
+    @SortingValue private var selectedSorting: Enums.StationsSortingOptions
 
     @State private var searchText = ""
     @State private var listHasContent = true    // To make transition
     
     // Keep the same location while the view is being presented
     @State private var location: CLLocation? = nil
-    
-    @State private var selectedSorting: Enums.StationsSortingOptions = .proximity
     
     @State private var showInfoAlert = false
     
@@ -128,7 +126,6 @@ struct StationsSheet: View {
         }
         .onAppear {
             location = locationManager.lastLocation
-            selectedSorting = defaultListSorting
         }
     }
 }

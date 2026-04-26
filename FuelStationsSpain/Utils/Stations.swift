@@ -60,36 +60,10 @@ func sortStations(stations: [FuelStation], sortingMethod: Enums.StationsSortingO
         switch sortingMethod {
         case .proximity:
             return sort(a.distanceToUserLocation, b.distanceToUserLocation)
-        case .aGasoil:
-            return sort(a.gasoilAPrice, b.gasoilAPrice)
-        case .bGasoil:
-            return sort(a.gasoilBPrice, b.gasoilBPrice)
-        case .premiumGasoil:
-            return sort(a.premiumGasoilPrice, b.premiumGasoilPrice)
-        case .biodiesel:
-            return sort(a.biodieselPrice, b.biodieselPrice)
-        case .gasoline95E10:
-            return sort(a.gasoline95E10Price, b.gasoline95E10Price)
-        case .gasoline95E5:
-            return sort(a.gasoline95E5Price, b.gasoline95E5Price)
-        case .gasoline95E5Premium:
-            return sort(a.gasoline95E5PremiumPrice, b.gasoline95E5PremiumPrice)
-        case .gasoline98E10:
-            return sort(a.gasoline98E10Price, b.gasoline98E10Price)
-        case .gasoline98E5:
-            return sort(a.gasoline98E5Price, b.gasoline98E5Price)
-        case .bioethanol:
-            return sort(a.bioethanolPrice, b.bioethanolPrice)
-        case .cng:
-            return sort(a.cngPrice, b.cngPrice)
-        case .lng:
-            return sort(a.lngPrice, b.lngPrice)
-        case .lpg:
-            return sort(a.lpgPrice, b.lpgPrice)
-        case .hydrogen:
-            return sort(a.hydrogenPrice, b.hydrogenPrice)
-        case .adblue:
-            return sort(a.adbluePrice, b.adbluePrice)
+        case .fuelType(let fuel):
+            let aVal: Double? = FuelStation.getObjectProperty(station: a, propertyName: "\(fuel.rawValue)Price")
+            let bVal: Double? = FuelStation.getObjectProperty(station: b, propertyName: "\(fuel.rawValue)Price")
+            return sort(aVal, bVal)
         }
     }
     return sorted
@@ -100,36 +74,14 @@ func sortingText(sortingMethod: Enums.StationsSortingOptions) -> String {
         switch sortingMethod {
         case .proximity:
             return String("")
-        case .aGasoil:
-            return String(localized: "A Gasoil")
-        case .bGasoil:
-            return String(localized: "B Gasoil")
-        case .premiumGasoil:
-            return String(localized: "Premium Gasoil")
-        case .biodiesel:
-            return String(localized: "Biodiesel")
-        case .gasoline95E10:
-            return String(localized: "Gasoline 95 E10")
-        case .gasoline95E5:
-            return String(localized: "Gasoline 95 E5")
-        case .gasoline95E5Premium:
-            return String(localized: "Gasoline 95 E5 Premium")
-        case .gasoline98E10:
-            return String(localized: "Gasoline 98 E10")
-        case .gasoline98E5:
-            return String(localized: "Gasoline 98 E5")
-        case .bioethanol:
-            return String(localized: "Bioethanol")
-        case .cng:
-            return String(localized: "Compressed Natural Gas")
-        case .lng:
-            return String(localized: "Liquefied Natural Gas")
-        case .lpg:
-            return String(localized: "Liquefied petroleum gases")
-        case .hydrogen:
-            return String(localized: "Hydrogen")
-        case .adblue:
-            return String("AdBlue")
+        case .fuelType(let fuel):
+            // Map FuelType raw values to localized display strings by searching fuelList
+            for section in fuelList {
+                if let item = section.types.first(where: { $0.type == fuel }) {
+                    return item.name
+                }
+            }
+            return fuel.rawValue
         }
     }
     if sortingMethod == .proximity {

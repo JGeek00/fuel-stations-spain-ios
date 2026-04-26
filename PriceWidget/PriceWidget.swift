@@ -59,39 +59,8 @@ struct PriceWidgetEntryView : View {
     var entry: Provider.Entry
     
     func getSelectedFuelValue(station: HistoricPrice, fuelKey: String) -> Double? {
-        let fuel = Enums.FuelType(rawValue: fuelKey)
-        switch fuel {
-        case .gasoilA:
-            return station.gasoilAPrice
-        case .gasoilB:
-            return station.gasoilBPrice
-        case .premiumGasoil:
-            return station.premiumGasoilPrice
-        case .biodiesel:
-            return station.biodieselPrice
-        case .gasoline95E10:
-            return station.gasoline95E10Price
-        case .gasoline95E5:
-            return station.gasoline95E5Price
-        case .gasoline95E5Premium:
-            return station.gasoline95E5PremiumPrice
-        case .gasoline98E10:
-            return station.gasoline98E10Price
-        case .gasoline98E5:
-            return station.gasoline98E5Price
-        case .bioethanol:
-            return station.bioethanolPrice
-        case .cng:
-            return station.cngPrice
-        case .lng:
-            return station.lngPrice
-        case .lpg:
-            return station.lpgPrice
-        case .hydrogen:
-            return station.hydrogenPrice
-        case .none:
-            return nil
-        }
+        guard let fuel = Enums.FuelType(rawValue: fuelKey) else { return nil }
+        return station.price(for: fuel)
     }
  
     var body: some View {

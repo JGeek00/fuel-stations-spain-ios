@@ -13,15 +13,18 @@ struct MapMarkerBubble: View {
     
     @AppStorage(StorageKeys.closedStationsShowMethod, store: UserDefaults.shared) private var closedStationsShowMethod: Enums.ClosedStationsMode = Defaults.closedStationsShowMethod
     @AppStorage(StorageKeys.showRedClockClosedStations, store: UserDefaults.shared) private var showRedClockClosedStations = Defaults.showRedClockClosedStations
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
+    @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
     
     @State private var formattedSchedule: OpeningSchedule?
     
     var body: some View {
-        let fuelPrice: Double? = FuelStation.getObjectProperty(station: value, propertyName: "\(favoriteFuel.rawValue)Price")
+        let fuelPrice: Double? = {
+            guard let fav = favoriteFuel else { return nil }
+            return FuelStation.getObjectProperty(station: value, propertyName: "\(fav.rawValue)Price")
+        }()
         Group {
             if !(formattedSchedule?.isCurrentlyOpen == false && closedStationsShowMethod == .hideCompletely) {
-                if favoriteFuel != .none, let fuelPrice = fuelPrice {
+                if let _ = favoriteFuel, let fuelPrice = fuelPrice {
                     PriceMarker()
                         .foregroundStyle(Color.background)
                         .frameDynamicSize(width: 60, height: 34)

@@ -71,39 +71,8 @@ struct PriceHistoryWidgetEntryView : View {
     var entry: Provider.Entry
     
     func getSelectedFuelValues(station: [HistoricPrice], fuelKey: String) -> [Double]? {
-        let fuel = Enums.FuelType(rawValue: fuelKey)
-        switch fuel {
-        case .gasoilA:
-            return (station.map() { $0.gasoilAPrice }.filter({ $0 != nil })) as? [Double]
-        case .gasoilB:
-            return (station.map() { $0.gasoilBPrice }.filter({ $0 != nil })) as? [Double]
-        case .premiumGasoil:
-            return (station.map() { $0.premiumGasoilPrice }.filter({ $0 != nil })) as? [Double]
-        case .biodiesel:
-            return (station.map() { $0.biodieselPrice }.filter({ $0 != nil })) as? [Double]
-        case .gasoline95E10:
-            return (station.map() { $0.gasoline95E10Price }.filter({ $0 != nil })) as? [Double]
-        case .gasoline95E5:
-            return (station.map() { $0.gasoline95E5Price }.filter({ $0 != nil })) as? [Double]
-        case .gasoline95E5Premium:
-            return (station.map() { $0.gasoline95E5PremiumPrice }.filter({ $0 != nil })) as? [Double]
-        case .gasoline98E10:
-            return (station.map() { $0.gasoline98E10Price }.filter({ $0 != nil })) as? [Double]
-        case .gasoline98E5:
-            return (station.map() { $0.gasoline98E5Price }.filter({ $0 != nil })) as? [Double]
-        case .bioethanol:
-            return (station.map() { $0.bioethanolPrice }.filter({ $0 != nil })) as? [Double]
-        case .cng:
-            return (station.map() { $0.cngPrice }.filter({ $0 != nil })) as? [Double]
-        case .lng:
-            return (station.map() { $0.lngPrice }.filter({ $0 != nil })) as? [Double]
-        case .lpg:
-            return (station.map() { $0.lpgPrice }.filter({ $0 != nil })) as? [Double]
-        case .hydrogen:
-            return (station.map() { $0.hydrogenPrice }.filter({ $0 != nil })) as? [Double]
-        case .none:
-            return nil
-        }
+        guard let fuel = Enums.FuelType(rawValue: fuelKey) else { return nil }
+        return station.compactMap { $0.price(for: fuel) }
     }
  
     var body: some View {

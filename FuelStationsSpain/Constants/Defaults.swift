@@ -3,7 +3,7 @@ import Foundation
 class Defaults {
     static let onboardingCompleted = false
     static let hideStationsNotOpenPublic = false
-    static let favoriteFuel = Enums.FavoriteFuelType.none
+    static let favoriteFuel: Enums.FuelType? = nil     // nil means no favorite fuel selected
     static let hideStationsDontHaveFavoriteFuel = false
     static let closedStationsShowMethod = Enums.ClosedStationsMode.showDimmed
     static let showRedClockClosedStations = true

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct GeneralSettings: View {
     
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel = Defaults.favoriteFuel
+    @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
         
     var body: some View {
         List {

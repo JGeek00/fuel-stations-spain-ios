@@ -13,13 +13,8 @@ class FavoritesListViewModel: ObservableObject {
     
     // Keep the same location when the view is being presented
     @Published var location: CLLocation? = nil
-    
-    @Published var selectedSorting: Enums.StationsSortingOptions = .proximity
-    
+        
     init() {
-        if let sortingKey = UserDefaults.shared.string(forKey: StorageKeys.defaultListSorting), let sorting = Enums.StationsSortingOptions(rawValue: sortingKey) {
-            selectedSorting = sorting
-        }
         Task {
             await fetchData()
         }

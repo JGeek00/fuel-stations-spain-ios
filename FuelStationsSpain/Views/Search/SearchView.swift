@@ -7,7 +7,7 @@ struct SearchView: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
-    @AppStorage(StorageKeys.defaultListSorting, store: UserDefaults.shared) private var defaultListSorting = Defaults.defaultListSorting
+    @SortingValue private var defaultListSorting: Enums.StationsSortingOptions
         
     @State private var columnVisibility = NavigationSplitViewVisibility.all
         

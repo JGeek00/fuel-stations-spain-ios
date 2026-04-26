@@ -20,3 +20,18 @@ struct HistoricPrice: Sendable, Codable {
     let hydrogenPrice: Double?
     let date: String?
 }
+
+extension HistoricPrice {
+    /// Returns the price for a given fuel by matching the property name dynamically.
+    /// It looks for a property named "<fuel.rawValue>Price" and returns it if present.
+    func price(for fuel: Enums.FuelType) -> Double? {
+        let propertyName = "\(fuel.rawValue)Price"
+        let mirror = Mirror(reflecting: self)
+        for child in mirror.children {
+            if child.label == propertyName {
+                return child.value as? Double
+            }
+        }
+        return nil
+    }
+}

@@ -9,6 +9,8 @@ struct FavoritesView: View {
     
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
+    @SortingValue private var selectedSorting: Enums.StationsSortingOptions
+    
     @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var width = 0.0
     
@@ -67,7 +69,7 @@ struct FavoritesView: View {
             }
             else {
                 let dataWithDistance = addDistancesToStations(stations: data, lastLocation: favoritesListViewModel.location)
-                let sorted = sortStations(stations: dataWithDistance, sortingMethod: favoritesListViewModel.selectedSorting)
+                let sorted = sortStations(stations: dataWithDistance, sortingMethod: selectedSorting)
                 let filtered = favoritesListViewModel.searchText != "" ? sorted.filter() { $0.signage.lowercased().contains(favoritesListViewModel.searchText.lowercased()) } : sorted
                 Group {
                     if favoritesListViewModel.listHasContent == false {
@@ -78,14 +80,14 @@ struct FavoritesView: View {
                         List(selection: $favoritesListViewModel.selectedStation) {
                             Section {
                                 ForEach(filtered, id: \.self) { item in
-                                    StationListEntry(station: item, sortingMethod: favoritesListViewModel.selectedSorting, hideFavoriteSymbol: true)
+                                    StationListEntry(station: item, sortingMethod: selectedSorting, hideFavoriteSymbol: true)
                                 }
                             } header: {
                                 HStack {
                                     if horizontalSizeClass == .regular {
                                         Spacer()
                                     }
-                                    Text(sortingText(sortingMethod: favoritesListViewModel.selectedSorting))
+                                    Text(sortingText(sortingMethod: selectedSorting))
                                         .fontWeight(.semibold)
                                         .multilineTextAlignment(horizontalSizeClass == .regular ? .center : .leading)
                                         .padding(.bottom, 12)
@@ -121,7 +123,7 @@ struct FavoritesView: View {
                 .searchable(text: $favoritesListViewModel.searchText, prompt: "Search service station by name")
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        SortingPicker(selectedSorting: $favoritesListViewModel.selectedSorting)
+                        SortingPicker(selectedSorting: $selectedSorting)
                     }
                 }
             }

@@ -15,15 +15,15 @@ struct StationDetailsSummary: View {
     
     @EnvironmentObject private var locationManager: LocationManager
     
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel = Defaults.favoriteFuel
+    @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
     
     var body: some View {
-        let favoriteFuel = runningOnPreview() ? Enums.FavoriteFuelType.gasoline95E5 : self.favoriteFuel
-        let fuel = favoriteFuels.map() { $0.fuels }.flatMap() { $0 }.first() { $0.fuelType == favoriteFuel }
+        let favoriteFuelResolved: Enums.FuelType = runningOnPreview() ? Enums.FuelType.gasoline95E5 : (self.favoriteFuel ?? Enums.FuelType.gasoline95E5)
+        let fuel = favoriteFuels.map() { $0.fuels }.flatMap() { $0 }.first() { $0.fuelType == favoriteFuelResolved }
         if width >= 300 {
             HStack {
                 Spacer()
-                if favoriteFuel != .none, let fuel = fuel, let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(favoriteFuel.rawValue)Price") {
+                if let fuel = fuel, let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(favoriteFuelResolved.rawValue)Price") {
                     VStack(alignment: .center) {
                         Text(fuel.label)
                             .lineLimit(1)
@@ -87,7 +87,7 @@ struct StationDetailsSummary: View {
         }
         else {
             VStack {
-                if favoriteFuel != .none, let fuel = fuel, let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(favoriteFuel.rawValue)Price") {
+                if let fav = favoriteFuel, let fuel = fuel, let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(fav.rawValue)Price") {
                     HStack(alignment: .center) {
                         Text(fuel.label)
                             .foregroundStyle(Color.gray)

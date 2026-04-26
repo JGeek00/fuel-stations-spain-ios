@@ -2,7 +2,12 @@ import SwiftUI
 import AlertToast
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool { return true }
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        // Perform migrations for persisted settings
+        FavoriteFuelMigrator.migrateIfNeeded()
+        SortingMigrator.migrateIfNeeded()
+        return true
+    }
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         let configuration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
@@ -52,7 +57,7 @@ struct InAppNotificationViewModifier: ViewModifier {
     
     @EnvironmentObject private var toastProvider: ToastProvider
     
-    func body(content: Content) -> some View {        
+    func body(content: Content) -> some View {
         content
             .toast(isPresenting: $toastProvider.presenting, duration: 2, tapToDismiss: true) {
                 toastProvider.toast ?? AlertToast(type: .regular)

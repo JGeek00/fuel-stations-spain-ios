@@ -4,7 +4,7 @@ struct FavoriteFuelSelection: View {
     
     @EnvironmentObject private var onboardingViewModel: OnboardingViewModel
     
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
+    @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
     
     var body: some View {
         VStack {

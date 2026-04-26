@@ -19,7 +19,7 @@ struct StationListEntry: View {
     
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
     
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
+    @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
     
     @State private var showHowToGetThere: Bool = false
     
@@ -42,36 +42,8 @@ struct StationListEntry: View {
                     return String("\(formattedNumber(value: distance)) Km")
                 }
             }
-        case .aGasoil:
-            return format(station.gasoilAPrice)
-        case .bGasoil:
-            return format(station.gasoilBPrice)
-        case .premiumGasoil:
-            return format(station.premiumGasoilPrice)
-        case .biodiesel:
-            return format(station.biodieselPrice)
-        case .gasoline95E10:
-            return format(station.gasoline95E10Price)
-        case .gasoline95E5:
-            return format(station.gasoline95E5Price)
-        case .gasoline95E5Premium:
-            return format(station.gasoline95E5PremiumPrice)
-        case .gasoline98E10:
-            return format(station.gasoline98E10Price)
-        case .gasoline98E5:
-            return format(station.gasoline98E5Price)
-        case .bioethanol:
-            return format(station.bioethanolPrice)
-        case .cng:
-            return format(station.cngPrice)
-        case .lng:
-            return format(station.lngPrice)
-        case .lpg:
-            return format(station.lpgPrice)
-        case .hydrogen:
-            return format(station.hydrogenPrice)
-        case .adblue:
-            return format(station.adbluePrice)
+        case .fuelType(let fuel):
+            return format(FuelStation.getObjectProperty(station: station, propertyName: "\(fuel.rawValue)Price"))
         }
         return nil
     }
@@ -171,7 +143,7 @@ struct StationListEntry: View {
                             EmptyView()
                         }
                     }
-                    if sortingMethod == .proximity && favoriteFuel != .none, let value: Double = FuelStation.getObjectProperty(station: station, propertyName: favoriteFuel.rawValue), let fuelName = getFuelNameString(fuel: favoriteFuel) {
+                    if sortingMethod == .proximity, let fav = favoriteFuel, let value: Double = FuelStation.getObjectProperty(station: station, propertyName: fav.rawValue), let fuelName = getFuelNameString(fuel: fav) {
                         Spacer()
                             .frame(height: 4)
                         Text(verbatim: "\(fuelName): \(formattedNumber(value: value, digits: 3)) €")
@@ -298,7 +270,7 @@ struct StationListEntry: View {
     )
 
     List {
-        StationListEntry(station: station, sortingMethod: .aGasoil)
+        StationListEntry(station: station, sortingMethod: .fuelType(.gasoilA))
     }
     .environmentObject(FavoritesProvider.shared)
 }

@@ -26,7 +26,7 @@ fileprivate struct MapComponent: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     
     @AppStorage(StorageKeys.hideStationsNotOpenPublic, store: UserDefaults.shared) private var hideStationsNotOpenPublic: Bool = Defaults.hideStationsNotOpenPublic
-    @AppStorage(StorageKeys.favoriteFuel, store: UserDefaults.shared) private var favoriteFuel: Enums.FavoriteFuelType = Defaults.favoriteFuel
+    @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
     @AppStorage(StorageKeys.hideStationsDontHaveFavoriteFuel, store: UserDefaults.shared) private var hideStationsDontHaveFavoriteFuel: Bool = Defaults.hideStationsDontHaveFavoriteFuel
     @AppStorage(StorageKeys.mapStyle, store: UserDefaults.shared) private var mapStyle: Enums.MapStyle = Defaults.mapStyle
 
@@ -174,13 +174,10 @@ fileprivate struct MapComponent: View {
                     if hideStationsNotOpenPublic == true {
                         m = m.filter() { $0.saleType != .r }
                     }
-                    if hideStationsDontHaveFavoriteFuel == true && favoriteFuel != .none {
+                    if hideStationsDontHaveFavoriteFuel == true, let fav = favoriteFuel {
                         m = m.filter() { item in
-                            let price: Double? = FuelStation.getObjectProperty(station: item, propertyName: "\(favoriteFuel.rawValue)Price")
-                            if price != nil {
-                                return true
-                            }
-                            return false
+                            let price: Double? = FuelStation.getObjectProperty(station: item, propertyName: "\(fav.rawValue)Price")
+                            return price != nil
                         }
                     }
                     return m

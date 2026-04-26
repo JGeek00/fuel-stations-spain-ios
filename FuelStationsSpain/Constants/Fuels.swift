@@ -2,9 +2,9 @@ import Foundation
 
 struct FavoriteFuel: Sendable, Hashable {
     let label: String
-    let fuelType: Enums.FavoriteFuelType
+    let fuelType: Enums.FuelType?
     
-    init(label: String, fuelType: Enums.FavoriteFuelType) {
+    init(label: String, fuelType: Enums.FuelType?) {
         self.label = label
         self.fuelType = fuelType
     }
@@ -24,7 +24,7 @@ let favoriteFuels: [FuelSection] = [
     FuelSection(
         label: nil,
         fuels: [
-            FavoriteFuel(label: String(localized: "None"), fuelType: .none),
+            FavoriteFuel(label: String(localized: "None"), fuelType: nil),
         ]
     ),
     FuelSection(
@@ -63,7 +63,8 @@ let favoriteFuels: [FuelSection] = [
     )
 ]
 
-func getFuelNameString(fuel: Enums.FavoriteFuelType) -> String? {
+func getFuelNameString(fuel: Enums.FuelType?) -> String? {
+    guard let fuel = fuel else { return nil }
     for fuelGroup in favoriteFuels {
         for f in fuelGroup.fuels {
             if f.fuelType == fuel {
