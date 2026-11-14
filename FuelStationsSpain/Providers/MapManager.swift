@@ -26,6 +26,7 @@ class MapManager: ObservableObject {
     @Published var stationDetailsSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedStation: FuelStation? = nil
     @Published var selectedStationAnimation: FuelStation? = nil   // Used just for the map marker animation
+    @Published var visibleLatitudeDelta: Double = Config.mapDefaultZoom
     var isOpeningOrClosingSheet = false
         
     private var previousLoadCoordinates: Coordinate? = nil
@@ -69,6 +70,7 @@ class MapManager: ObservableObject {
     func onMapCameraChange(_ value: MapCameraUpdateContext) {
         self.latitude = value.camera.centerCoordinate.latitude
         self.longitude = value.camera.centerCoordinate.longitude
+        self.visibleLatitudeDelta = value.region.span.latitudeDelta
 
         if !(self.firstLoadCompleted == true && (previousLoadCoordinates == nil || (previousLoadCoordinates != nil && distanceBetweenCoordinates(Coordinate(latitude: latitude, longitude: longitude), previousLoadCoordinates!) > Config.defaultFetchDistance))) {
             return
@@ -121,6 +123,18 @@ class MapManager: ObservableObject {
                 span: MKCoordinateSpan(latitudeDelta: Config.mapDefaultZoom, longitudeDelta: Config.mapDefaultZoom)
             )
         )
+    }
+    
+    func zoomInto(coordinate: CLLocationCoordinate2D) {
+        let span = max(visibleLatitudeDelta / 3, Config.mapDefaultZoom / 3)
+        withAnimation(.default) {
+            self.position = MapCameraPosition.region(
+                MKCoordinateRegion(
+                    center: coordinate,
+                    span: MKCoordinateSpan(latitudeDelta: span, longitudeDelta: span)
+                )
+            )
+        }
     }
     
     func selectStation(station: FuelStation, centerLocation: Bool = false) {

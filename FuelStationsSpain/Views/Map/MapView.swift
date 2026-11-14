@@ -176,10 +176,20 @@ fileprivate struct MapComponent: View {
                     }
                     return m
                 }()
-                ForEach(markers, id: \.id) { value in
-                    Annotation(value.signage, coordinate: CLLocationCoordinate2D(latitude: value.latitude, longitude: value.longitude)) {
-                        MapMarkerBubble(value)
-                            .environmentObject(MapManager.shared)
+                let clusters = clusterStations(markers, latitudeDelta: mapManager.visibleLatitudeDelta)
+                ForEach(clusters) { cluster in
+                    if let value = cluster.singleStation {
+                        Annotation(value.signage, coordinate: cluster.coordinate) {
+                            MapMarkerBubble(value)
+                                .environmentObject(MapManager.shared)
+                        }
+                    }
+                    else {
+                        Annotation("\(cluster.count) stations", coordinate: cluster.coordinate) {
+                            MapClusterBubble(count: cluster.count) {
+                                mapManager.zoomInto(coordinate: cluster.coordinate)
+                            }
+                        }
                     }
                 }
             }
