@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 
 struct RootView: View {
     
@@ -56,6 +57,22 @@ struct RootView: View {
             guard old == nil, let latitude = new?.coordinate.latitude, let longitude = new?.coordinate.longitude else { return }
             Task {
                 await mapManager.setInitialLocation(latitude: latitude, longitude: longitude)
+            }
+        }
+        .onChange(of: locationManager.authorizationStatus) { _, new in
+            // Sin permiso no hay firstLocation: cargar Madrid en vez de spinner eterno
+            guard locationManager.firstLocation == nil else { return }
+            if new == .denied || new == .restricted {
+                Task {
+                    await mapManager.setInitialLocation(latitude: nil, longitude: nil)
+                }
+            }
+        }
+        .task {
+            // Fallback por si la ubicación tarda o nunca llega (simulador en None, GPS lento)
+            try? await Task.sleep(nanoseconds: 8_000_000_000)
+            if locationManager.firstLocation == nil {
+                await mapManager.loadDefaultLocationIfNeeded()
             }
         }
         .onAppear {
