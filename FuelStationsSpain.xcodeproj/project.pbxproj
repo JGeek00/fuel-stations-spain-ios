@@ -33,6 +33,13 @@
 			remoteGlobalIDString = 0DB71C062CC031EA008A0BAC;
 			remoteInfo = PriceHistoryWidgetExtension;
 		};
+		7E5700012DC9000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D5F58692CA42B8300342D3F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D5F58702CA42B8300342D3F;
+			remoteInfo = FuelStationsSpain;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +68,7 @@
 		0DB7146C2CBC8DEE008A0BAC /* PriceWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PriceWidgetExtension.entitlements; sourceTree = "<group>"; };
 		0DB71C072CC031EA008A0BAC /* PriceHistoryWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PriceHistoryWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DB71C1B2CC031F2008A0BAC /* PriceHistoryWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PriceHistoryWidgetExtension.entitlements; sourceTree = "<group>"; };
+		7E5700012DC9000000000002 /* FuelStationsSpainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuelStationsSpainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -156,6 +164,11 @@
 			path = PriceHistoryWidget;
 			sourceTree = "<group>";
 		};
+		7E5700012DC9000000000001 /* FuelStationsSpainTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FuelStationsSpainTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +199,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7E5700012DC900000000000A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -202,6 +222,7 @@
 				0D5F58D82CA4C6BD00342D3F /* README.md */,
 				0DB14FAF2CC47F8800634B8A /* LICENSE.md */,
 				0D7E9C2E2CAC870000CAC020 /* .gitignore */,
+				0D844DCB30A7EE9D0028BD2A /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -211,8 +232,17 @@
 				0D5F58712CA42B8300342D3F /* FuelStationsSpain.app */,
 				0DB714482CBC8A65008A0BAC /* PriceWidgetExtension.appex */,
 				0DB71C072CC031EA008A0BAC /* PriceHistoryWidgetExtension.appex */,
+				7E5700012DC9000000000002 /* FuelStationsSpainTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		0D844DCB30A7EE9D0028BD2A /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				7E5700012DC9000000000001 /* FuelStationsSpainTests */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		0DB714492CBC8A65008A0BAC /* Frameworks */ = {
@@ -298,6 +328,29 @@
 			productReference = 0DB71C072CC031EA008A0BAC /* PriceHistoryWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		7E5700012DC9000000000003 /* FuelStationsSpainTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E5700012DC9000000000004 /* Build configuration list for PBXNativeTarget "FuelStationsSpainTests" */;
+			buildPhases = (
+				7E5700012DC9000000000009 /* Sources */,
+				7E5700012DC900000000000A /* Frameworks */,
+				7E5700012DC900000000000B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7E5700012DC9000000000008 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				7E5700012DC9000000000001 /* FuelStationsSpainTests */,
+			);
+			name = FuelStationsSpainTests;
+			packageProductDependencies = (
+			);
+			productName = FuelStationsSpainTests;
+			productReference = 7E5700012DC9000000000002 /* FuelStationsSpainTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -315,6 +368,9 @@
 						CreatedOnToolsVersion = 16.0;
 					};
 					0DB71C062CC031EA008A0BAC = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					7E5700012DC9000000000003 = {
 						CreatedOnToolsVersion = 16.0;
 					};
 				};
@@ -341,6 +397,7 @@
 				0D5F58702CA42B8300342D3F /* FuelStationsSpain */,
 				0DB714472CBC8A65008A0BAC /* PriceWidgetExtension */,
 				0DB71C062CC031EA008A0BAC /* PriceHistoryWidgetExtension */,
+				7E5700012DC9000000000003 /* FuelStationsSpainTests */,
 			);
 		};
 /* End PBXProject section */
@@ -361,6 +418,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0DB71C052CC031EA008A0BAC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E5700012DC900000000000B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -392,6 +456,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7E5700012DC9000000000009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -404,6 +475,11 @@
 			isa = PBXTargetDependency;
 			target = 0DB71C062CC031EA008A0BAC /* PriceHistoryWidgetExtension */;
 			targetProxy = 0DB71C142CC031EB008A0BAC /* PBXContainerItemProxy */;
+		};
+		7E5700012DC9000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D5F58702CA42B8300342D3F /* FuelStationsSpain */;
+			targetProxy = 7E5700012DC9000000000007 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -720,6 +796,52 @@
 			};
 			name = Release;
 		};
+		7E5700012DC9000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 38Z3B9TJTR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jgeek00.FuelStationsSpainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FuelStationsSpain.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FuelStationsSpain";
+			};
+			name = Debug;
+		};
+		7E5700012DC9000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 38Z3B9TJTR;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jgeek00.FuelStationsSpainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FuelStationsSpain.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FuelStationsSpain";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -755,6 +877,15 @@
 			buildConfigurations = (
 				0DB71C172CC031EB008A0BAC /* Debug */,
 				0DB71C182CC031EB008A0BAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E5700012DC9000000000004 /* Build configuration list for PBXNativeTarget "FuelStationsSpainTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E5700012DC9000000000005 /* Debug */,
+				7E5700012DC9000000000006 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

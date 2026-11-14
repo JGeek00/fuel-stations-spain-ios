@@ -13,15 +13,20 @@ class FavoritesListViewModel: ObservableObject {
     
     // Keep the same location when the view is being presented
     @Published var location: CLLocation? = nil
-        
-    init() {
+
+    /// Seam de test: proveedor de favoritos inyectable. Por defecto es el
+    /// singleton compartido, el mismo comportamiento de antes de la inyección.
+    private let favoritesProvider: FavoritesProvider
+
+    init(favoritesProvider: FavoritesProvider = FavoritesProvider.shared) {
+        self.favoritesProvider = favoritesProvider
         Task {
             await fetchData()
         }
     }
     
     func fetchData() async {
-        let favorites = FavoritesProvider.shared.favorites.map() { $0.id! } as [String]
+        let favorites = favoritesProvider.favorites.map() { $0.id! } as [String]
         if favorites.isEmpty { return }
 
         self.loading = true

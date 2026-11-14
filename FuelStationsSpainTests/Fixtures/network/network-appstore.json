@@ -1,0 +1,15 @@
+{
+  "resultCount": 1,
+  "results": [
+    {
+      "trackName": "HispaFuel - Gasolineras España",
+      "bundleID": "com.jgeek00.FuelStationsSpain",
+      "version": "2.1.0",
+      "artistName": "Jorge Geek",
+      "minimumOSVersion": "17.0",
+      "formattedPrice": "Free",
+      "userRatingCount": 120,
+      "averageUserRating": 5
+    }
+  ]
+}

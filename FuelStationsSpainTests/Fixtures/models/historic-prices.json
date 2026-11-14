@@ -1,0 +1,16 @@
+[
+  {
+    "stationId": "12345",
+    "stationSignage": "Repsol",
+    "gasoline95E5Price": 1.559,
+    "gasoilAPrice": 1.489,
+    "date": "2026-02-14"
+  },
+  {
+    "stationId": "67890",
+    "stationSignage": "Cepsa",
+    "biodieselPrice": null,
+    "gasoline95E5Price": null,
+    "date": "2026-02-13"
+  }
+]

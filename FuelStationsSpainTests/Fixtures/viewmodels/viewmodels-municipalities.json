@@ -1,0 +1,42 @@
+[
+  {
+    "IDMunicipio": "05019",
+    "IDProvincia": "05",
+    "IDCCAA": "05",
+    "Municipio": "Ávila",
+    "Provincia": "Ávila",
+    "CCAA": "Castilla y León"
+  },
+  {
+    "IDMunicipio": "05042",
+    "IDProvincia": "05",
+    "IDCCAA": "05",
+    "Municipio": "Cebreros",
+    "Provincia": "Ávila",
+    "CCAA": "Castilla y León"
+  },
+  {
+    "IDMunicipio": "15030",
+    "IDProvincia": "15",
+    "IDCCAA": "12",
+    "Municipio": "A Coruña",
+    "Provincia": "A Coruña",
+    "CCAA": "Galicia"
+  },
+  {
+    "IDMunicipio": "23050",
+    "IDProvincia": "23",
+    "IDCCAA": "01",
+    "Municipio": "Jaén",
+    "Provincia": "Jaén",
+    "CCAA": "Andalucía"
+  },
+  {
+    "IDMunicipio": "49022",
+    "IDProvincia": "49",
+    "IDCCAA": "07",
+    "Municipio": "Zamora",
+    "Provincia": "Zamora",
+    "CCAA": "Castilla y León"
+  }
+]

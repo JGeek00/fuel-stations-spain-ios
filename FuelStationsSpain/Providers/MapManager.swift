@@ -39,6 +39,12 @@ class MapManager: ObservableObject {
     
     init() {}
     
+    func loadDefaultLocationIfNeeded() async {
+        // Solo si el primer fetch nunca se disparó (sin ubicación y sin datos)
+        guard !firstLoadCompleted, data == nil, loading else { return }
+        await setInitialLocation(latitude: nil, longitude: nil)
+    }
+    
     func setInitialLocation(latitude: Double?, longitude: Double?) async {
         if latitude != nil && longitude != nil {
             self.latitude = latitude!
