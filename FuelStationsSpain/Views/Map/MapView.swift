@@ -108,7 +108,7 @@ fileprivate struct MapComponent: View {
                             if mapManager.selectedStation != nil {
                                 ScrollView {
                                     StationDetailsSheetHeader(isSideSheet: false)
-                                    StationDetailsSheetContent()
+                                    StationDetailsSheetContent(cardsTranslucent: selectedDetent != .fraction(0.99))
                                 }
                                 .transition(.opacity)
                             }

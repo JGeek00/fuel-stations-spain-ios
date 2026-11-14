@@ -120,6 +120,8 @@ struct StationDetailsSheetContent: View {
     @State private var lookAroundScene: MKLookAroundScene? = nil
     @State private var pricesScaleItems: [PriceScaleItem]? = nil
     
+    var cardsTranslucent: Bool = true
+    
     var body: some View {
         if let station = mapManager.selectedStation {
             let formattedSchedule = getStationSchedule(station.openingHours)
@@ -293,6 +295,7 @@ struct StationDetailsSheetContent: View {
             .padding(.horizontal)
             .animation(.easeOut, value: mapManager.selectedStation)
             .transition(.opacity)
+            .environment(\.cardTranslucent, cardsTranslucent)
             .onChange(of: station, initial: true) {
                 DispatchQueue.global(qos: .background).async {
                     Task {

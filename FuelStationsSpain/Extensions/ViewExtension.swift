@@ -17,8 +17,21 @@ fileprivate struct ConditionalBackgroundWithMaterial: ViewModifier {
     }
 }
 
+private struct CardTranslucentKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var cardTranslucent: Bool {
+        get { self[CardTranslucentKey.self] }
+        set { self[CardTranslucentKey.self] = newValue }
+    }
+}
+
 fileprivate struct CardGlassBackgroundIfAvailable: ViewModifier {
     let onSheet: Bool
+    
+    @Environment(\.cardTranslucent) private var translucent
     
     init(onSheet: Bool) {
         self.onSheet = onSheet
@@ -26,12 +39,24 @@ fileprivate struct CardGlassBackgroundIfAvailable: ViewModifier {
     
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
-            content
-                .clipShape(.rect(cornerRadius: 20))
-                .glassEffect(.regular.tint(Color.sheetGlassCardBackground), in: .rect(cornerRadius: 20))
+            if translucent {
+                content
+                    .clipShape(.rect(cornerRadius: 20))
+                    .glassEffect(.regular, in: .rect(cornerRadius: 20))
+            }
+            else {
+                content
+                    .clipShape(.rect(cornerRadius: 20))
+                    .glassEffect(.regular.tint(Color.sheetGlassCardBackground), in: .rect(cornerRadius: 20))
+            }
         }
         else {
-            if onSheet == true {
+            if translucent {
+                content
+                    .background(Material.thin)
+                    .clipShape(.rect(cornerRadius: 8))
+            }
+            else if onSheet == true {
                 content
                     .background(Material.ultraThick)
                     .clipShape(.rect(cornerRadius: 8))

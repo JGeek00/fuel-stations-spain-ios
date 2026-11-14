@@ -36,10 +36,8 @@ func httpRequest<T: Decodable>(url: String, httpMethod: String? = "GET", body: D
             request.httpBody = try CustomJSONEncoder().encode(body)
         }
 
-        print("[HTTP] -> \(request.httpMethod ?? "?") \(request.url?.absoluteString ?? "?")")
         let (data, r) = try await HTTPClientSessionProvider.shared.session.data(for: request)
         guard let response = r as? HTTPURLResponse else {
-            print("[HTTP] no HTTPURLResponse")
             return defaultErrorResponse
         }
         if response.statusCode < 400 {
@@ -47,17 +45,13 @@ func httpRequest<T: Decodable>(url: String, httpMethod: String? = "GET", body: D
                 let formatted = try JSONDecoder().decode(T.self, from: data)
                 return StatusResponse<T>(successful: true, statusCode: response.statusCode, data: formatted)
             } catch {
-                print("[HTTP] decode \(request.url?.absoluteString ?? "?"): \(error)")
                 return defaultErrorResponse
             }
         }
         else {
-            print("[HTTP] <- \(response.statusCode) body=\(String(data: data.prefix(300), encoding: .utf8) ?? "?")")
             return StatusResponse<T>(successful: false, statusCode: response.statusCode, rawBody: String(data: data, encoding: .utf8))
         }
-    } catch let e {
-        let nserr = e as NSError
-        print("[HTTP] !! FAIL domain=\(nserr.domain) code=\(nserr.code) desc=\(e)")
+    } catch {
         return defaultErrorResponse
     }
 }
