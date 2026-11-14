@@ -1,6 +1,5 @@
 import MapKit
 import SwiftUI
-import BottomSheet
 
 @MainActor
 class MapManager: ObservableObject {
@@ -23,7 +22,7 @@ class MapManager: ObservableObject {
     @Published var showStationsSheet = false
     
     @Published var showStationDetailsSheet = false
-    @Published var stationDetailsSheetPosition: BottomSheetPosition = .hidden
+    @Published var stationDetailsSheetPosition: StationPanelPosition = .hidden
     @Published var selectedStation: FuelStation? = nil
     @Published var selectedStationAnimation: FuelStation? = nil   // Used just for the map marker animation
     @Published var visibleLatitudeDelta: Double = Config.mapDefaultZoom
@@ -141,12 +140,12 @@ class MapManager: ObservableObject {
                 
         self.isOpeningOrClosingSheet = true
         
-        withAnimation(.default) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
             self.selectedStation = station
+            self.stationDetailsSheetPosition = .expanded
         }
         self.selectedStationAnimation = station
         self.showStationDetailsSheet = true
-        self.stationDetailsSheetPosition = .dynamicTop
         if centerLocation == true {
             centerToLocation(latitude: station.latitude, longitude: station.longitude)
         }
@@ -160,7 +159,16 @@ class MapManager: ObservableObject {
             self.centerToLocation(latitude: station.latitude, longitude: station.longitude)
         }
         self.selectedStationAnimation = station
-        self.selectedStation = station
-        self.showStationDetailsSheet = true
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+            self.selectedStation = station
+            self.showStationDetailsSheet = true
+            self.stationDetailsSheetPosition = .expanded
+        }
     }
+}
+
+enum StationPanelPosition: Equatable {
+    case hidden
+    case collapsed
+    case expanded
 }

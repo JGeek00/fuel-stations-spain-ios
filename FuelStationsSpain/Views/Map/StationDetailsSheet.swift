@@ -1,7 +1,6 @@
 import SwiftUI
 import MapKit
 import AlertToast
-import BottomSheet
 
 struct StationDetailsSheetHeader: View {
     var isSideSheet: Bool
@@ -35,11 +34,11 @@ struct StationDetailsSheetHeader: View {
                 }
                 else {
                     ChevronButton {
-                        if mapManager.stationDetailsSheetPosition == .dynamicTop {
-                            mapManager.stationDetailsSheetPosition = .absoluteTop(70)
+                        if mapManager.stationDetailsSheetPosition == .expanded {
+                            mapManager.stationDetailsSheetPosition = .collapsed
                         }
                         else {
-                            mapManager.stationDetailsSheetPosition = .dynamicTop
+                            mapManager.stationDetailsSheetPosition = .expanded
                         }
                     }
                 }
@@ -92,7 +91,7 @@ struct StationDetailsSheetHeader: View {
                         view.foregroundColor(.foreground.opacity(0.5))
                     }
                 }
-                .rotationEffect(mapManager.stationDetailsSheetPosition == .dynamicTop ? .degrees(0) : .degrees(180), anchor: .center)
+                .rotationEffect(mapManager.stationDetailsSheetPosition == .expanded ? .degrees(0) : .degrees(180), anchor: .center)
                 .animation(.default, value: mapManager.stationDetailsSheetPosition)
         }
         .condition { view in

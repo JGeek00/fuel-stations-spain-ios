@@ -1,6 +1,5 @@
 import SwiftUI
 import MapKit
-import BottomSheet
 
 struct MapView: View {
     
@@ -91,20 +90,13 @@ fileprivate struct MapComponent: View {
             })
             .if(horizontalSizeClass == .regular) { view in
                 view
-                    .bottomSheet(
-                        bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
-                        switchablePositions: [.absoluteBottom(70), .dynamicTop],
-                        headerContent: {
-                            StationDetailsSheetHeader(isSideSheet: true)
+                    .overlay(alignment: .topLeading) {
+                        if mapManager.stationDetailsSheetPosition != .hidden, mapManager.selectedStation != nil {
+                            StationSidePanel()
+                                .padding(.leading, 12)
+                                .padding(.vertical, 12)
                         }
-                    ) {
-                        StationDetailsSheetContent()
-                            .padding(.top)
                     }
-                    .sheetWidth(.relative(0.4))
-                    .enableAccountingForKeyboardHeight()
-                    .enableAppleScrollBehavior()
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
             }
             .if(horizontalSizeClass != .regular) { view in
                 view
@@ -140,6 +132,8 @@ fileprivate struct MapComponent: View {
                             .presentationBackgroundInteraction(
                                 .enabled(upThrough: .fraction(0.99))
                             )
+                            .presentationDragIndicator(.visible)
+                            .presentationCornerRadius(24)
                             .onDisappear {
                                 if mapManager.isOpeningOrClosingSheet == true {
                                     mapManager.selectedStation = nil

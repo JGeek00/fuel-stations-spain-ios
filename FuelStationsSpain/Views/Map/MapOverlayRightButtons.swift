@@ -32,10 +32,12 @@ struct MapOverlayRightButtons: View {
                         .disabled(locationManager.lastLocation == nil)
                         
                         Button {
-                            mapManager.showStationDetailsSheet = false
-                            mapManager.stationDetailsSheetPosition = .hidden
-                            mapManager.selectedStationAnimation = nil
-                            mapManager.selectedStation = nil
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+                                mapManager.showStationDetailsSheet = false
+                                mapManager.stationDetailsSheetPosition = .hidden
+                                mapManager.selectedStationAnimation = nil
+                                mapManager.selectedStation = nil
+                            }
                             mapManager.showStationsSheet = true
                         } label: {
                             Image(systemName: "list.bullet")
@@ -75,10 +77,12 @@ struct MapOverlayRightButtons: View {
                     .frame(height: 12)
                 
                 Button {
-                    mapManager.showStationDetailsSheet = false
-                    mapManager.stationDetailsSheetPosition = .hidden
-                    mapManager.selectedStationAnimation = nil
-                    mapManager.selectedStation = nil
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+                        mapManager.showStationDetailsSheet = false
+                        mapManager.stationDetailsSheetPosition = .hidden
+                        mapManager.selectedStationAnimation = nil
+                        mapManager.selectedStation = nil
+                    }
                     mapManager.showStationsSheet = true
                 } label: {
                     Image(systemName: "list.bullet")
