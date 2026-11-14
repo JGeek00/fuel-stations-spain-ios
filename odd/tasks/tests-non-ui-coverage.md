@@ -22,3 +22,4 @@ Fuera: `Views/`, `Components/`, widgets UI, previews.
 ## Log
 
 - L1 (verbatim): "Eso es, vamos a añadir test a toda la lógica de la app. Buscamos la mayor cobertura de código posible en ficheros que no lleven UI"
+- L4: T6 gate 121/121 en serie + 62,75% no-UI; slice boundary: 7 commits (fix + 5 test + docs) en tests/non-ui-coverage, ~2.389 líneas.
