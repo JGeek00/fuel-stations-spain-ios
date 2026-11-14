@@ -6,9 +6,12 @@ class FavoritesProvider: ObservableObject {
     
     @Published var favorites: [FavoriteStation] = []
     
-    private let coredataContext = PersistenceController.shared.container.viewContext
+    /// Seam de test: contexto Core Data inyectable. Por defecto es el
+    /// viewContext compartido, el mismo que se usaba antes de la inyección.
+    private let coredataContext: NSManagedObjectContext
     
-    init() {
+    init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
+        self.coredataContext = context
         _ = fetchFavorites()
     }
     

@@ -1,6 +1,12 @@
 import Foundation
 import StoreKit
 
+/// Decisión pura de pedir review: >=24h desde el primer lanzamiento y no se
+/// ha pedido antes. El efecto StoreKit queda fuera, en `requestAppReview`.
+func shouldRequestReview(now: TimeInterval, firstLaunchDate: TimeInterval, hasRequestedReview: Bool) -> Bool {
+    (now - firstLaunchDate) >= 24 * 60 * 60 && !hasRequestedReview
+}
+
 @MainActor
 func requestAppReview() {
     let firstLaunchDate: Double? = UserDefaults.shared.double(forKey: StorageKeys.appFirstLaunch)
@@ -11,9 +17,8 @@ func requestAppReview() {
     if firstLaunchDate == 0 {
         UserDefaults.shared.setValue(currentDate, forKey: StorageKeys.appFirstLaunch)
     } else {
-        let oneDay: TimeInterval = 24 * 60 * 60
         guard let firstLaunchDate = firstLaunchDate else { return }
-        if (currentDate - firstLaunchDate) >= oneDay && hasRequestedReview != true {
+        if shouldRequestReview(now: currentDate, firstLaunchDate: firstLaunchDate, hasRequestedReview: hasRequestedReview == true) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                 #if os(iOS)
                 guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
