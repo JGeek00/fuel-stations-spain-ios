@@ -1,0 +1,18 @@
+[
+  {
+    "IDMunicipio": "28065",
+    "IDProvincia": "28",
+    "IDCCAA": "07",
+    "Municipio": "Madrid",
+    "Provincia": "Madrid",
+    "CCAA": "Comunidad de Madrid"
+  },
+  {
+    "IDMunicipio": "08019",
+    "IDProvincia": "08",
+    "IDCCAA": "09",
+    "Municipio": "Barcelona",
+    "Provincia": "Barcelona",
+    "CCAA": "Cataluña"
+  }
+]
