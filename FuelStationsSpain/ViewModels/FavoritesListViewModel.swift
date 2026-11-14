@@ -14,8 +14,6 @@ class FavoritesListViewModel: ObservableObject {
     // Keep the same location when the view is being presented
     @Published var location: CLLocation? = nil
 
-    /// Seam de test: proveedor de favoritos inyectable. Por defecto es el
-    /// singleton compartido, el mismo comportamiento de antes de la inyección.
     private let favoritesProvider: FavoritesProvider
 
     init(favoritesProvider: FavoritesProvider = FavoritesProvider.shared) {
