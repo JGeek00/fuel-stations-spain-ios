@@ -1,0 +1,14 @@
+[
+  {
+    "stationId": "1111",
+    "stationSignage": "REPSOL",
+    "gasoline95E5Price": 1.521,
+    "date": "2024-01-15"
+  },
+  {
+    "stationId": "1111",
+    "stationSignage": "REPSOL",
+    "gasoline95E5Price": 1.539,
+    "date": "2024-01-16"
+  }
+]
