@@ -35,14 +35,13 @@ struct FavoriteDetailsView: View {
         }()
         
         NavigationStack(path: $navigationPath) {
-            GeometryReader { proxy in
-                ScrollView {
+            ScrollView {
                     LazyVStack(alignment: .leading, spacing: 12) {
                         if showStationSummary {
                             Text("Summary")
                                 .fontSize(22)
                                 .fontWeight(.bold)
-                            StationDetailsSummary(width: proxy.size.width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                            StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                                 .cardGlassBackgroundIfAvailable()
                             
                             Divider()
@@ -131,7 +130,6 @@ struct FavoriteDetailsView: View {
                         }
                     }
                 }
-            }
         }
     }
     

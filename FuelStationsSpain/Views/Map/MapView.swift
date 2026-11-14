@@ -89,47 +89,42 @@ fileprivate struct MapComponent: View {
             .sheet(isPresented: $mapManager.showStationsSheet, content: {
                 StationsSheet()
             })
-            .if(UIDevice.current.userInterfaceIdiom == .pad) { view in
-                Group {
-                    GeometryReader { proxy in
-                        view
-                            .bottomSheet(
-                                bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
-                                switchablePositions: [.absoluteBottom(70), .dynamicTop],
-                                headerContent: {
-                                    StationDetailsSheetHeader(isSideSheet: true)
-                                }
-                            ) {
-                                StationDetailsSheetContent(width: proxy.size.width)
-                                    .padding(.top)
-                            }
-                            .sheetWidth(.relative(0.4))
-                            .enableAccountingForKeyboardHeight()
-                            .enableAppleScrollBehavior()
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
+            .if(horizontalSizeClass == .regular) { view in
+                view
+                    .bottomSheet(
+                        bottomSheetPosition: $mapManager.stationDetailsSheetPosition,
+                        switchablePositions: [.absoluteBottom(70), .dynamicTop],
+                        headerContent: {
+                            StationDetailsSheetHeader(isSideSheet: true)
+                        }
+                    ) {
+                        StationDetailsSheetContent()
+                            .padding(.top)
                     }
-                }
+                    .sheetWidth(.relative(0.4))
+                    .enableAccountingForKeyboardHeight()
+                    .enableAppleScrollBehavior()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.background))
             }
-            .if(UIDevice.current.userInterfaceIdiom != .pad) { view in
+            .if(horizontalSizeClass != .regular) { view in
                 view
                     .sheet(isPresented: $mapManager.showStationDetailsSheet, onDismiss: {
                         mapManager.selectedStationAnimation = nil
                         mapManager.isOpeningOrClosingSheet = true
                     }, content: {
-                        GeometryReader { proxy in
-                            Group {
-                                if mapManager.selectedStation != nil {
-                                    ScrollView {
-                                        StationDetailsSheetHeader(isSideSheet: false)
-                                        StationDetailsSheetContent(width: proxy.size.width)
-                                    }
-                                    .transition(.opacity)
+                        Group {
+                            if mapManager.selectedStation != nil {
+                                ScrollView {
+                                    StationDetailsSheetHeader(isSideSheet: false)
+                                    StationDetailsSheetContent()
                                 }
-                                else {
-                                    ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
-                                        .transition(.opacity)
-                                }
+                                .transition(.opacity)
                             }
+                            else {
+                                ContentUnavailableView("No station selected", systemImage: "xmark.circle", description: Text("Select a service station to see it's details."))
+                                    .transition(.opacity)
+                            }
+                        }
                             .presentationBackground {
                                 // On versions prior to iOS 26 a background must always be defined
                                 if #available(iOS 26.0, *) {
@@ -151,7 +146,6 @@ fileprivate struct MapComponent: View {
                                     mapManager.isOpeningOrClosingSheet = false
                                 }
                             }
-                        }
                     })
             }
             .mapScope(mapScope)

@@ -109,13 +109,6 @@ struct StationDetailsSheetHeader: View {
 }
 
 struct StationDetailsSheetContent: View {
-    var width: Double
-    
-    init(width: Double) {
-        self.width = width
-    }
-    
-
     @EnvironmentObject private var mapManager: MapManager
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var favoritesProvider: FavoritesProvider
@@ -141,7 +134,7 @@ struct StationDetailsSheetContent: View {
             
             VStack(alignment: .leading) {
                 if showStationSummary {
-                    StationDetailsSummary(width: width, station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
+                    StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distanceToUserLocation)
                         .cardGlassBackgroundIfAvailable(onSheet: true)
                 
                     Divider()

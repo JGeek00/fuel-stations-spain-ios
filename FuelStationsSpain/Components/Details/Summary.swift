@@ -1,26 +1,25 @@
 import SwiftUI
 
 struct StationDetailsSummary: View {
-    var width: Double
     var station: FuelStation
     var schedule: OpeningSchedule?
     var distanceToLocation: Double?
     
-    init(width: Double, station: FuelStation, schedule: OpeningSchedule?, distanceToLocation: Double?) {
-        self.width = width
+    init(station: FuelStation, schedule: OpeningSchedule?, distanceToLocation: Double?) {
         self.station = station
         self.schedule = schedule
         self.distanceToLocation = distanceToLocation
     }
     
     @EnvironmentObject private var locationManager: LocationManager
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @FavoriteFuelValue private var favoriteFuel: Enums.FuelType?
     
     var body: some View {
         let favoriteFuelResolved: Enums.FuelType = runningOnPreview() ? Enums.FuelType.gasoline95E5 : (self.favoriteFuel ?? Enums.FuelType.gasoline95E5)
         let fuel = favoriteFuels.map() { $0.fuels }.flatMap() { $0 }.first() { $0.fuelType == favoriteFuelResolved }
-        if width >= 300 {
+        if horizontalSizeClass == .regular {
             HStack {
                 Spacer()
                 if let fuel = fuel, let fuelPrice: Double = FuelStation.getObjectProperty(station: station, propertyName: "\(favoriteFuelResolved.rawValue)Price") {
@@ -191,8 +190,9 @@ struct StationDetailsSummary: View {
     let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude, longitude: station.longitude), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
 
 
-    StationDetailsSummary(width: 500, station: station, schedule: formattedSchedule, distanceToLocation: distance)
+    StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distance)
         .environmentObject(locationManager)
+        .environment(\.horizontalSizeClass, .regular)
 }
 
 #Preview("Small") {
@@ -246,7 +246,8 @@ struct StationDetailsSummary: View {
     let distance = distanceBetweenCoordinates(Coordinate(latitude: station.latitude, longitude: station.longitude), Coordinate(latitude: locationManager.lastLocation!.coordinate.latitude, longitude: locationManager.lastLocation!.coordinate.longitude))
 
 
-    StationDetailsSummary(width: 250, station: station, schedule: formattedSchedule, distanceToLocation: distance)
+    StationDetailsSummary(station: station, schedule: formattedSchedule, distanceToLocation: distance)
         .environmentObject(locationManager)
+        .environment(\.horizontalSizeClass, .compact)
         .frame(width: 250)
 }
